@@ -30,7 +30,7 @@ html5lib==1.1
 idna==3.4
 lxml==4.9.2
 mysql-connector-python==8.0.33
-mysqlclient==2.1.1
+# mysqlclient==2.1.1  # ❌ Eliminado para evitar errores
 numpy==1.26.1
 oauthlib==3.2.2
 openpyxl==3.1.2
@@ -48,7 +48,7 @@ pyhanko-certvalidator==0.22.0
 PyJWT==2.8.0
 pylogix==0.8.11
 pyModbusTCP==0.2.0
-PyMySQL==1.0.3
+PyMySQL==1.0.3  # ✅ Alternativa ligera y compatible con Railway
 pyodbc==4.0.39
 pypdf==3.8.1
 pyphen==0.14.0

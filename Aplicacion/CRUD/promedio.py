@@ -1,7 +1,7 @@
 import sys
 import re
 import sqlite3
-import mysql.connector
+# import mysql.connector
 
 # Reporte diario argumentos,  IDCliente,FechaInicial,FechaFinal
 
@@ -177,27 +177,27 @@ def CantidadActualAnimales(IDCorral, fecha):
 
 
 
-# def run_query2(query, parameters=()):
-#     conn = sqlite3.connect("respaldo.sqlite3")
-#     cursor = conn.cursor()
-#     cursor.execute(query, parameters)
-#     result = cursor.fetchall()
-#     conn.commit()
-#     return result
-
-
 def run_query2(query, parameters=()):
-    mydb = mysql.connector.connect(
-        host="containers-us-west-200.railway.app",
-        user="root",
-        password="KeRCIq2V93Z89OiWzpy2",
-        database="railway",
-        port="5663")
-    cursor = mydb.cursor()
+    conn = sqlite3.connect("respaldo.sqlite3")
+    cursor = conn.cursor()
     cursor.execute(query, parameters)
     result = cursor.fetchall()
-    mydb.commit()
+    conn.commit()
     return result
+
+
+# def run_query2(query, parameters=()):
+#     mydb = mysql.connector.connect(
+#         host="containers-us-west-200.railway.app",
+#         user="root",
+#         password="KeRCIq2V93Z89OiWzpy2",
+#         database="railway",
+#         port="5663")
+#     cursor = mydb.cursor()
+#     cursor.execute(query, parameters)
+#     result = cursor.fetchall()
+#     mydb.commit()
+#     return result
 
 if __name__ == "__main__":
     print("Resultados de la función ProductosQueSeSirven:")

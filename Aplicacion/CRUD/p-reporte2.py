@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 # LLAMAR ARCHIVOS LOCALES
 from django.db.models import Q
 from django.db import connection
-import mysql.connector
+# import mysql.connector
 import sqlite3
 
 # Reporte diario argumentos,  IDCliente,FechaInicial,FechaFinal

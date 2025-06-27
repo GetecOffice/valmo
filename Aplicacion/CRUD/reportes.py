@@ -5,7 +5,7 @@ from django.db.models import Q
 from Aplicacion.forms import *
 from Aplicacion.models import *
 from django.db import connection
-import mysql.connector
+# import mysql.connector
 import sqlite3
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TABLAS DE REPORTES >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # ------------------------------------------------REPORTES DE MATERIAS PRIMAS---------------------------------------------------
