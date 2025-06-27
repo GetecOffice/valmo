@@ -1,0 +1,24 @@
+{% load static %}
+{% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Registro</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link href="{% static 'css/estilos3.css' %}" rel="stylesheet">
+</head>
+
+<body class="bg-primary">
+    <!-- Redireccionamiento al login -->
+    <script>
+        window.location.href = "{% url 'Login' %}";
+    </script>
+</body>
+
+</html>
+{% endblock %}

@@ -1,0 +1,264 @@
+{% load static %} {% block body %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <title>Registro</title>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+  <link href="{% static 'css/estilos3.css' %}" rel="stylesheet" />
+  <style>
+    .valid {
+      color: rgb(6, 182, 0);
+    }
+
+    .invalid {
+      color: rgb(255, 0, 0);
+    }
+
+    .is-valid {
+      border-color: rgb(6, 182, 0);
+    }
+
+    .is-invalid {
+      border-color: rgb(255, 0, 0);
+    }
+
+    .password-toggle {
+      cursor: pointer;
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .password-container {
+      position: relative;
+    }
+  </style>
+</head>
+
+<body class="bg-primary">
+  <div id="layoutAuthentication">
+    <div id="layoutAuthentication_content">
+      <main>
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-lg-7">
+              <div class="card shadow-lg border-0 rounded-lg mt-1">
+                <div class="card-header">
+                  <h3 class="text-center font-weight-light my-4">
+                    REGISTRARSE
+                  </h3>
+                </div>
+                <div class="card-body">
+                  {% if messages %} {% for message in messages %}
+                  <div class="alert alert-danger notifications {{ message.tags }}">
+                    {{ message }}
+                  </div>
+                  {% endfor %} {% endif %}
+                  <form id="registrationForm" class="form" method="POST" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="row">
+                      <div class="col-sm-12 col-md-12 col-lg col-xl">
+                        <h5>Nombre Completo</h5>
+                        <input type="text" id="first_name" name="first_name" class="form-control input"
+                          placeholder="Ingrese nombre completo" required />
+                        <br />
+                      </div>
+                      <div class="col-sm-12 col-md-12 col-lg col-xl">
+                        <h5>Apellidos</h5>
+                        <input type="text" id="last_name" name="last_name" class="form-control input"
+                          placeholder="Ingrese apellidos" required />
+                        <br />
+                      </div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg col-xl">
+                      <h5>Correo Electrónico</h5>
+                      <input type="email" id="username" name="username" class="form-control input"
+                        placeholder="ejemplo@gmail.com" required />
+                      <br />
+                    </div>
+
+                    <div class="row">
+                      <div class="col-sm-12 col-md-12 col-lg col-xl">
+                        <h5>Contraseña</h5>
+                        <div class="password-container">
+                          <input type="password" id="password1" name="password1" class="form-control input"
+                            placeholder="CONTRASEÑA" required />
+                          <span class="password-toggle" onclick="togglePassword('password1')">👁️</span>
+                        </div>
+                        <br />
+                      </div>
+                      <div class="col-sm-12 col-md-12 col-lg col-xl">
+                        <h5>Confirmar Contraseña</h5>
+                        <div class="password-container">
+                          <input type="password" id="password2" name="password2" class="form-control input"
+                            placeholder="CONFIRME CONTRASEÑA" required />
+                          <span class="password-toggle" onclick="togglePassword('password2')">👁️</span>
+                        </div>
+                        <br />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <h6 id="error1" class="invalid" style="font-size: 15px">
+                          ° Las contrseñas deben coincidir
+                        </h6>
+                      </div>
+                      <!-- <div class="col">
+                          <h6
+                            id="error2"
+                            class="invalid"
+                            style="font-size: 15px"
+                          >
+                            ° La contraseña no debe tener números consecutivos
+                          </h6>
+                        </div> -->
+                      <div class="col">
+                        <h6 id="error3" class="invalid" style="font-size: 15px">
+                          ° La contraseña debe contener minimo 8 caracteres
+                        </h6>
+                      </div>
+                      <div class="col">
+                        <h6 id="error4" class="invalid" style="font-size: 15px">
+                          ° La contraseña debe contener letras y números
+                        </h6>
+                      </div>
+                    </div>
+                    <div class="d-grid">
+                      <button type="submit" name="submit" class="btn btn-primary">
+                        Registrarse
+                      </button>
+                    </div>
+                  </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                  <div class="small">
+                    <a href="{% url 'Login' %}">Iniciar Sesión</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+
+</html>
+<script>
+  document
+    .getElementById("registrationForm")
+    .addEventListener("input", validateForm);
+
+  function validateForm() {
+    validatePassword();
+    validateName();
+    validateLastName();
+    validateEmail();
+    validateConfirmPassword(); // Agregamos validación para confirmar contraseña
+  }
+
+  function validatePassword() {
+    const password1 = document.getElementById("password1").value;
+    const password2 = document.getElementById("password2").value;
+    // valida
+    if (password1 !== password2) {
+      document.getElementById("error1").classList.add("invalid");
+      document.getElementById("error1").classList.remove("valid");
+
+    } else {
+      document.getElementById("error1").classList.add("valid");
+      document.getElementById("error1").classList.remove("invalid");
+    }
+
+    // if (/123|234|345|456|567|678|789|890/.test(password1)) {
+    //   // Verificamos números consecutivos
+    //   document.getElementById("error2").classList.add("invalid");
+    //   document.getElementById("error2").classList.remove("valid");
+    // } else {
+    //   document.getElementById("error2").classList.add("valid");
+    //   document.getElementById("error2").classList.remove("invalid");
+    // }
+
+    if (password1.length >= 8) {
+      document.getElementById("error3").classList.add("valid");
+      document.getElementById("error3").classList.remove("invalid");
+    } else {
+      document.getElementById("error3").classList.add("invalid");
+      document.getElementById("error3").classList.remove("valid");
+    }
+
+    if (/[a-zA-Z]/.test(password1) && /\d/.test(password1)) {
+      document.getElementById("error4").classList.add("valid");
+      document.getElementById("error4").classList.remove("invalid");
+    } else {
+      document.getElementById("error4").classList.add("invalid");
+      document.getElementById("error4").classList.remove("valid");
+    }
+  }
+
+  function validateName() {
+    const firstName = document.getElementById("first_name").value;
+    if (firstName.trim().length > 0) {
+      document.getElementById("first_name").classList.add("is-valid");
+      document.getElementById("first_name").classList.remove("is-invalid");
+    } else {
+      document.getElementById("first_name").classList.add("is-invalid");
+      document.getElementById("first_name").classList.remove("is-valid");
+    }
+  }
+
+  function validateLastName() {
+    const lastName = document.getElementById("last_name").value;
+    if (lastName.trim().length > 0) {
+      document.getElementById("last_name").classList.add("is-valid");
+      document.getElementById("last_name").classList.remove("is-invalid");
+    } else {
+      document.getElementById("last_name").classList.add("is-invalid");
+      document.getElementById("last_name").classList.remove("is-valid");
+    }
+  }
+
+  function validateEmail() {
+    const email = document.getElementById("username").value;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (emailPattern.test(email)) {
+      document.getElementById("username").classList.add("is-valid");
+      document.getElementById("username").classList.remove("is-invalid");
+    } else {
+      document.getElementById("username").classList.add("is-invalid");
+      document.getElementById("username").classList.remove("is-valid");
+    }
+  }
+
+  function validateConfirmPassword() {
+    const password1 = document.getElementById("password1").value;
+    const password2 = document.getElementById("password2").value;
+    const confirmPasswordInput = document.getElementById("password2");
+
+    if (password1 === password2 && password1 !== "" && password2 !== "") {
+      confirmPasswordInput.classList.add("is-valid");
+      confirmPasswordInput.classList.remove("is-invalid");
+    } else {
+      confirmPasswordInput.classList.add("is-invalid");
+      confirmPasswordInput.classList.remove("is-valid");
+    }
+  }
+
+  function togglePassword(id) {
+    const input = document.getElementById(id);
+    if (input.type === "password") {
+      input.type = "text";
+    } else {
+      input.type = "password";
+    }
+  }
+</script>
+
+{% endblock %}

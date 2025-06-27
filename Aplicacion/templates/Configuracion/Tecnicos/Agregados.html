@@ -1,0 +1,133 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} Datos agregados {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-10">
+                <h1 style="display: inline-block;">
+                    <a href="{% url 'TUsuarios' %}" class="btn h6-form"><i class="fa-solid fa-arrow-left"><</i></a>
+                    DATOS AGREGADOS POR EL TÉCNICO - {{usuario.first_name}}
+                    {{usuario.last_name}} </h1>
+            </div>
+        </div>
+
+        <h5 class="h6-form" style="display: inline-block;"> </h5>
+        <div class="row centrar">
+
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna1">
+                <ul class="sidebar-nav" id="sidebar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-target="#components-nav-registro-catalogo"
+                            data-bs-toggle="collapse" href="#">
+                            <i class="fa fa-folder-open"></i><span>Catálogos</span><i
+                                class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="components-nav-registro-catalogo" class="nav-content collapse  ml-5"
+                            data-bs-parent="#sidebar-nav">
+                            <li class="nav-item">
+                                {% for TablaCatalogos in catalogosUL%}
+                                <form action="/Agregar-Tecnicos/" method="POST">{% csrf_token %}
+                                    <input type="hidden" value="{{usuario.id}}" name="usuario">
+                                    <input type="hidden" value="{{usuario.first_name }} {{usuario.last_name }}"
+                                        name="full_name">
+                                    <input type="hidden" value="{{TablaCatalogos.NombreTabla}}" name="tabla">
+                                    <button type="submit" class="btn nav-link col-12">
+                                        <i class="fa fa-circle" style="font-size: 8px;"></i>
+                                        <span>{{TablaCatalogos.NombreTabla}}</span></button>
+                                </form>
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-target="#components-nav-registro-procesos"
+                            data-bs-toggle="collapse" href="#">
+                            <i class="fa fa-folder-open"></i><span>Procesos</span><i
+                                class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="components-nav-registro-procesos" class="nav-content collapse "
+                            data-bs-parent="#sidebar-nav">
+                            <li class="nav-item">
+                                {% for TablaProcesos in procesosUL%}
+                                <form action="/Agregar-Tecnicos/" method="POST">{% csrf_token %}
+                                    <input type="hidden" value="{{usuario.id}}" name="usuario">
+                                    <input type="hidden" value="{{usuario.first_name }} {{usuario.last_name }}"
+                                        name="full_name">
+                                    <input type="hidden" value="{{TablaProcesos.NombreTabla}}" name="tabla">
+                                    <button type="submit" class="btn nav-link col-12">
+                                        <i class="fa fa-circle" style="font-size: 8px;"></i>
+                                        <span>{{TablaProcesos.NombreTabla}}</span></button>
+                                </form>
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-target="#components-nav-registro-subtabla"
+                            data-bs-toggle="collapse" href="#">
+                            <i class="fa fa-folder-open"></i><span>SubTablas</span><i
+                                class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="components-nav-registro-subtabla" class="nav-content collapse "
+                            data-bs-parent="#sidebar-nav">
+                            <li class="nav-item">
+                                {% for TablaSubTabla in subtablaUL %}
+                                <form action="/Agregar-Tecnicos/" method="POST">{% csrf_token %}
+                                    <input type="hidden" value="{{usuario.id}}" name="usuario">
+                                    <input type="hidden" value="{{usuario.first_name }} {{usuario.last_name }}"
+                                        name="full_name">
+                                    <input type="hidden" value="{{TablaSubTabla.NombreTabla}}" name="tabla">
+                                    <button type="submit" class="btn nav-link col-12">
+                                        <i class="fa fa-circle" style="font-size: 8px;"></i>
+                                        <span>{{TablaSubTabla.NombreTabla}}</span></button>
+                                </form>
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-9 col-xl-9 columna2">
+                <h6 class="h6-form centrar">Tabla seleccionada: {{tabla_v}}</h6>
+                <div class="table-responsive py-1">
+                    <table class="tabla_id">
+                        <thead>
+                            <tr>
+                                <th>ID Tabla</th>
+                                <th>FOLIO</th>
+                                <th>FECHA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for contenido in contenidoTabla %}
+                            <tr>
+                                <td>{{ contenido.IDFila}}</td>
+                                <td>{{ contenido.IDFilaTabla }}</td>
+                                <td>{{ contenido.Fecha}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %}UNIDAD MEDIDA{% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-10">
+                <h1>SUBTABLA - UNIDAD MEDIDA</h1>
+            </div>
+            <div class="col-2">
+                {% if perms.Aplicacion.add_tblunidades %}
+                <a href="{% url 'F-Unidad-Medida'%}">
+                    <button type="button" class="btn button-add col-12">
+                        <i class="fa fa-plus"></i> AGREGAR
+                    </button>
+                </a>
+                {% else %}
+                <div class="row centrar">
+                    <h6 class="h6-form">
+                        <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+                        No tienes los permisos necesarios para agregar contenido a la tabla
+                        <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+                    </h6>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if perms.Aplicacion.view_tblunidades %}
+        <div class="table-responsive py-1">
+            <table class="tabla_id">
+                <thead>
+                    <tr>
+                        <th class="th-responsive">CLAVE</th>
+                        <th class="th-responsive">DESCRIPCIÓN</th>
+                        <th class="th-responsive">ABREVIACIÓN</th>
+                        {% if perms.Aplicacion.change_tblunidades or perms.Aplicacion.delete_tblunidades %}
+                        <th class="th-responsive">ACCIÓN</th>
+                        {% endif %}
+                        <th class="th-responsive dnone"></th>
+                        <th class="th-responsive dnone"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for UnidadMedida in TUnidadMedida %}
+                    <tr>
+                        <td>
+                            <h6 class="td-responsive">CLAVE:</h6>
+                            {{ UnidadMedida.Clave }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">DESCRIPCIÓN:</h6>
+                            {{ UnidadMedida.Descripcion }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">ABREVIACIÓN:</h6>
+                            {{ UnidadMedida.Abreviacion }}
+                        </td>
+                        {% if perms.Aplicacion.change_tblunidades or perms.Aplicacion.delete_tblunidades %}
+                        <td>
+                            {% if perms.Aplicacion.change_tblunidades %}
+                            <a style="display: inline-block;"
+                                href="Editar/{{UnidadMedida.ID}}"> 
+                                <button class="edit-button">
+                                    <svg class="edit-svgIcon" viewBox="0 0 512 512">
+                                        <path
+                                            d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
+                                        </path>
+                                    </svg>
+                                </button>
+                            </a>
+                            {% endif %}
+                            <!-- {% if perms.Aplicacion.delete_tblunidades %}
+                            <a class="btn btn-danger btn-sm" style="display: inline-block;"
+                                href="EliminarCliente/{{Cliente.ID}}"><i class="fas fa-trash-alt"></i></a>
+                            {% endif %} -->
+                        </td>
+                        {% endif %}
+                        <td class="td-salto"></td>
+                        <td class="td-salto"></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="row centrar">
+            <h6 class="h6-form">
+                <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+                No tienes los permisos necesarios para ver el contenido de la tabla
+                <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+            </h6>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

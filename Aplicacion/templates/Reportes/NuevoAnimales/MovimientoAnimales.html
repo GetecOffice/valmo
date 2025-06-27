@@ -1,0 +1,141 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} REPORTES ANIMALES {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>
+            <a href="{% url 'Reportes' %}" class="btn h6-form"><i class="fa fa-arrow-left">
+                    <</i></a>
+            REPORTES - MOVIMIENTOS DE ANIMALES - POR MOVIMIENTO
+        </h1>
+        <div class="card card-hdr-procesos">
+            <div class="card-header">
+                <div class="row">
+                    <h5 class="h6-form">Filtrar datos de movimientos de animales</h5>
+                    <div class="col-10">
+                        <form action="/Reporte-Movimientos-Animales/" class="pr-5 pl-5" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                                        <select name="cliente" class="select2" style="width: 100%;" required
+                                            onchange="ocultarPDF()">
+                                            {% if Nombre is none %}
+                                            {% else %}
+                                            <option value="{{ Cliente }}">----{{Nombre}}----</option>
+                                            {% endif %}
+                                            <option value="todos">Traer todos los clientes</option>
+                                            {% for clientes in FClientes%}
+                                            <option value="{{ clientes.ID }}">{{ clientes.Nombre }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+                                        <select name="mov" class="select2" style="width: 100%;" required
+                                            onchange="ocultarPDF()">
+                                            {% if Movimiento is none %}
+                                            {% else %}
+                                            <option value="{{ Movimiento_v }}">-------{{Movimiento}}-------</option>
+                                            {% endif %}
+                                            {% for mov in FMovimientos%}
+                                            <option value="{{ mov.ID }}">{{ mov.Descripcion }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12 col-md-12 col-lg-2 col-xl-2 p-0 m-0">
+                                        {% if Fecha is none %}
+                                        <input type="date" name="fecha1" class="form-control" style=" border-radius: 0;"
+                                            value="{{FechaDeHoy}}">
+                                        {% else %}
+                                        <input type="date" name="fecha1" class="form-control" style=" border-radius: 0;"
+                                            value="{{Fecha}}">
+                                        {% endif %}
+
+                                    </div>
+                                    <div class="col-sm-12 col-md-12 col-lg-2 col-xl-2 p-0 m-0">
+                                        {% if Fecha2 is none %}
+                                        <input type="date" name="fecha2" class="form-control" style=" border-radius: 0;"
+                                            value="{{FechaDeHoy}}">
+                                        {% else %}
+                                        <input type="date" name="fecha2" class="form-control" style=" border-radius: 0;"
+                                            value="{{Fecha2}}">
+                                        {% endif %}
+
+                                    </div>
+                                    <div class="col-sm-12 col-md-12 col-lg-1 col-xl-1 p-0 m-0">
+                                        <button type="submit" class="btn button-add" name="reportes"
+                                            style="padding: 5px 14px 7px 14px; border-radius: 1px 7px 7px 1px;">Buscar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-2">
+                        <form action="/Descarga_PDF_Reporte_Movimientos_Animales/" method="POST">{% csrf_token %}
+                            <input type="hidden" value="{{ Cliente }}" name="cliente">
+                            <input type="hidden" value="{{ Movimiento_v }}" name="mov">
+                            <input type="hidden" value="{{Fecha}}" name="fechaInicial">
+                            <input type="hidden" value="{{Fecha2}}" name="fechaFinal">
+                            <input type="hidden" value="0" name="reporte-movimiento-animales">
+                            <button class="pdf-red-button" type="submit" style="float: inline-end;" id="pdf"></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive py-1">
+            <table class="tabla_id">
+                <thead>
+                    <tr>
+                        <th>FOLIO SÁLIDA</th>
+                        <th>PROPIETARIO GANADO</th>
+                        <th>CANTIDAD CABEZAS</th>
+                        <th>SEXO</th>
+                        <th>PESO SÁLIDA</th>
+                        <th>CORRAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reporte in reportes %}
+                    <tr>
+                        <td>{{ reporte.0 }}</td>
+                        <!-- <td>{{ reporte.IDCorral__Descripcion }}</td> -->
+                        <td>{{ reporte.1 }}</td>
+                        <td>{{ reporte.2 }}</td>
+                        <td>{{ reporte.3 }}</td>
+                        <td>{{ reporte.4 }}</td>
+                        <td>{{ reporte.5 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    var nombre = "{{Nombre}}";
+
+    if (nombre == "Buscar cliente")
+        window.onload = ocultarPDF();
+
+    function ocultarPDF() {
+        document.getElementById("pdf").style.display = "None"
+    }
+</script>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

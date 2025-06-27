@@ -1,0 +1,99 @@
+{% load static %}
+{% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title>INICIO DE SESIÓN</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link href="{% static 'css/estilos3.css' %}" rel="stylesheet">
+    <style>
+        .password-toggle {
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .password-container {
+            position: relative;
+        }
+    </style>
+</head>
+
+<body class="bg-primary">
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-7">
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header">
+                                    <h3 class="text-center font-weight-light my-4">INICIAR SESIÓN</h3>
+                                </div>
+                                <div class="card-body">
+                                    {% if messages %}
+                                    {% for message in messages %}
+                                    <div
+                                        class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+                                        {{ message }}
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                    <form class="form" method="POST">
+                                        {% csrf_token %}
+                                        <div class="col-sm-12 col-md-12 col-lg col-xl">
+                                            <h5>EMAIL</h5>
+                                            <input type="email" name="username" class="form-control input" value="admin@gmail.com"
+                                                placeholder="Ingrese el usuario de registro" autocomplete="off">
+                                            <br>
+                                        </div>
+                                        <div class="col-sm-12 col-md-12 col-lg col-xl">
+                                            <h5>CONTRASEÑA</h5>
+                                            <div class="password-container">
+                                                <input type="password" name="password" id="password_login" value="geteo393"
+                                                    class="form-control input" placeholder="Ingrese su contraseña"
+                                                    autocomplete="off" required>
+                                                <span class="password-toggle"
+                                                    onclick="togglePassword('password_login')">👁️</span>
+                                            </div>
+                                            <br>
+                                        </div>
+                                        <div class="d-grid">
+                                            <button type="submit" name="submit" class="btn btn-primary">Iniciar
+                                                sesión</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="card-footer text-center py-3">
+                                    <div class="small"><a href="{% url 'Register' %}">¿No tienes cuenta?, Presione para
+                                            registrarse</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+<script>
+    function togglePassword(id) {
+        const input = document.getElementById(id);
+        if (input.type === "password") {
+            input.type = "text";
+        } else {
+            input.type = "password";
+        }
+    }
+</script>
+
+</html>
+{% endblock %}

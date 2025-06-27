@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Servicio Valmo</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="{% static 'images/iconos/favicon.png' %}" rel="icon">
+
+   
+    <!-- vendor-pages CSS Files -->
+    <link href="{% static 'assets/vendor-pages/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor-pages/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+</head>
+
+<body class="index-page" data-bs-spy="scroll" data-bs-target="#navmenu">
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center">
+        <div class="container-fluid d-flex align-items-center justify-content-between">
+            <a href="{% url 'Inicio' %}" class="logo d-flex align-items-center me-auto me-xl-0">
+                <!-- Uncomment the line below if you also wish to use an image logo -->
+                <img src="{% static 'assets/img-pages/valmo.png' %}" width="100px" height="150px" alt="">
+            </a>
+            <!-- Nav Menu -->
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="{% url 'Inicio' %}#inicio" class="active">Inicio</a></li>
+
+                    <li><a href="{% url 'Cliente' %}">Cliente</a></li>
+                    {% if user.is_authenticated %}
+                    {% if perms.Aplicacion.delete_tblserviciosweb %}
+                    <li><a href="{% url 'Sistema' %}">Técnico</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'Logout' %}">Cerrar sesión</a></li>
+                    {% else %}
+                    <li><a href="{% url 'Login' %}">Iniciar sesión</a></li>
+                    <li><a href="{% url 'Register' %}">Registrarse</a></li>
+                    {% endif %}
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav><!-- End Nav Menu -->
+        </div>
+    </header><!-- End Header -->
+
+    <main id="main">
+        <!-- Hero Section - Inicio Page -->
+        <section id="inicio" class="hero">
+            <img src="{% static 'assets/img-pages/fondo.png' %}" alt="" data-aos="fade-in">
+            <div class="container" style="margin-top: 15%;">
+                <div class="row">
+                    <div class="col-lg-10">
+                        {% if user.is_authenticated %}
+                        <h2 data-aos="fade-up" data-aos-delay="100">Bienvenido(a) {{ user.first_name }}
+                            {{ user.last_name }}</h2>
+                        <p data-aos="fade-up" data-aos-delay="200">{{ grupos }}</p>
+                        {% else %}
+                        <h2 data-aos="fade-up" data-aos-delay="100">Bienvenido(a) a nuestro sitio web</h2>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section><!-- End Hero Section -->
+
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- ======= Footer ======= -->
+        <footer id="contact" class="footer">
+            <div class="container footer-top">
+                <div class="row gy-4">
+                    <div class="col-lg-5 col-md-12 footer-about">
+                        <a href="{% url 'Inicio' %}" class="logo d-flex align-items-center">
+                            <span>GANADERA VALMO</span>
+                        </a>
+                        <p> En nuestra ganaderia, ofrecemos una amplia gama de servicios
+                            especializados para satisfacer las necesidades de tu ganado.</p>
+                        <div class="social-links d-flex mt-4">
+                            <a href=""><i class="bi bi-twitter"></i></a>
+                            <a href=""><i class="bi bi-facebook"></i></a>
+                            <a href=""><i class="bi bi-instagram"></i></a>
+                            <a href=""><i class="bi bi-linkedin"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-6 footer-links">
+                        <h4>Navegación</h4>
+                        <ul>
+                            <li><a href="{% url 'Inicio' %}#inicio">Inicio</a></li>
+                            <li><a href="{% url 'Inicio' %}#quienes">Quienes somos</a></li>
+                            <li><a href="{% url 'Inicio' %}#nosotros">Nosotros</a></li>
+                            <li><a href="{% url 'Inicio' %}#servicios">Servicios</a></li>
+                            <li><a href="{% url 'Inicio' %}#contact">Contactenos</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-6 footer-links">
+                        <h4>Horario de apertura</h4>
+                        <label>Lunes a Viernes</label>
+                        <label class="mb-2">9:00 am - 7:30 pm</label>
+                        <label>Sábado</label>
+                        <label class="mb-2">10:00 am - 3:00 pm</label>
+                        <label>Domingo</label>
+                        <br>
+                        <label style="color: red;">Cerrado</label>
+                    </div>
+                    <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+                        <h4>Contactenos</h4>
+                        <p>Everardo Monroy #144,</p>
+                        <p>Col. Centro, CP 83000,esquina Garmendia. </p>
+                        <p>Hermosillo, Sonora, México</p>
+                        <p class="mt-4"><strong>Teléfono:</strong> <span>( 662 ) 212-6400</span></p>
+                    </div>
+                </div>
+            </div>
+            <!-- All the links in the footer should remain intact. -->
+            <!-- You can delete the links only if you've purchased the pro version. -->
+            <!-- Licensing information: https://bootstrapmade.com/license/ -->
+            <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+        </footer><!-- End Footer -->
+        <!-- <a href="https://bootstrapmade.com/" style="bottom: 0; color: antiquewhite;">BootstrapMade</a> -->
+        <!-- Scroll Top Button -->
+        <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+                class="bi bi-arrow-up-short"></i></a>
+        <!-- Preloader -->
+        <div id="preloader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+
+        <!-- Template Main JS File -->
+        <script src="{% static 'assets/js/main-pages.js' %}"></script>
+
+</body>
+
+</html>

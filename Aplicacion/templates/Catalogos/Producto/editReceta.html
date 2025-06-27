@@ -1,0 +1,85 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %}EDITAR CANTIDAD MOVIMIENTOS ANIMALES # {{ TRecetas.Folio }} {% endblock %}
+
+{% block body %}
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.change_tblproductosmateriaprima %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>EDITAR RECETAS# {{ TRecetas.Folio }}</h1>
+        <form action="/actualizarRecetasProductos/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{TRecetas.ID}}">
+                <input type="hidden" name="folio" value="{{TRecetas.Folio}}">
+                <input type="hidden" name="producto" value="{{TRecetas.IDProductos_id}}">
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <div class="row mr-1 ml-1 fila">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">MATERIA PRIMA <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="materia" required>
+                            <option value="{{FiltradoMateriaPrima.ID}}">
+                                --------{{FiltradoMateriaPrima.Descripcion}}--------
+                            </option>
+                            {% for MateriaPrima in FEMateriaPrima %}
+                            <option value="{{ MateriaPrima.ID }}">{{ MateriaPrima.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                        <h6 class="h6-form">PROPORCIÓN <label>*</label></h6>
+                        <input type="tel" name="proporcion" value="{{TRecetas.Porcentaje}}"
+                            class="form-control" placeholder="Ingrese la cantidad" required id="proporcion" data-total="{{ total }}">
+                            <p id="error-message" style="color: red; display: none;">La suma de las proporciones no debe exceder 100.</p> 
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                        <h6 class="h6-form">MERMA <label>*</label></h6>
+                        <input type="tel" name="merma" value="{{TRecetas.Merma}}"
+                            class="form-control" placeholder="Ingrese la cantidad" required>
+                    </div>
+                </div>
+                <div class="form-group ml-1 mr-1">
+                    <button type="submit" class="btn btn-success buttonEnviar celular" id="submit-btn">ACTUALIZAR</button>
+                    <a href="{% url 'D-Producto' ID=TRecetas.IDProductos_id %}" class="btn btn-danger buttonCancelar celular"
+                        role="button">CANCELAR</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const proporcionInput = document.getElementById("proporcion");
+        const submitBtn = document.getElementById("submit-btn");
+        const errorMessage = document.getElementById("error-message");
+        const total = parseFloat(proporcionInput.getAttribute('data-total')) || 0;
+
+        proporcionInput.addEventListener("input", function () {
+            const proporcionValue = parseFloat(proporcionInput.value) || 0;
+            if (total + proporcionValue > 100) {
+                errorMessage.style.display = "block";
+                submitBtn.disabled = true;
+            } else {
+                errorMessage.style.display = "none";
+                submitBtn.disabled = false;
+            }
+        });
+    });
+</script>
+{% else %}
+<script>
+    window.location.href = "{% url 'T-Producto' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

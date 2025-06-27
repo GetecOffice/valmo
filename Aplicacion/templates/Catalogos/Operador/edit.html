@@ -1,0 +1,68 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} EDITAR OPERADOR #{{TEOperador.ID}} {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.change_tbloperadores %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>EDITAR OPERADOR #{{TEOperador.ID}}</h1>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <form action="/ActualizarOperador/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{TEOperador.ID}}">
+                <input type="hidden" name="clave" value="{{TEOperador.Clave}}">
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">OPERADOR <label>*</label></h6>
+                        <input type="text" name="operador" value="{{TEOperador.Descripcion}}" class="form-control input"
+                            placeholder="Ingrese el nombre del operador (obligatorio)" required>
+
+                    </div>
+                    <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">ESTATUS <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="estatus" required>
+                            <option value="{{FiltradoEstatus.ID}}">
+                                --------{{FiltradoEstatus.Descripcion}}--------
+                            </option>
+                            {% for Estatus in FEEstatus %}
+                            <option value="{{ Estatus.ID }}">{{ Estatus.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Actualizar</button>
+                    <a href="{% url 'T-Operador' %}" class="btn btn-danger">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'T-Operador' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

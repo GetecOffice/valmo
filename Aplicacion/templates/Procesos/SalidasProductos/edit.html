@@ -1,0 +1,125 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} EDITAR SALIDA PRODUCTOS # {{ TSalidaProductos.IDFolio }} {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.change_tblsalidaproductos %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>
+            <a href="{% url 'T-Sal-Productos' %}" class="btn h6-form"><i class="fa fa-arrow-left"><</i></a>
+            EDITAR SALIDA PRODUCTOS # {{ TSalidaProductos.IDFolio }}
+        </h1>
+        <form action="/ActualizarSalidaProductos/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{TSalidaProductos.ID}}">
+                <input type="hidden" name="folio" value="{{TSalidaProductos.IDFolio}}">
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <input type="hidden" class="form-control" name="tipoMov" value="2">
+                <div class="row mr-5 ml-5 fila">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">CLIENTE <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="cliente" required>
+                            <option value="{{ FiltradoCliente.ID }}">
+                                --------{{FiltradoCliente.Nombre}}--------
+                            </option>
+                            {% for cliente in FEClientes %}
+                            <option value="{{ cliente.ID }}">{{ cliente.Nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">ALMACEN <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="almacen" required>
+                            <option value="{{FiltradoAlmacen.ID}}">
+                                --------{{FiltradoAlmacen.Proveedor }}--------
+                            </option>
+                            {% for Almacen in FEAlmacen %}
+                            <option value="{{ Almacen.ID }}">{{ Almacen.Proveedor }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mr-5 ml-5 fila">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">PRESENTACIÓN <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="presentacion" required>
+                            <option value="{{FiltradoPresentacion.ID}}">
+                                --------{{FiltradoPresentacion.Descripcion}}--------
+                            </option>
+                            {% for Presentacion in FETipoPresentacion %}
+                            <option value="{{ Presentacion.ID }}">{{ Presentacion.Descripcion }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">PRODUCTO <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="materia" required>
+                            <option value="{{FiltradoProducto.ID}}">
+                                --------{{FiltradoProducto.Descripcion}}--------
+                            </option>
+                            {% for Producto in FEProducto %}
+                            <option value="{{ Producto.ID }}">{{ Producto.Descripcion }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mr-5 ml-5 fila">
+                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                        <h6 class="h6-form">CANTIDAD <label>*</label></h6>
+                        <input type="text" name="cantidad" value="{{ TSalidaProductos.cantidad }}" class="form-control"
+                            placeholder="Ingrese la cantidad (obligatorio)" required>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                        <h6 class="h6-form">REFERENCIA</h6>
+                        <input type="tel" name="referencia" value="{{ TSalidaProductos.referencia}}"
+                            class="form-control" placeholder="Ingrese la referencia">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
+                        <h6 class="h6-form">FECHA <label>*</label></h6>
+                        <input type="datetime-local" name="fecha" value="{{fecha|date:'Y-m-d H:i'}}" class=" form-control" required>
+                    </div>
+                </div>
+
+                <div class="row mr-5 ml-5 fila">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 columna">
+                        <h6 class="h6-form">NOTAS</h6>
+                        <input type="text" name="notas" value="{{ TSalidaProductos.notas }}" class="form-control"
+                            placeholder="Ingrese las notas">
+                    </div>
+                </div>
+
+
+                <div class="form-group ml-5 mr-5">
+                    <button type="submit" class="btn btn-success buttonEnviar celular">ACTUALIZAR</button>
+                    <a href="{% url 'T-Sal-Productos' %}" class="btn btn-danger buttonCancelar celular"
+                        role="button">CANCELAR</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'T-Sal-Productos' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

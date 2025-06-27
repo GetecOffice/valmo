@@ -1,0 +1,169 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} AGREGAR RECETAS {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.add_tblproductosmateriaprima %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>AGREGAR RECETAS</h1>
+        <div class="row fila">
+            <div class="col-sm-12 col-md-6 col-lg-6 pt-3">
+                <form action="/Guardar-Recetas/" method="POST" autocomplete="off">{% csrf_token %}
+                    <input type="hidden" class="form-control" name="clave" value="{{AgRecetas.ID}}">
+                    <input type="hidden" class="form-control" name="tecnico"
+                        value="{{ user.first_name }} {{user.last_name}}">
+                    <div class="row mr-1 ml-1 fila">
+                        <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                            <h6 class="h6-form">PRODUCTO</h6>
+                            <input type="tel" class="form-control" name="descripcion" value="{{AgRecetas.Descripcion}}"
+                                readonly>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                            <h6 class="h6-form">PRECIO UNITARIO</h6>
+                            <input type="text" class="form-control col-12" name="precio"
+                                value="{{AgRecetas.PrecioUnitario}}" readonly>
+                        </div>
+                    </div>
+                    <div class="row mr-1 ml-1 fila">
+                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
+                            <h6 class="h6-form">ESTATUS</h6>
+                            <select class="select2 form-control col-12" name="estatus" required>
+                                <option value="{{ FiltradoEstatus.ID }}">{{ FiltradoEstatus.Descripcion }}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
+                            <h6 class="h6-form">UNIDAD MEDIDA</h6>
+                            <select class="select2 form-control col-12" name="unidad" required>
+                                <option value="{{ FiltradoUnidad.ID }}">{{ FiltradoUnidad.Descripcion }}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
+                            <h6 class="h6-form">SE SIRVE</h6>
+                            <select class="select2 form-control col-12" name="seSirve" required>
+                                <option value="{{ AgRecetas.SeSirve }}">{{ AgRecetas.SeSirve }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+            </div>
+            <div class="col-sm-12 col-md col-sm" style="border: 1px rgb(124, 124, 124) solid;">
+                <div class="row mr-1 ml-1 pt-3 fila">
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">MATERIA PRIMA <label>*</label></h6>
+                        <select class="select2 form-control" name="materia" required>
+                            {% for MateriaPrima in FMateriaPrima %}
+                            <option value="{{ MateriaPrima.ID }}">{{ MateriaPrima.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">PROPORCIÓN <label>*</label></h6>
+                        <input type="text" id="proporcion" name="proporcion" class="form-control"
+                            placeholder="Ingrese la proporción" required data-total="{{ total }}">
+                            <p id="error-message" style="color: red; display: none;">La suma de las proporciones no debe exceder 100.</p>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">MERMA <label>*</label></h6>
+                        <input type="text" name="merma" value="2.0" class="form-control" placeholder="Ingrese la merma"
+                            required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary agregarBoton" name="agregar" id="submit-btn">Guardar y
+                        agregar otro</button>
+                    <button type="submit" class="btn btn-success salirBoton" name="salir" id="submit-btn2">Guardar y
+                        salir</button>
+                    <a href="{% url 'T-Producto'%}">
+                        <button type="button" class="btn btn-danger cancelarBoton">Cancelar</button>
+                    </a>
+
+                </div>
+                </form>
+
+                {% if messages %}
+                {% for message in messages %}
+                <br>
+                <div
+                    class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                <br>
+                <table class="tabla_id">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="th-responsive">ID</th>
+                            <th scope="col" class="th-responsive">MATERIA PRIMA</th>
+                            <th scope="col" class="th-responsive">PROPORCIÓN</th>
+                            <th scope="col" class="th-responsive">MERMA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for recetas in Recetas %}
+                        <tr>
+                            <th scope="row" style="border-bottom: 1px white solid;">
+                                <h6 class="td-responsive">ID:</h6>
+                                {{ recetas.Folio }}
+                            </th>
+                            <td>
+                                <h6 class="td-responsive">MATERIA PRIMA:</h6>
+                                {{ recetas.IDMateriaPrima_id__Descripcion }}
+                            </td>
+                            <td>
+                                <h6 class="td-responsive">PROPORCIÓN:</h6>
+                                {{ recetas.Porcentaje }}
+                            </td>
+                            <td>
+                                <h6 class="td-responsive">MERMA:</h6>
+                                {{ recetas.Merma }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const proporcionInput = document.getElementById("proporcion");
+        const submitBtn = document.getElementById("submit-btn");
+        const submitBtn2 = document.getElementById("submit-btn2");
+        const errorMessage = document.getElementById("error-message");
+        const total = parseFloat(proporcionInput.getAttribute('data-total')) || 0;
+
+        proporcionInput.addEventListener("input", function () {
+            const proporcionValue = parseFloat(proporcionInput.value) || 0;
+            if (total + proporcionValue > 100) {
+                errorMessage.style.display = "block";
+                submitBtn.disabled = true;
+                submitBtn2.disabled = true;
+            } else {
+                errorMessage.style.display = "none";
+                submitBtn.disabled = false;
+                submitBtn2.disabled = false;
+            }
+        });
+    });
+</script>
+{% else %}
+<script>
+    window.location.href = "{% url 'T-Producto' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

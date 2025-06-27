@@ -1,0 +1,86 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %}EDITAR TIPOS DE PRESENTACIÓN #{{TETipoPresentacion.ID}} {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.change_tbltipopresentacion %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>EDITAR TIPOS DE PRESENTACIÓN #{{TETipoPresentacion.ID}}</h1>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <form action="/ActualizarTipoPresentacion/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{TETipoPresentacion.ID}}">
+                <input type="hidden" name="clave" value="{{TETipoPresentacion.Clave}}">
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">TIPO PRESENTACIÓN <label>*</label></h6>
+                        <input type="text" name="descripcion" value="{{TETipoPresentacion.Descripcion}}"
+                            class="form-control input" placeholder="Ingrese el tipo de animal" required>
+
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">CANTIDAD <label>*</label></h6>
+                        <input type="number" step="0.01" name="cantidad" value="{{TETipoPresentacion.Cantidad}}"
+                            class="form-control input" placeholder="Ingrese cantidad (Obligratorio)" required>
+
+                    </div>
+                </div>
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">UNIDAD DE MEDIDA <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="unidad" required>
+                            <option value="{{FiltradoUnidad.ID}}">
+                                --------{{FiltradoUnidad.Descripcion}}--------
+                            </option>
+                            {% for Unidad in FEUnidad %}
+                            <option value="{{ Unidad.ID }}">{{ Unidad.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">VISIBLE <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="visible" required>
+                            <option value="{{TETipoPresentacion.Visible}}">
+                                --------{{TETipoPresentacion.Visible}}--------
+                            </option>
+                            <option value="Si">Si</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Actualizar</button>
+                    <a href="{% url 'T-Tipo-Presentacion' %}" class="btn btn-danger">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'T-Tipo-Presentacion' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

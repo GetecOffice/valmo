@@ -1,0 +1,36 @@
+{% extends "include/header.html" %}
+{% load static %}
+
+{% block title %} SIN SERVICIO {% endblock %}
+
+{% block body %}
+<style>
+    .cancelado {
+        justify-content: center;
+        text-align: center;
+        display: flex;
+        align-items: center;
+    }
+
+    .imagen-cancelada {
+        margin-top: 10%;
+    }
+</style>
+
+{% if ServiciosWeb.Servicio == False %}
+
+<div class="container">
+    <div class="mt-5 cancelado">
+        <img src="{% static 'images/cancelar/bloqueado.png' %}" class="imagen-cancelada">
+    </div>
+    <div class="row centrar">
+        <h6 class="h6-form">
+            <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+            No hay servicio
+            <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+        </h6>
+    </div>
+</div>
+
+{% endif %}
+{% endblock %}

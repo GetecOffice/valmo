@@ -1,0 +1,156 @@
+{% extends "include/header.html" %}
+{% load static %}
+
+{% block title %} REPORTES SERVIDOS {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<!-- ESTILOS DE CARDS EN STYLE.CSS Y DE ANIMACIONES EN BUTTONS.CSS -->
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1 class="mt-2 mb-5">PROCESOS - INVENTARIO</h1>
+        <div class="servidos-card">
+            {% if perms.Aplicacion.add_tblinventarioinicialesmp or perms.Aplicacion.view_tblinventarioinicialesmp %}
+            <div class="card-servidos">
+                <div class="face front" id="card-front">
+                    <div class="card-header titulo-servidos-card">
+                        <div class="row">
+                            <div class="col-3 explicacion comodin">
+                                <h1 class="h6-form" onmouseover="voltearCarta(0)">?</h1>
+                            </div>
+                            <div class="col-6">
+                                <h5 class="h6-form">MAT. PRIMA</h5>
+
+                            </div>
+                            <div class="col-3 comodin">
+                                <h5 class="h6-form"><a href="{% url 'T-InventarioMP' %}">></a></h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="animacion">
+                            <img src="{% static 'assets/img/inicio/valmo.png' %}" alt="" width="250"
+                                style="padding: 28px 0 28px 0;">
+                        </div>
+                    </div>
+                    <div class="card-footer" style="display: flex;">
+                        <div class="animacion">
+                            <img src="{% static 'assets/img/inventario.png' %}" alt="" width="80"
+                            style="padding: 28px 0 28px 0;">
+                        </div>
+                    </div>
+                </div>
+                <div class="face back" id="card-back">
+                    <div class="card-header titulo-servidos-card">
+                        <div class="row">
+                            <div class="col-3"></div>
+                            <div class="col-6">
+                                <h5 class="h6-form">MAT. PRIMA</h5>
+                            </div>
+                            <div class="col-3 explicacion">
+                                <h1 class="h6-form boton-girar-card" onmousedown="voltearCarta(0)">X</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card body p-4" style="height: 218px; justify-content: center; align-items: center;">
+                        <h6 style="font-size: 18px;"><b>Inventario de materias primas:</b>
+                        </h6>
+                    </div>
+                    <div class="card-footer pt-4">
+                        <h5 class="h6-form"><a href="{% url 'T-InventarioMP' %}">Ver detalles</a></h5>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% if perms.Aplicacion.add_tblinventarioinicialesproductos or perms.Aplicacion.view_tblinventarioinicialesproductos %}
+            <div class="card-servidos">
+                <div class="face front">
+                    <div class="card-header titulo-servidos-card">
+                        <div class="row">
+                            <div class="col-3 explicacion comodin">
+                                <h1 class="h6-form" onmouseover="voltearCarta(1)">?</h1>
+                            </div>
+                            <div class="col-6">
+                                <h5 class="h6-form">PRODUCTOS</h5>
+                            </div>
+                            <div class="col-3 comodin">
+                                <h5 class="h6-form"><a href="{% url 'T-InventarioProductos' %}">></a></h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="animacion">
+                            <img src="{% static 'assets/img/inicio/valmo.png' %}" alt="" width="250"
+                                style="padding: 28px 0 28px 0;">
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                            <div class="animacion">
+                                <img src="{% static 'assets/img/inventario.png' %}" alt="" width="80"
+                                style="padding: 28px 0 28px 0;">
+                        </div>
+                    </div>
+                </div>
+                <div class="face back">
+                    <div class="card-header titulo-servidos-card">
+                        <div class="row">
+                            <div class="col-3"></div>
+                            <div class="col-6">
+                                <h5 class="h6-form">PRODUCTOS</h5>
+                            </div>
+                            <div class="col-3 explicacion">
+                                <h1 class="h6-form boton-girar-card" onmousedown="voltearCarta(1)">X</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card body p-4" style="height: 218px; justify-content: center; align-items: center;">
+                        <h6 style="font-size: 18px;"><b>Inventario de productos:</b>
+                        </h6>
+                    </div>
+                    <div class="card-footer pt-4">
+                        <h5 class="h6-form"><a href="{% url 'T-InventarioProductos' %}">Ver detalles</a></h5>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<script>
+    const cartasFront = document.querySelectorAll('.front');
+    const cartasBack = document.querySelectorAll(".back");
+
+    function voltearCarta(numero) {
+        cartasFront[numero].classList.toggle("cardVolteadaFront")
+        cartasBack[numero].classList.toggle("cardVolteadaBack")
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const counters = document.querySelectorAll('span[id]'); // Selecciona todos los spans con un ID
+
+        counters.forEach(counter => {
+            const target = +counter.getAttribute('data-target');
+            let current = 0;
+
+            function updateCounter() {
+                if (current < target) {
+                    current++;
+                    counter.textContent = `${current}/{{registros}}`;
+                    setTimeout(updateCounter, 35); // Ajusta el intervalo para controlar la velocidad
+                } else {
+                    counter.textContent = `${target}/{{registros}}`;
+                }
+            }
+
+            updateCounter();
+        });
+    });
+</script>
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

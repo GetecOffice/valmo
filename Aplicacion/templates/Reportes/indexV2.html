@@ -1,0 +1,244 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} REPORTES SERVIDOS {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<style>
+    .card-reportes {
+        margin-bottom: 5%;
+    }
+
+    h6 strong {
+        text-align: center;
+        justify-content: center;
+    }
+</style>
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>REPORTES</h1>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 card-reportes">
+                <div class="accordion">
+                    <div class="card card-hdr-procesos">
+                        <div class="card-header">
+                            <div class="accordion-item">
+                                <input type="checkbox" id="uno" class="accordion-checkbox">
+                                <label for="uno" class="accordion-title"
+                                    style="justify-content: center; text-align: center; background-color:rgb(0, 38, 255)"><strong>REPORTES
+                                        DE <br> SERVIDOS</strong></label>
+                                <div class="accordion-content   card-hdr">
+                                    <div style="height: auto;" class="card-body form">
+                                        <a href="{% url 'Reportes-Movimientos-Servidos' %}">
+                                            <button type="submit" class="btn button-add mb-3 col-12">
+                                                <strong>Movimientos</strong>
+                                            </button>
+                                        </a>
+                                        <!-- ../reportes/ReporteServidoLiqClientes.php-->
+                                        <a href="{% url 'Reportes-Servidos-Liquidacion' %}">
+                                            <button type="submit" class="btn button-add mb-3 col-12">
+                                                <strong>Liquidación Cliente</strong>
+                                            </button>
+                                        </a>
+                                        <!-- ../reportes/ReportesPromDiario.php -->
+                                        <a href="{% url 'Reportes-Servidos-Promedio' %}">
+                                            <button type="submit" class="btn button-add mb-3 col-12">
+                                                <strong>Promedio Diario</strong>
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 card-reportes">
+                <div class="accordion">
+                    <div class="card card-hdr-procesos">
+                        <div class="card-header">
+                            <div class="accordion-item">
+                                <input type="checkbox" id="dos" class="accordion-checkbox">
+                                <label for="dos" class="accordion-title"
+                                    style="justify-content: center; text-align: center; background-color:rgb(0, 38, 255)"><strong>REPORTES
+                                        DE <br> MATERIA PRIMA</strong></label>
+                                <div class="accordion-content   card-hdr">
+                                    <div style="height: auto;" class="card-body form">
+                                        <a href="{% url 'Reportes-Entrada-Materia-Prima' %}">
+                                            <button type="submit" class="btn button-add mb-3 col-12">
+                                                <strong>Entrada Materia Prima</strong>
+                                            </button>
+                                        </a>
+                                        <br>
+                                        <a href="{% url 'Reportes-Salida-Materia-Prima' %}">
+                                            <button type="submit" class="btn button-add mb-3 col-12">
+                                                <strong>Salida Materia Prima</strong>
+                                            </button>
+                                        </a>
+                                        <!-- ../reportes/ReportesMPyAlmacen.php -->
+                                        <a href="#">
+                                            <button type="submit" class="btn button-add mb-3 col-12">
+                                                <strong>Por Almacen y MP</strong>
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 card-reportes">
+                <div class="accordion">
+                    <div class="card card-hdr-procesos">
+                        <div class="card-header">
+                            <div class="accordion-item">
+                                <input type="checkbox" id="tres" class="accordion-checkbox">
+                                <label for="tres-" class="accordion-title"
+                                    style="justify-content: center; text-align: center; background-color:rgb(0, 38, 255)">
+                                    <strong>REPORTES DE <br> PRODUCTOS</strong></label>
+                                <div class="accordion-content   card-hdr">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 card-reportes">
+                <div class="accordion">
+                    <div class="card card-hdr-procesos">
+                        <div class="card-header">
+                            <div class="accordion-item">
+                                <input type="checkbox" id="cuatro" class="accordion-checkbox">
+                                <label for="cuatro" class="accordion-title"
+                                    style="justify-content: center; text-align: center; background-color:rgb(0, 38, 255)"><strong>REPORTES
+                                        DE <br> ANIMALES</strong></label>
+                                <div class="accordion-content   card-hdr">
+                                    <div style="height: auto;" class="card-body form">
+                                        <a href="{% url 'Reportes-Movimientos-Animales' %}"><button type="submit"
+                                                class="btn button-add mb-3 col-12"><strong>Movimientos</strong></button>
+                                        </a>
+                                        <br> <!-- # ../reportes/ReportesMovPorClientes.php -->
+                                        <a href="{% url 'Reportes-Animales-Clientes' %}">
+                                            <button type="submit" class="btn button-add mb-3 col-12">
+                                                <strong>ResPorClieCorral</strong>
+                                            </button>
+                                        </a>
+                                        <br>
+                                        <!-- ../reportes/ReportesPorClientesCorrales.php -->
+                                        <a href="{% url 'Reportes-Animales-Clientes-Corrales' %}">
+                                            <button type="submit" class="btn button-add mb-3 col-12">
+                                                <strong>Por Corral</strong>
+                                            </button>
+                                        </a>
+                                        <!-- <br> -->
+                                        <!-- ../reportes/ReportesPorClientesCorrales.php -->
+                                        <!-- <a href="#">
+                                            <button type="submit" class="btn btn-danger btn-block">
+                                                <strong>Por Cliente, Corral, Cantidad Actual</strong>
+                                            </button>
+                                        </a> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 card-reportes">
+                <div class="accordion">
+                    <div class="card card-hdr-procesos">
+                        <div class="card-header">
+                            <div class="accordion-item">
+                                <input type="checkbox" id="cinco" class="accordion-checkbox">
+                                <label for="cinco" class="accordion-title"
+                                    style="justify-content: center; text-align: center; background-color:rgb(0, 38, 255)">
+                                    <strong>REPORTES DE SALIDAS <br> (VENTAS)</strong></label>
+                                <div class="accordion-content   card-hdr">
+                                    <div style="height: auto;" class="card-body form">
+                                        <!-- ../reportes/ReporteServidoMovimientos.php  -->
+                                        <a href="#">
+                                            <button type="submit" class="btn button-add mb-3 col-12">
+                                                <strong>Almacen, Producto, Presentación</strong>
+                                            </button>
+                                        </a>
+                                        <br>
+                                        <!-- ../reportes/ReporteServidoLiqClientes.php  -->
+                                        <a href="#">
+                                            <button type="submit" class="btn button-add mb-3 col-12">
+                                                <strong>Cliente, Producto, Presentación</strong>
+                                            </button>
+                                        </a>
+                                        <br>
+                                        <!-- ../reportes/ReportesPromDiario.php  -->
+                                        <a href="#">
+                                            <button type="submit" class="btn button-add mb-3 col-12">
+                                                <strong>Almacen, Cliente, Producto,<br>Presentación.</strong>
+                                            </button>
+                                        </a>
+                                        <br>
+                                        <!-- ../reportes/ReportesVentMovimientos.php  -->
+                                        <a href="#">
+                                            <button type="submit" class="btn button-add mb-3 col-12">
+                                                <strong>Movimientos</strong>
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 card-reportes">
+                <div class="accordion">
+                    <div class="card card-hdr-procesos">
+                        <div class="card-header">
+                            <div class="accordion-item">
+                                <input type="checkbox" id="seis" class="accordion-checkbox">
+                                <label for="seis-" class="accordion-title"
+                                    style="justify-content: center; text-align: center; background-color:rgb(0, 38, 255)"><strong>REP.
+                                        CLIENTE,
+                                        SERVIDO,<br> ANIMALES</strong></label>
+                                <div class="accordion-content   card-hdr">
+                                    <!-- <div style="height: auto;" class="card-body form">
+                                        <a href="{% url 'Reportes-Movimientos-Servidos' %}">
+                                            <button type="submit" class="btn button-add mb-3 col-12">
+                                                <strong>Movimientos</strong>
+                                            </button>
+                                        </a> -->
+                                        <!-- ../reportes/ReporteServidoLiqClientes.php-->
+                                        <!-- <a href="{% url 'Reportes-Servidos-Liquidacion' %}">
+                                            <button type="submit" class="btn button-add mb-3 col-12">
+                                                <strong>Liquidación Cliente</strong>
+                                            </button>
+                                        </a> -->
+                                        <!-- ../reportes/ReportesPromDiario.php -->
+                                        <!-- <a href="{% url 'Reportes-Servidos-Promedio' %}">
+                                            <button type="submit" class="btn button-add mb-3 col-12">
+                                                <strong>Promedio Diario</strong>
+                                            </button>
+                                        </a>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}} -->
+        </div>
+    </div>
+</div>
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "include/header.html" %} 
+{% load static %}
+{% block title %} CORRALES SERVIDOS {% endblock %} 
+{% block body %} 
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<div class="card card-hdr">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-10 col-md-10 col-lg-10">
+        <h1>
+          <a href="{% url 'Servidos_Presentacion' %}" class="btn h6-form"><i class="fa-solid fa-arrow-left"><</i></a>
+          PROCESOS - CORRALES SERVIDOS
+          
+        </h1>
+      </div>
+      <div class="col-sm-2 col-md-2 col-lg-2">
+        <a href="{% url 'ServidosSalidas' %}">Servidos</a>
+      </div>
+    </div>
+
+    {% if perms.Aplicacion.view_tblservido %}
+    <div class="table-responsive py-1">
+      <table class="tabla_id">
+        <thead>
+          <tr>
+            <th class="th-responsive">FOLIO</th>
+            <th class="th-responsive">CLIENTE</th>
+            <th class="th-responsive">CORRAL</th>
+            <th class="th-responsive">PRODUCTO</th>
+            <th class="th-responsive">ESTATUS</th>
+            <th class="th-responsive">CANTIDAD</th>
+            <th class="th-responsive">CANTIDAD SERVIDA</th>
+            <th class="th-responsive">FECHA</th>
+            <th class="th-responsive">FECHA SERVIDA</th>
+            <th class="th-responsive dnone"></th>
+            <th class="th-responsive dnone"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for Servidos in TServidos %}
+          <tr>
+            <td>
+              <h6 class="td-responsive">FOLIO:</h6>
+              {{ Servidos.Folio }}
+            </td>
+            <td>
+              <h6 class="td-responsive">CLIENTE:</h6>
+              {{ Servidos.IDCliente_id__Nombre }}
+            </td>
+            <td>
+              <h6 class="td-responsive">CORRAL:</h6>
+              {{ Servidos.IDCorral_id__Descripcion }}
+            </td>
+            <td>
+              <h6 class="td-responsive">PRODUCTO:</h6>
+              {{ Servidos.IDProducto_id__Descripcion }}
+            </td>
+            <td>
+              <h6 class="td-responsive">ESTATUS:</h6>
+              {{ Servidos.IDEstatus_id__Descripcion }}
+            </td>
+            
+            <td>
+              <h6 class="td-responsive">CANTIDAD:</h6>
+              {{ Servidos.CantidadSolicitada }}
+            </td>
+            <td>
+              <h6 class="td-responsive">CANTIDAD SERVIDA:</h6>
+              {{ Servidos.CantidadServida }}
+            </td>
+            <td>
+              <h6 class="td-responsive">FECHA:</h6>
+              {{ Servidos.Fecha }}
+            </td>
+            <td>
+              <h6 class="td-responsive">FECHA SERVIDA:</h6>
+              {{ Servidos.FechaServida }}
+            </td>
+
+            <td class="td-salto"></td>
+            <td class="td-salto"></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="row centrar">
+      <h6 class="h6-form">
+        <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+        No tienes los permisos necesarios para ver el contenido de la tabla
+        <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+      </h6>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% else %}
+<script>
+  window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %} {% endblock %}

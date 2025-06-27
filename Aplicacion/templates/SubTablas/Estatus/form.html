@@ -1,0 +1,78 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} AGREGAR ESTATUS {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.add_tblestatus %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>AGREGAR ESTATUS</h1>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form action="/Guardar-Estatus/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                {% if clave is not None %}
+                <input type="hidden" class=" form-control mb-3" name="clave" value="{{ clave }}">
+                {% else %}
+                <input type="hidden" class=" form-control mb-3" name="clave" value="{{ ultimo_folio }}">
+                {% endif %}
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 columna">
+                        <h6 class="h6-form">DESCRIPCIÓN <label>*</label></h6>
+                        {% if errorCol is not None %}
+                        <input type="text" autofocus name="descripcion" class=" form-control is-invalid"
+                            placeholder="Ingrese el tipo de animal (obligatorio)" required>
+                        <div class="invalid-feedback  mb-3">
+                            El Estatus ya se registro anteriormente
+                        </div>
+                        {% else %}
+                        <input type="text" autofocus name="descripcion" class="form-control input"
+                            placeholder="Ingrese el tipo de animal (obligatorio)" required>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary agregarBoton" name="agregar">Guardar y
+                        agregar otro</button>
+                    <button type="submit" class="btn btn-success salirBoton" name="salir">Guardar y
+                        salir</button>
+                    <a href="{% url 'T-Estatus'%}">
+                        <button type="button" class="btn btn-danger cancelarBoton">Cancelar</button>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<div class="row centrar">
+    <h6 class="h6-form">
+        <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+        No tienes los permisos necesarios para agregar el contenido de la tabla
+        <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+    </h6>
+</div>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

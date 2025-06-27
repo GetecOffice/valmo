@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>{% block title %} {% endblock %}</title>
+    <!-- Estilos importantes para las tablas de html -->
+    <link rel="stylesheet" href="{% static 'assets/css/jquery.dataTables.min.css' %}" crossorigin="anonymous">
+
+    <!-- Favicons -->
+    <link rel="icon" href="{% static 'images/iconos/favicon.png' %}" sizes="32x32" type="image/x-icon">
+
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'ruta/select2/select2.min.css' %}" rel="stylesheet" />
+    <!-- Template Main CSS File -->
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style_manual.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/buttons.css' %}" rel="stylesheet">
+
+    <!-- scripts para los filtros de las tablas -->
+    <script src="{% static 'jquery/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'jquery/simple-datatables@latest' %}"></script>
+    <script src="{% static 'jquery/jquery.dataTables.min.js' %}"></script>
+
+    <script src="{% static 'assets/js/input-not-real.js' %}"></script>
+    <script src="{% static 'ruta/select2/select2.min.js' %}"></script>
+    <script src="{% static 'assets/js/fontawesome.js' %}" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center">
+        <div class="d-flex align-items-center justify-content-center">
+            <a href="{% url 'Cliente' %}" class="logo d-flex align-items-center">
+                <img src="{% static 'assets/img-pages/valmo.png' %}" alt="">
+            </a>
+            <div style="display: none;">
+                <button id="sidebarButton" class="bi bi-list toggle-sidebar-btn"></button>
+            </div>
+            <div style="padding: 0 5px 0 5px;" class="col-8">
+                <form class="search-form d-flex align-items-center" method="POST" action="/Resultados_Cliente/">
+                    {% csrf_token %}
+                    {% if email %}
+                    <input type="email" name="email" value="{{email}}" placeholder="Ingrese su email">
+                    {% else %}
+                    <input type="email" name="email" placeholder="Ingrese su email">
+                    {% endif %}
+                    <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                </form>
+            </div>
+        </div><!-- End Logo -->
+        <nav class="header-nav ms-auto">
+            <ul class="d-flex">
+                <li class="nav-item dropdown">
+                    <a class="nav-link collapsed" href="{% url 'Inicio' %}" style="margin-left: 10px;">
+                        INICIO
+                    </a>
+                </li>
+
+            </ul>
+        </nav><!-- End Icons Navigation -->
+    </header><!-- End Header -->
+
+    <main id="main" class="main">
+        <div class="pagetitle">
+            <div class="loader" id="loader-container">
+                <div>
+                    <ul>
+                        <li>
+                            <svg fill="currentColor" viewBox="0 0 90 120">
+                                <path
+                                    d="M90,0 L90,120 L11,120 C4.92486775,120 0,115.075132 0,109 L0,11 C0,4.92486775 4.92486775,0 11,0 L90,0 Z M71.5,81 L18.5,81 C17.1192881,81 16,82.1192881 16,83.5 C16,84.8254834 17.0315359,85.9100387 18.3356243,85.9946823 L18.5,86 L71.5,86 C72.8807119,86 74,84.8807119 74,83.5 C74,82.1745166 72.9684641,81.0899613 71.6643757,81.0053177 L71.5,81 Z M71.5,57 L18.5,57 C17.1192881,57 16,58.1192881 16,59.5 C16,60.8254834 17.0315359,61.9100387 18.3356243,61.9946823 L18.5,62 L71.5,62 C72.8807119,62 74,60.8807119 74,59.5 C74,58.1192881 72.8807119,57 71.5,57 Z M71.5,33 L18.5,33 C17.1192881,33 16,34.1192881 16,35.5 C16,36.8254834 17.0315359,37.9100387 18.3356243,37.9946823 L18.5,38 L71.5,38 C72.8807119,38 74,36.8807119 74,35.5 C74,34.1192881 72.8807119,33 71.5,33 Z">
+                                </path>
+                            </svg>
+                        </li>
+                        <li>
+                            <svg fill="currentColor" viewBox="0 0 90 120">
+                                <path
+                                    d="M90,0 L90,120 L11,120 C4.92486775,120 0,115.075132 0,109 L0,11 C0,4.92486775 4.92486775,0 11,0 L90,0 Z M71.5,81 L18.5,81 C17.1192881,81 16,82.1192881 16,83.5 C16,84.8254834 17.0315359,85.9100387 18.3356243,85.9946823 L18.5,86 L71.5,86 C72.8807119,86 74,84.8807119 74,83.5 C74,82.1745166 72.9684641,81.0899613 71.6643757,81.0053177 L71.5,81 Z M71.5,57 L18.5,57 C17.1192881,57 16,58.1192881 16,59.5 C16,60.8254834 17.0315359,61.9100387 18.3356243,61.9946823 L18.5,62 L71.5,62 C72.8807119,62 74,60.8807119 74,59.5 C74,58.1192881 72.8807119,57 71.5,57 Z M71.5,33 L18.5,33 C17.1192881,33 16,34.1192881 16,35.5 C16,36.8254834 17.0315359,37.9100387 18.3356243,37.9946823 L18.5,38 L71.5,38 C72.8807119,38 74,36.8807119 74,35.5 C74,34.1192881 72.8807119,33 71.5,33 Z">
+                                </path>
+                            </svg>
+                        </li>
+                        <li>
+                            <svg fill="currentColor" viewBox="0 0 90 120">
+                                <path
+                                    d="M90,0 L90,120 L11,120 C4.92486775,120 0,115.075132 0,109 L0,11 C0,4.92486775 4.92486775,0 11,0 L90,0 Z M71.5,81 L18.5,81 C17.1192881,81 16,82.1192881 16,83.5 C16,84.8254834 17.0315359,85.9100387 18.3356243,85.9946823 L18.5,86 L71.5,86 C72.8807119,86 74,84.8807119 74,83.5 C74,82.1745166 72.9684641,81.0899613 71.6643757,81.0053177 L71.5,81 Z M71.5,57 L18.5,57 C17.1192881,57 16,58.1192881 16,59.5 C16,60.8254834 17.0315359,61.9100387 18.3356243,61.9946823 L18.5,62 L71.5,62 C72.8807119,62 74,60.8807119 74,59.5 C74,58.1192881 72.8807119,57 71.5,57 Z M71.5,33 L18.5,33 C17.1192881,33 16,34.1192881 16,35.5 C16,36.8254834 17.0315359,37.9100387 18.3356243,37.9946823 L18.5,38 L71.5,38 C72.8807119,38 74,36.8807119 74,35.5 C74,34.1192881 72.8807119,33 71.5,33 Z">
+                                </path>
+                            </svg>
+                        </li>
+                        <li>
+                            <svg fill="currentColor" viewBox="0 0 90 120">
+                                <path
+                                    d="M90,0 L90,120 L11,120 C4.92486775,120 0,115.075132 0,109 L0,11 C0,4.92486775 4.92486775,0 11,0 L90,0 Z M71.5,81 L18.5,81 C17.1192881,81 16,82.1192881 16,83.5 C16,84.8254834 17.0315359,85.9100387 18.3356243,85.9946823 L18.5,86 L71.5,86 C72.8807119,86 74,84.8807119 74,83.5 C74,82.1745166 72.9684641,81.0899613 71.6643757,81.0053177 L71.5,81 Z M71.5,57 L18.5,57 C17.1192881,57 16,58.1192881 16,59.5 C16,60.8254834 17.0315359,61.9100387 18.3356243,61.9946823 L18.5,62 L71.5,62 C72.8807119,62 74,60.8807119 74,59.5 C74,58.1192881 72.8807119,57 71.5,57 Z M71.5,33 L18.5,33 C17.1192881,33 16,34.1192881 16,35.5 C16,36.8254834 17.0315359,37.9100387 18.3356243,37.9946823 L18.5,38 L71.5,38 C72.8807119,38 74,36.8807119 74,35.5 C74,34.1192881 72.8807119,33 71.5,33 Z">
+                                </path>
+                            </svg>
+                        </li>
+                        <li>
+                            <svg fill="currentColor" viewBox="0 0 90 120">
+                                <path
+                                    d="M90,0 L90,120 L11,120 C4.92486775,120 0,115.075132 0,109 L0,11 C0,4.92486775 4.92486775,0 11,0 L90,0 Z M71.5,81 L18.5,81 C17.1192881,81 16,82.1192881 16,83.5 C16,84.8254834 17.0315359,85.9100387 18.3356243,85.9946823 L18.5,86 L71.5,86 C72.8807119,86 74,84.8807119 74,83.5 C74,82.1745166 72.9684641,81.0899613 71.6643757,81.0053177 L71.5,81 Z M71.5,57 L18.5,57 C17.1192881,57 16,58.1192881 16,59.5 C16,60.8254834 17.0315359,61.9100387 18.3356243,61.9946823 L18.5,62 L71.5,62 C72.8807119,62 74,60.8807119 74,59.5 C74,58.1192881 72.8807119,57 71.5,57 Z M71.5,33 L18.5,33 C17.1192881,33 16,34.1192881 16,35.5 C16,36.8254834 17.0315359,37.9100387 18.3356243,37.9946823 L18.5,38 L71.5,38 C72.8807119,38 74,36.8807119 74,35.5 C74,34.1192881 72.8807119,33 71.5,33 Z">
+                                </path>
+                            </svg>
+                        </li>
+                        <li>
+                            <svg fill="currentColor" viewBox="0 0 90 120">
+                                <path
+                                    d="M90,0 L90,120 L11,120 C4.92486775,120 0,115.075132 0,109 L0,11 C0,4.92486775 4.92486775,0 11,0 L90,0 Z M71.5,81 L18.5,81 C17.1192881,81 16,82.1192881 16,83.5 C16,84.8254834 17.0315359,85.9100387 18.3356243,85.9946823 L18.5,86 L71.5,86 C72.8807119,86 74,84.8807119 74,83.5 C74,82.1745166 72.9684641,81.0899613 71.6643757,81.0053177 L71.5,81 Z M71.5,57 L18.5,57 C17.1192881,57 16,58.1192881 16,59.5 C16,60.8254834 17.0315359,61.9100387 18.3356243,61.9946823 L18.5,62 L71.5,62 C72.8807119,62 74,60.8807119 74,59.5 C74,58.1192881 72.8807119,57 71.5,57 Z M71.5,33 L18.5,33 C17.1192881,33 16,34.1192881 16,35.5 C16,36.8254834 17.0315359,37.9100387 18.3356243,37.9946823 L18.5,38 L71.5,38 C72.8807119,38 74,36.8807119 74,35.5 C74,34.1192881 72.8807119,33 71.5,33 Z">
+                                </path>
+                            </svg>
+                        </li>
+                    </ul>
+                </div><span>Cargando, por favor espere un momento...</span>
+            </div>
+            {% block body %}
+
+
+            {% endblock %}
+        </div>
+    </main>
+
+    <script src="{% static 'assets/vendor/apexcharts/apexcharts.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+
+    <!-- --------------------------------------------------------SCRIPT PARA SELECT--------------------------------------------------------  -->
+    <script>
+        $(document).ready(function () {
+            $(".tabla_id").DataTable({
+                "pageLength": 100,
+                "lengthMenu": [[50, 100, 150, 200], [50, 100, 150, 200]],
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.13.1/i18n/Spanish.json"
+                }
+            });
+        });
+    </script>
+    <script>
+        const htmlElement = document.documentElement;
+        const themePreference = localStorage.getItem('theme');
+        if (themePreference) {
+            htmlElement.classList.add(themePreference);
+        }
+        function toggleTheme() {
+            if (htmlElement.classList.contains('dark-theme')) {
+                htmlElement.classList.remove('dark-theme');
+                localStorage.setItem('theme', 'light-theme');
+            } else {
+                htmlElement.classList.add('dark-theme');
+                localStorage.setItem('theme', 'dark-theme');
+            }
+        }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Selecciona el botón por su ID
+            var sidebarButton = document.getElementById("sidebarButton");
+
+            // Verifica el ancho de la ventana
+            if (window.innerWidth >= 768) {
+                // Si el ancho de la ventana es mayor o igual a 768px, simula un clic en el botón
+                sidebarButton.click();
+            }
+        });
+    </script>
+    <script>
+        // Muestra el loader cuando la página está cargando
+        window.addEventListener('beforeunload', function () {
+            document.getElementById('loader-container').style.display = 'block';
+            // Oculta el loader después de 5 segundos
+            setTimeout(function () {
+                document.getElementById('loader-container').style.display = 'none';
+            }, 5000); // 5000 milisegundos = 5 segundos
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2();
+        });
+    </script>
+</body>
+
+</html>

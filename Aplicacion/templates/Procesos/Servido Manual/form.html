@@ -1,0 +1,121 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} AGREGAR SERVIDOS MANUALES {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.add_tblservido %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>AGREGAR SERVIDOS MANUALES </h1>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form action="/Guardar-Servidos-Manual/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <div class="row fila">
+                    <input type="hidden" class="form-control" name="folio" value="{{ ultimo_folio }}">
+                    <input type="hidden" class="form-control" name="tecnico"
+                        value="{{ user.first_name }} {{user.last_name}}">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">CLIENTE <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="cliente" required>
+                            {% for Clientes in FClientes %}
+                            <option value="{{ Clientes.ID }}">{{ Clientes.Nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">CORRAL <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="corral" required>
+                            {% for Corrales in FECorrales %}
+                            <option value="{{ Corrales.ID }}">{{ Corrales.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">PRODUCTO <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="producto" required>
+                            {% for Producto in FEProductos %}
+                            <option value="{{ Producto.ID }}">{{ Producto.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="hidden" name="estatus" value="3">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">PRIORIDAD <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="prioridad" required>
+                            <option value="Alta">Alta</option>
+                            <option value="Media">Media</option>
+                            <option value="Baja">Baja</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                        <h6 class="h6-form">CANTIDAD SOLICITADA <label>*</label></h6>
+                        <input type="number" name="cantidadSol" class="form-control input"
+                            placeholder="Ingrese la cantidad solicitada (obligatorio)" required step="0.01">
+
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                        <h6 class="h6-form">CANTIDAD SERVIDA <label>*</label></h6>
+                        <input type="number" name="cantidadSer" class="form-control input"
+                            placeholder="Ingrese la cantidad servida (obligatorio)" required step="0.01">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                        <h6 class="h6-form">FECHA SOLICITADA <label>*</label></h6>
+                        <input type="datetime-local" name="fechaSol" value="{{FechaDeHoy}}" class="form-control input"
+                            required>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                        <h6 class="h6-form">FECHA SERVIDA <label>*</label></h6>
+                        <input type="datetime-local" name="fechaSer" value="{{FechaDeHoy}}" class="form-control input"
+                            required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary agregarBoton" name="agregar" id="agregarBoton">Guardar
+                        y agregar otro</button>
+                    <button type="submit" class="btn btn-success salirBoton" name="salir" id="salirBoton">Guardar y
+                        salir</button>
+                    <a href="{% url 'T-Servidos'%}">
+                        <button type="button" class="btn btn-danger cancelarBoton">Cancelar</button>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<div class="row centrar">
+    <h6 class="h6-form">
+        <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+        No tienes los permisos necesarios para agregar el contenido de la tabla
+        <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+    </h6>
+</div>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

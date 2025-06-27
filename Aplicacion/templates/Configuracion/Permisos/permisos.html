@@ -1,0 +1,85 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} PERMISOS {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>CONFIGURACIÓN - PERMISOS</h1>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if perms.auth.view_permission %}
+        <div class="table-responsive py-1">
+            <table class="tabla_id">
+                <thead>
+                    <tr>
+                        <!-- <th class="th-responsive">ID</th> -->
+                        <!-- <th class="th-responsive">CODIGO DE PERMISO</th> -->
+                        <th class="th-responsive">NOMBRE DEL PERMISO</th>
+                        {% if perms.auth.change_permission %}
+                        <th scope="col" style="width: 10%;">EDITAR</th>
+                        {% endif %}
+                        <th class="th-responsive dnone"></th>
+                        <th class="th-responsive dnone"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Permisos in TPermisos %}
+                    <tr>
+                        <!-- <td>
+                            <h6 class="td-responsive">ID:</h6>
+                            {{Permisos.id}}
+                        </td> -->
+                        <!-- <td>
+                            <h6 class="td-responsive">CODIGO DEL PERMISO:</h6>
+                            {{Permisos.codename}}
+                        </td> -->
+                        <td>
+                            <h6 class="td-responsive">NOMBRE DEL PERMISO:</h6>
+                            {{Permisos.name }}
+                        </td>
+                        {% if perms.auth.change_permission %}
+                        <td>
+                            {% if perms.auth.change_permission %}
+                            <a class="btn btn-success btn-sm" href="Editar/{{ Permisos.id }}"><i
+                                    class="fas fa-pen"></i> Editar</a>
+                            {% endif %}
+                        </td>
+                        {% endif %}
+                        <td class="td-salto"></td>
+                        <td class="td-salto"></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="row centrar">
+            <h6 class="h6-form">
+                <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+                No tienes los permisos necesarios para ver el contenido de la tabla
+                <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+            </h6>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,323 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} SERVIDO DE PRODUCTO {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<style>
+    #boton-recargar {
+        display: none;
+    }
+
+    .overlay-container {
+        position: fixed;
+        top: 0;
+        right: 0;
+
+        /* Fondo semi-transparente */
+        z-index: 999;
+        /* Asegura que esté en la parte superior */
+        margin-top: 62px;
+        margin-right: 12px;
+        padding: 20px;
+        /* Espaciado interior */
+        text-align: right;
+        /* Alinea el contenido a la derecha */
+    }
+
+    .overlay-container .col {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .overlay-container .btn {
+        margin-bottom: 10px;
+        /* Espaciado entre los botones */
+    }
+</style>
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>
+            <a href="{% url 'Servidos_Presentacion' %}" class="btn h6-form"><i class="fa-solid fa-arrow-left"><</i></a>
+            PROCESOS - ASIGNE UNA TOLVA PARA EL PRODUCTO (- {{FiltradoProducto.Descripcion}} -)
+        </h1>
+        {% if perms.Aplicacion.view_tblservido %}
+        
+        <div class="card card-hdr-procesos mt-3 mb-3 p-4">
+            <div class="card card-hdr-procesos mt-3 mb-3 p-4">
+                <form action="/Dato-Consolidacion-Servido-Filtro/" method="POST">{% csrf_token %}
+                    <div class="row">
+                        <div style="width: 50%; padding: 0 5px 0 5px;">
+                            <h6 class="h6-form">Seleccione el producto</h6>
+                            <select name="producto" class="select2 form-control" required>
+                                <option value="{{FiltradoProducto.ID}}">
+                                    -------------{{FiltradoProducto.Descripcion}}-------------
+                                </option>
+                                {% for consolidacion in TConsolidacion %}
+                                <option value="{{ consolidacion.IDProducto }}">
+                                    {{ consolidacion.Producto }} - - - Cantidad pendiente:
+                                    {{ consolidacion.cantidad }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div style="width: 40%; padding: 0 5px 0 5px;">
+                            <h6 class="h6-form">Seleccione tolva disponible</h6>
+                            <select name="tolva" class="select2 form-control" required>
+                                {% if FiltradoTolva.IDProducto_id == FiltradoProducto.ID or FiltradoTolva.IDProducto_id == 1%}
+                                <option value="{{FiltradoTolva.ID}}">
+                                    -------{{FiltradoTolva.Alias}}-------
+                                </option>
+                                {% else %}
+                                <option value="1">La Tolva no se encuentra disponible</option>
+                                {% endif %}
+                                {% for tolva in STolva %}
+                                {% if tolva.IDProducto_id == FiltradoProducto.ID or tolva.IDProducto_id == 1 %}
+                                <option value="{{ tolva.ID }}">
+                                    {{ tolva.Alias }}
+                                </option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div style="width: 8%; padding: 0 5px 0 5px;">
+                            <h6 class="h6-form">Buscar</h6>
+                            <button type="submit" class="btn sub-button-add"><i class="bi bi-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            {% if FiltradoTolva.ID != 1 %}
+            <div class="row centrar">
+                <div style="width: 20%;">
+                    <h6 class="h6-form">Cantidad en <br> {{FiltradoTolva.Alias}}</h6>
+                    <label>{{ TTolva1.0.cantidad }} {{Filtradounidad.Abreviacion}}</label>
+                </div>
+                <div style="width: 20%;">
+                    <h6 class="h6-form">Cantidad <br> seleccionada</h6>
+                    <label><span id="suma">0</span> {{Filtradounidad.Abreviacion}} </label>
+                </div>
+                <div style="width: 20%;">
+                    <h6 class="h6-form">Cantidad<br> total</h6>
+                    <label><span id="sumaSelect">0</span> {{Filtradounidad.Abreviacion}} de {{FiltradoTolva.Capacidad}} {{Filtradounidad.Abreviacion}}</label>
+                </div>
+                <div style="width: 20%;">
+                    <h6 class="h6-form">Sugerencia <br> corral</h6>
+                    <button id="boton-deshabilitar" class="btn btn-dark col-8">Desactivar</button>
+                    <button id="boton-recargar" class="btn btn-light col-8">Activar</button>
+                </div>
+                <div style="width: 20%;">
+                    <h6 class="h6-form">Enviar a <br> {{FiltradoTolva.Alias}}</h6>
+                    <button id="boton-guardar" class="btn btn-success" style="width: 100%;">
+                        <i class="fas fa-arrow-alt-circle-right"></i>
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form id="miFormulario" action="/ActualizarServidosATolva/" method="POST" autocomplete="off">
+            {% csrf_token %}
+            <div class=" table-responsive py-1">
+                <table class="tabla_id">
+                    <thead>
+                        <tr>
+                            <th class="th-responsive">FOLIO</th>
+                            <th class="th-responsive">CLIENTE</th>
+                            <th class="th-responsive"></th>
+                            <th class="th-responsive">CORRAL</th>
+                            <th class="th-responsive">CANT. SOL.</th>
+                            <th class="th-responsive">CANT. SER.</th>
+                            <th class="th-responsive">FECHA PETICION</th>
+                            <th class="th-responsive">FECHA A SERVIR</th>
+                            <th class="th-responsive dnone"></th>
+                            <th class="th-responsive dnone"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for Servidos in FiltroServidos %}
+                        <tr>
+                            <td>
+                                <h6 class="td-responsive">FOLIO:</h6>
+                                {{ Servidos.Folio }}
+                            </td>
+                            <td>
+                                <h6 class="td-responsive">CLIENTE:</h6>
+                                {{ Servidos.IDCliente_id__Nombre }}
+                            </td>
+                            <td>
+                                <input type="checkbox" class="checkbox" value="{{ Servidos.CantidadSolicitada }}"
+                                    name="seleccionado_{{ Servidos.ID }}"  style="border: 1px black solid; font-size: 20px;">
+                            </td>
+                            <td>
+                                <h6 class="td-responsive">CORRAL:</h6>
+                                {{ Servidos.IDCorral_id__Descripcion }}
+                            </td>
+   
+                            <td>
+                                <h6 class="td-responsive">CANTIDAD:</h6>
+                                {{ Servidos.CantidadSolicitada }} {{Filtradounidad.Abreviacion}}
+                            </td>
+                            <td>
+                                <h6 class="td-responsive">CANTIDAD:</h6>
+                                {{ Servidos.CantidadServida }} {{Filtradounidad.Abreviacion}}
+                            </td>
+                            <td>
+                                <h6 class="td-responsive">FECHA:</h6>
+                                {{ Servidos.Fecha }}
+                                <input type="hidden" value="{{FiltradoTolva.ID }}" name="tolva">
+                                <input type="hidden" value="{{FiltradoTolva.Alias }}" name="NombreTolva">
+                                <input type="hidden" value="{{Servidos.ID}}" name="id">
+                                <input type="hidden" value="{{Servidos.IDProducto_id}}" name="idproducto">
+                            </td>
+                            <td>
+                                <h6 class="td-responsive">FECHA:</h6>
+                                {{ Servidos.FechaAServir }}
+                            </td>
+                            <td class="td-salto"></td>
+                            <td class="td-salto"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+
+        {% else %}
+        <div class="row centrar">
+            <h6 class="h6-form">
+                <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+                No has seleccionado una tolva para cargar el producto
+                <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+            </h6>
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="row centrar">
+            <h6 class="h6-form">
+                <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+                No tienes los permisos necesarios para ver el contenido de la tabla
+                <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+            </h6>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Obtén todos los checkboxes con la clase "checkbox"
+        var checkboxes = document.querySelectorAll(".checkbox");
+        var suma = 0;
+        var capacidad = parseFloat("{{ FiltradoTolva.Capacidad }}");
+        // var capacidad = parseFloat(15000);
+        var sumaTotal = parseFloat("{{ TTolva1.0.cantidad }}"); // Inicializa la suma con TTolva1.0.cantidad
+        var sumaSelect = document.getElementById("sumaSelect"); // Obtén el elemento donde mostrarás la suma seleccionada
+        var sumaElement = document.getElementById("suma"); // Obtén el elemento donde mostrarás la suma total
+        var autocompletar = true; // Variable para habilitar o deshabilitar la función de autocompletar
+
+        // Función para validar y seleccionar checkboxes
+        function validarYSeleccionar() {
+            suma = parseFloat("{{ TTolva1.0.cantidad }}"); // Reinicializa la suma
+            checkboxes.forEach(function (cb) {
+                var valor = parseFloat(cb.value);
+
+                // Verifica si el checkbox está dentro del rango
+                if ((autocompletar || cb.checked) && valor + suma <= capacidad) {
+                    cb.checked = true; // Marca el checkbox automáticamente si corresponde
+                    suma += valor; // Actualiza la suma
+                } else {
+                    cb.checked = false; // Desmarca el checkbox si no corresponde
+                }
+            });
+
+            // Actualiza el contenido del elemento "suma"
+            sumaSelect.textContent = suma; // Muestra la suma seleccionada
+            sumaElement.textContent = suma - sumaTotal; // Muestra la suma total
+        }
+
+        // Llama a la función para validar y seleccionar al cargar la página
+        validarYSeleccionar();
+
+
+        // Agrega un evento "change" a cada checkbox para volver a validar al cambiar
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", function () {
+                var valor = parseFloat(checkbox.value);
+
+                // Si se desmarca un checkbox, resta su valor de la suma
+                if (!checkbox.checked) {
+                    suma -= valor;
+                }
+
+                // Vuelve a validar y seleccionar
+                validarYSeleccionar();
+            });
+        });
+
+        // Agrega un botón para deshabilitar la función de autocompletar
+
+        var botonDeshabilitar = document.getElementById("boton-deshabilitar");
+        var botonRecargar = document.getElementById("boton-recargar");
+
+        botonDeshabilitar.addEventListener("click", function () {
+            botonDeshabilitar.style.display = "none"; // Oculta el botón "Deshabilitar"
+            botonRecargar.style.display = "block"; // Muestra el botón "Habilitar sugerencia"
+            autocompletar = false; // Deshabilita la función de autocompletar
+            // Deshabilita los checkboxes que superan el límite
+            checkboxes.forEach(function (cb) {
+                var valor = parseFloat(cb.value);
+                if (checkbox.checked) {
+                    if (valor + suma > capacidad) {
+                        cb.disabled = false;
+                    } else {
+                        cb.disabled = true;
+                    }
+                }
+            });
+        });
+        botonRecargar.addEventListener("click", function () {
+            botonRecargar.style.display = "none"; // Oculta el botón "Habilitar sugerencia"
+            botonDeshabilitar.style.display = "block"; //
+            location.reload(); // Recarga la página al hacer clic en el botón "Recargar"
+        });
+    });
+    $(document).ready(function () {
+        $("#producto").change(function () {
+            var selectedOption = $(this).val();
+            if (selectedOption) {
+                // Obtiene la URL actual
+                var currentUrl = window.location.pathname;
+
+                // Reemplaza el último segmento (ID) con el nuevo valor
+                var newUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1) + selectedOption;
+
+                // Redirige a la nueva URL
+                window.location.href = newUrl;
+            }
+        });
+    });
+    document.getElementById("boton-guardar").addEventListener("click", function () {
+        // Captura el clic en el botón fuera del formulario
+        document.getElementById("miFormulario").submit(); // Envía el formulario manualmente
+    });
+</script>
+
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

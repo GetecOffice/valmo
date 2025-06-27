@@ -1,0 +1,804 @@
+      /* NAVBAR */
+      .navbar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          background-color: #f2f2f2;
+      }
+
+      .navbar-nav {
+          display: flex;
+          justify-content: flex-start;
+          list-style-type: none;
+          padding: 0;
+      }
+
+      .nav-item {
+          margin-right: 20px;
+      }
+
+
+      .nav-link {
+          text-decoration: none;
+          color: #1f1f1f;
+          transition: color 0.3s;
+      }
+
+      /* CONTENEDOR GENERAL DEL BODY DE LA PAGINA */
+      .container {
+          margin-top: 3%;
+      }
+
+      /* CARD DE FORMULARIO ORDEN DE TRABAJO */
+      .card-select {
+          background-color: rgb(243, 243, 243);
+          width: 50%;
+          justify-content: center;
+          display: flex;
+          border-radius: 10%;
+      }
+
+      .table {
+          text-align: center;
+      }
+
+      /* FORMULARIO ORDEN DE TRABAJO */
+      .select-cliente {
+          width: 80%;
+      }
+
+      .aceptar-cliente {
+          width: 20%;
+      }
+
+      /* CARRUSEL */
+      .carousel-control-next {
+          background-color: transparent;
+          border: 0 transparent;
+      }
+
+      .carousel-control-prev {
+          background-color: transparent;
+          border: 0 transparent;
+      }
+
+      .ContenerCarrusel {
+          margin-top: 3%;
+          width: 100%;
+          max-height: 600px;
+          overflow: hidden;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+      }
+
+      .contenedor-info {
+          width: 100%;
+          padding: 2%;
+          margin-top: 3%;
+          background-color: white;
+          color: black;
+          display: flex;
+          align-items: center;
+      }
+
+      .body-home {
+          background-color: rgb(255, 255, 255);
+      }
+
+      .informacion {
+          flex: 1;
+          max-width: 80%;
+          margin-right: 5%;
+          padding: 2% 0;
+          margin-left: 5%;
+      }
+
+      .imagen-info img {
+          border-radius: 50%;
+          width: 250px;
+          /* Ajusta el tamaño según tus necesidades */
+          height: 250px;
+          /* Ajusta el tamaño según tus necesidades */
+      }
+
+      .section {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.5s;
+          margin-top: 5%;
+      }
+
+      .section.active {
+          transform: translateY(0);
+      }
+
+      .contenedor-responsive {
+          display: none;
+      }
+
+      .imagen-responsive {
+          display: none;
+      }
+
+      .h5-informacion {
+          justify-content: center;
+      }
+
+      .h4-informacion {
+          font-weight: bold;
+      }
+
+      #textoH6 {
+          color: black;
+          font-size: 15px;
+          margin-top: 10%;
+          text-align: center;
+          font-weight: bold;
+          justify-content: center;
+      }
+
+      #textoLabel {
+          color: black;
+          font-weight: normal;
+          font-size: 14px;
+          text-align: center;
+          justify-content: center;
+
+      }
+
+
+      .search-container {
+          justify-content: center;
+          text-align: center;
+          padding: 1% 0 2% 0;
+      }
+
+      /* ------------------------------------------------------------------------------------- */
+      .servicios {
+          padding: 2% 0 0 0%;
+          color: white;
+          text-align: center;
+          font-weight: normal;
+      }
+
+      .imagen-pie {
+          border-radius: 4%;
+          max-width: 180px;
+      }
+
+      .fila-pie {
+          padding-top: 2%;
+          margin: auto;
+          justify-content: center;
+      }
+
+      .columna-pie-3 {
+          text-align: justify;
+          padding: 0 3%;
+      }
+
+      .columna-pie-2 {
+          text-align: left;
+          padding: 0% 3% 0 3%;
+      }
+
+      .nav-pie-title {
+          color: aqua;
+      }
+
+      .nav-pie {
+          color: rgb(0, 204, 255);
+          font-weight: normal;
+          font-size: 16px;
+      }
+
+      .contenedor {
+          background-color: rgb(255, 255, 255);
+          color: black;
+          justify-content: center;
+          display: flex;
+          text-align: justify;
+          margin: auto;
+
+      }
+
+      .contenedor-quienes {
+          background-color: rgb(255, 255, 255);
+          color: black;
+          justify-content: center;
+          display: flex;
+          text-align: justify;
+          margin: 3% 0 0 0;
+
+      }
+
+      .card-segmentos {
+          transition: transform 0.3s;
+      }
+
+      .card-segmentos:hover {
+          transform: scale(1.1);
+      }
+
+      .card-img-top {
+          padding-top: 5%;
+          height: 130px;
+          max-height: 130px;
+          max-width: 240px;
+          justify-content: center;
+          text-align: center;
+          margin: auto;
+          align-items: center;
+          box-shadow: 9px 9px 10px 1px rgba(0, 0, 0, 0.2);
+
+      }
+
+      .card-img-top {
+          cursor: pointer;
+      }
+
+      .h3-informacion {
+          margin-top: 3%;
+          text-align: center;
+          font-weight: bold;
+
+      }
+
+      /* ---------------------------------------------------- */
+      p {
+          color: black;
+          display: inline-block;
+      }
+
+      #textoH6 {
+          color: black;
+          font-size: 16px;
+          margin-top: 10%;
+          text-align: center;
+          font-weight: bold;
+          justify-content: center;
+      }
+
+      #textoLabel {
+          color: black;
+          font-weight: normal;
+          font-size: 16px;
+          text-align: center;
+          justify-content: center;
+
+      }
+
+      #fecha {
+          width: 50%;
+          padding-right: 5%;
+          display: inline;
+          float: right;
+          justify-content: center;
+          text-align: right;
+      }
+
+      #folio {
+          justify-content: center;
+          text-align: center;
+      }
+
+      .div-1,
+      .div-3,
+      .div-6,
+      .div-8 {
+          background-color: rgb(255, 255, 255);
+      }
+
+      .div-2,
+      .div-4,
+      .div-5,
+      .div-7 {
+          background-color: rgb(247, 247, 247);
+      }
+
+      .search-container {
+          justify-content: center;
+          text-align: center;
+          padding: 1% 0 2% 0;
+      }
+
+      .h1-text {
+          padding-top: 3%;
+          justify-content: center;
+          text-align: center;
+      }
+
+      #card {
+          background-color: rgb(247, 247, 247);
+          margin-bottom: 5%;
+      }
+
+
+      .card .card-body {
+          padding: 2rem 0;
+      }
+
+      #card-header {
+          width: 100%;
+          justify-content: center;
+          text-align: center;
+          margin: 60% 0 0 0;
+      }
+
+      #card-header-orden {
+          padding: 5%;
+          background-color: #e0e0e0;
+      }
+
+      .card-imagen {
+          background-color: #c9c9c9;
+      }
+
+      #card-body-orden {
+          padding: 3% 3%;
+      }
+
+      #imagen-fullscreen {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.8);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999;
+          cursor: pointer;
+      }
+
+      #imagen-fullscreen img {
+          max-width: 90%;
+          max-height: 90%;
+      }
+
+
+      .h1-Clientes {
+          color: black;
+      }
+
+      /* Estilos para el botón */
+      .button {
+          background-color: blue;
+          color: white;
+          padding: 10px 20px;
+          border: none;
+          transition: all 0.3s ease;
+          width: 100%;
+          font-family: 'Arial';
+          font-size: 14px;
+          margin: 1%;
+      }
+
+      .button:hover {
+          background-color: #2f04eb;
+      }
+
+      .buttonEnviar {
+          background-color: rgb(0, 47, 255);
+          color: rgb(255, 255, 255);
+
+          padding: 10px 20px;
+          border: none;
+          transition: all 0.3s ease;
+          width: 30%;
+          font-family: 'Arial';
+          font-size: 14px;
+          margin: 1%;
+      }
+
+      .buttonEnviar:hover {
+          background-color: #001e70;
+          color: rgb(160, 160, 160);
+
+      }
+
+      .buttonActualizar {
+          background-color: rgb(16, 194, 0);
+          color: rgb(255, 255, 255);
+          padding: 10px 20px;
+          border: none;
+          transition: all 0.3s ease;
+          width: 30%;
+          font-family: 'Arial';
+          font-size: 14px;
+          margin: 1%;
+      }
+
+      .buttonActualizar:hover {
+          background-color: #048100;
+          color: rgb(202, 202, 202);
+      }
+
+      .buttonEditar {
+          background-color: rgba(6, 194, 0, 0.822);
+          color: rgb(255, 255, 255);
+          border: none;
+          transition: all 0.3s ease;
+
+      }
+
+      .buttonEditar:hover {
+          background-color: #035200;
+          color: rgb(202, 202, 202);
+      }
+
+      .buttonEliminar {
+          background-color: rgba(255, 0, 0, 0.822);
+          color: rgb(255, 255, 255);
+          border: none;
+          transition: all 0.3s ease;
+      }
+
+      .buttonEliminar:hover {
+          background-color: #520000;
+          color: rgb(202, 202, 202);
+      }
+
+      .buttonCancelar {
+          background-color: rgb(255, 0, 0);
+          color: rgb(0, 0, 0);
+          padding: 10px 20px;
+          border: none;
+          transition: all 0.3s ease;
+          width: 30%;
+          font-family: 'Arial';
+          font-size: 14px;
+          margin: 1%;
+      }
+
+      .buttonCancelar:hover {
+          background-color: #a70000;
+          color: rgb(172, 172, 172);
+          /* Color de fondo del botón al pasar por encima */
+      }
+
+      .centrar {
+          justify-content: center;
+      }
+
+      .contenido {
+          justify-content: center;
+          margin: 0% 0% 20% 0%;
+
+      }
+
+      /* formulario orden de trabajo */
+      .file-select {
+          position: relative;
+          display: inline-block;
+          width: 90%;
+      }
+
+      .file-select::before {
+          background-color: #2e2e2e;
+          color: white;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 3px;
+          content: 'SELECCIONE IMAGEN';
+          /* testo por defecto */
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+      }
+
+      .file-select input[type="file"] {
+          opacity: 0;
+          width: 200px;
+          height: 15px;
+          display: inline-block;
+      }
+
+      .src-file1::before {
+          content: 'Seleccionar Archivo 1';
+      }
+
+      .text-imagen {
+          color: black;
+      }
+
+      .imagen-footer-orden {
+          display: none;
+          max-width: 100%;
+          max-height: 100px;
+          margin: auto;
+      }
+
+      .imagen-header-orden {
+          display: none;
+          max-width: 150%;
+          max-height: 150px;
+          margin: auto;
+      }
+
+      .card-formulario-orden {
+          width: 50%;
+      }
+
+      /* animacion cancelar edicion */
+      @keyframes fadeOut {
+          0% {
+              opacity: 1;
+          }
+
+          100% {
+              opacity: 0;
+          }
+      }
+
+      .fade-out {
+          animation: fadeOut .5s ease-in-out forwards;
+          opacity: 1;
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 600px) {
+
+          /* Agrega aquí tus estilos para pantallas pequeñas */
+          .resp-izquierda {
+              display: block;
+          }
+
+          .dropdown-item {
+              display: block;
+          }
+
+          .resp-derecha {
+              display: block;
+          }
+
+          /* CONTENEDOR GENERAL */
+          .container {
+              margin-top: 25%;
+          }
+
+          /* CARD DE FORMULARIO DE ORDEN DE TRABAJO */
+          .card-select {
+              background-color: rgb(243, 243, 243);
+              width: 100%;
+              justify-content: center;
+              display: flex;
+              border-radius: 10%;
+          }
+
+          /* FORMULARIO ORDEN DE TRABAJO */
+          .select-cliente {
+              width: 70%;
+          }
+
+          .aceptar-cliente {
+              width: 25%;
+          }
+
+          /* NAVBAR */
+          .navbar {
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              background-color: #f0efef;
+          }
+
+          .informacion {
+              width: 100%;
+              padding: 0;
+              text-align: justify;
+          }
+
+          .imagen-info img {
+              display: none;
+          }
+
+          .imagen-responsive img {
+              border-radius: 50%;
+              width: 150px;
+              /* Ajusta el tamaño según tus necesidades */
+              height: 150px;
+              /* Ajusta el tamaño según tus necesidades */
+          }
+
+          .contenedor-responsive {
+              display: flex;
+              width: 100%;
+              padding: 5%;
+              margin: 10% 0 0 0;
+              background-color: #fafffe;
+              justify-content: center;
+          }
+
+          .imagen-responsive {
+              display: flex;
+              width: 50%;
+              margin: auto;
+          }
+
+          .contenedor-info {
+              margin: 0 0 10% 0;
+
+          }
+
+          .h3-informacion {
+              font-size: 24px;
+              font-weight: bold;
+          }
+
+          .h5-informacion {
+              font-size: 16px;
+          }
+
+          .select-orden-trabajo {
+              width: 100%;
+              margin-bottom: 5%;
+          }
+
+          #textoH6 {
+              color: black;
+              font-size: 15px;
+              margin-top: 10%;
+              text-align: center;
+              font-weight: bold;
+              justify-content: center;
+          }
+
+
+          #textoLabel {
+              color: black;
+              font-size: 14px;
+              font-weight: normal;
+              text-align: center;
+              justify-content: center;
+          }
+
+          .search-container {
+              text-align: center;
+              justify-content: center;
+              float: center;
+              padding: 3% 0;
+          }
+
+          #textoH6 {
+              color: black;
+              font-size: 15px;
+              margin-top: 10%;
+              text-align: center;
+              justify-content: center;
+              font-weight: bold;
+          }
+
+          .fila {
+              padding: 16% 0;
+          }
+
+
+
+          #textoLabel {
+              color: black;
+              font-size: 14px;
+              font-weight: normal;
+              text-align: center;
+              justify-content: center;
+          }
+
+          .div-1,
+          .div-3,
+          .div-5,
+          .div-7 {
+              background-color: rgb(255, 255, 255);
+          }
+
+          .div-2,
+          .div-4,
+          .div-6,
+          .div-8 {
+              background-color: rgb(240, 240, 240);
+          }
+
+          .search-container {
+              text-align: center;
+              justify-content: center;
+              float: center;
+              padding: 3% 0;
+          }
+
+          .formulario-responive {
+              margin-bottom: 8%;
+          }
+
+          #cliente {
+              display: block;
+
+              width: 100%;
+          }
+
+          /* ------------------------------------------------------- */
+          .body-home {
+              overflow: hidden;
+          }
+
+          .ContenerCarrusel {
+              margin-top: 15%;
+              max-height: 200px;
+              overflow: hidden;
+              display: flex;
+          }
+
+          .segmentos-responsive {
+              display: flex;
+              margin: auto;
+              justify-content: center;
+          }
+
+          .columnas-segmento-responsive {
+              display: flex;
+              margin: auto;
+              justify-content: center;
+              margin-bottom: 10%;
+              padding: 2%;
+              margin: 0 5% 12% 5%;
+
+          }
+
+          .h3-informacion {
+              font-size: 18px;
+          }
+
+          h3 {
+              font-size: 16px;
+          }
+
+          p {
+              font-size: 14px;
+          }
+
+          .resp-izquierda {
+              width: 100%;
+              display: block;
+          }
+
+          .nav-item {
+              padding-left: 13%;
+              width: 100%;
+          }
+
+          .configuracion {
+              display: none;
+          }
+
+          .columna-pie-2 {
+              padding-left: 3%;
+          }
+
+          .buttonEnviarOrden {
+              display: inline-block;
+              width: 49%;
+          }
+
+          .buttonCancelarOrden {
+              display: inline-block;
+              width: 49%;
+          }
+
+          .h1-Clientes {
+              display: block;
+              width: 100%;
+          }
+
+          #card-header {
+              width: 100%;
+              justify-content: center;
+              text-align: center;
+              margin: 6% 0 0 0;
+          }
+      }

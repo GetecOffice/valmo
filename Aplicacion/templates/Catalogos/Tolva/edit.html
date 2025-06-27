@@ -1,0 +1,100 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %}EDITAR TOLVA #{{TETolva.ID}} {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.change_tblanimalestipo %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>EDITAR TOLVA #{{TETolva.ID}}</h1>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <form action="/ActualizarTolva/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{TETolva.ID}}">
+                <input type="hidden" name="clave" value="{{TETolva.Clave}}">
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
+                        <h6 class="h6-form">ALIAS <label>*</label></h6>
+                        <input type="text" name="alias" value="{{TETolva.Alias}}" class="form-control input"
+                            placeholder="Ingrese el tipo de animal" required>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
+                        <h6 class="h6-form">MARCA <label>*</label></h6>
+                        <input type="text" name="marca" value="{{TETolva.Marca}}" class="form-control input"
+                            placeholder="Ingrese el tipo de animal" required>
+
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
+                        <h6 class="h6-form">MODELO <label>*</label></h6>
+                        <input type="text" name="modelo" value="{{TETolva.Modelo}}" class="form-control input"
+                            placeholder="Ingrese el tipo de animal" required>
+
+                    </div>
+                </div>
+                <div class="row fila">
+
+
+                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
+                        <h6 class="h6-form">CAPACIDAD <label>*</label></h6>
+                        <input type="text" name="capacidad" value="{{TETolva.Capacidad}}" class="form-control input"
+                            placeholder="Ingrese el tipo de animal" required>
+
+                    </div>
+                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 columna">
+                        <h6 class="h6-form">ESTATUS <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="estatus" required>
+                            <option value="{{FiltradoEstatus.ID}}">
+                                --------{{FiltradoEstatus.Descripcion}}--------
+                            </option>
+                            {% for Estatus in FEEstatus %}
+                            <option value="{{ Estatus.ID }}">{{ Estatus.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 columna">
+                        <h6 class="h6-form">UNIDAD <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="unidad" required>
+                            <option value="{{FiltradoUnidad.ID}}">
+                                --------{{FiltradoUnidad.Descripcion}}--------
+                            </option>
+                            {% for unidades in FEUnidades %}
+                            <option value="{{ unidades.ID }}">{{ unidades.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Actualizar</button>
+                    <a href="{% url 'T-Tolva' %}" class="btn btn-danger">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'T-Tolva' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

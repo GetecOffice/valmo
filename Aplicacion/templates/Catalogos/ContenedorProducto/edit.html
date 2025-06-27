@@ -1,0 +1,75 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} EDITAR CONTENEDORES PRODUCTOS #{{TEContenedorProductos.Clave}} {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.change_tblcontenedoresproductos %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>EDITAR CONTENEDORES PRODUCTOS #{{TEContenedorProductos.Clave}}</h1>
+        <form action="/ActualizarContenedorProducto/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{TEContenedorProductos.ID}}">
+                <input type="hidden" name="clave" value="{{TEContenedorProductos.Clave}}">
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">PROVEEDORES <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="cliente" required>
+                            <option value="{{FiltradoProveedores.ID}}">
+                                --------{{FiltradoProveedores.Nombre}}--------
+                            </option>
+                            {% for Proveedores in FEProveedores %}
+                            <option value="{{ Proveedores.ID }}">{{ Proveedores.Nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">ESTATUS <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="estatus" required>
+                            <option value="{{FiltradoEstatus.ID}}">
+                                --------{{FiltradoEstatus.Descripcion}}--------
+                            </option>
+                            {% for Estatus in FEEstatus %}
+                            <option value="{{ Estatus.ID }}">{{ Estatus.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 columna">
+                        <h6 class="h6-form">CAPACIDAD <label>*</label></h6>
+                        <input type="number" name="capacidad" value="{{TEContenedorProductos.Capacidad}}"
+                            class="form-control input" placeholder="Ingrese la capacidad" required step="0.01">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Actualizar</button>
+                    <a href="{% url 'T-ContenedorProducto' %}" class="btn btn-danger">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'T-ContenedorProducto' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} SERVIDO DE PRODUCTO {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>
+            <a href="{% url 'T-Consolidacion' %}" class="btn h6-form"><i class="fa fa-arrow-left"><</i></a>
+            PROCESOS - SERVIDO, {{tolva}}
+        </h1>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if perms.Aplicacion.view_tblservido %}
+        <div class=" table-responsive py-1">
+            <table class="tabla_id">
+                <thead>
+                    <tr>
+                        <th class="th-responsive">FOLIO</th>
+                        <th class="th-responsive">CLIENTE</th>
+                        <th class="th-responsive">CORRAL</th>
+                        <th class="th-responsive">PRODUCTO</th>
+                        <th class="th-responsive">CANT. SOL.</th>
+                        <th class="th-responsive">FECHA SOLICITADA</th>
+                        <th class="th-responsive">¿SE SIRVIO?</th>
+                        <th class="th-responsive dnone"></th>
+                        <th class="th-responsive dnone"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Servidos in TServidos %}
+                    <tr>
+                        <td>
+                            <h6 class="td-responsive">FOLIO:</h6>
+                            {{ Servidos.Folio }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">CLIENTE:</h6>
+                            {{ Servidos.IDCliente_id__Nombre }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">CORRAL:</h6>
+                            {{ Servidos.IDCorral_id__Descripcion }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">PRODUCTO:</h6>
+                            {{ Servidos.IDProducto_id__Descripcion }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">CANTIDAD:</h6>
+                            {{ Servidos.CantidadSolicitada }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">FECHA:</h6>
+                            {{ Servidos.Fecha }}
+                        </td>
+                        <td>
+                            <form action="/Dato-Tolva-Servido-Se-Sirve/" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" value="7" name="estatus">
+                                <input type="hidden" value="{{ Servidos.IDEstatus_id }}" name="tolva">
+                                <input type="hidden" value="{{ Servidos.Folio }}" name="folio">
+                                <input type="hidden" value="{{ Servidos.IDProducto_id }}" name="IDProd">
+
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            </form>
+                            <form action="/Dato-Tolva-Servido-Se-Sirve/" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" value="3" name="estatus">
+                                <input type="hidden" value="{{ Servidos.IDEstatus_id }}" name="tolva">
+                                <input type="hidden" value="{{ Servidos.Folio }}" name="folio">
+                                <input type="hidden" value="{{ Servidos.IDProducto_id }}" name="IDProd">
+
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fa fa-close text-light"></i>
+                                </button>
+                            </form>
+                        </td>
+                        <td class="td-salto"></td>
+                        <td class="td-salto"></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="row centrar">
+            <h6 class="h6-form">
+                <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+                No tienes los permisos necesarios para ver el contenido de la tabla
+                <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+            </h6>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

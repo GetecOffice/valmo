@@ -1,0 +1,51 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} ROL ASIGNADO {% endblock %}
+
+{% block body %}
+
+
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>PERFIL - ROL ASIGNADO</h1>
+
+        {% if perms.auth.view_permission %}
+        <div class="table-responsive py-1">
+            <table class="tabla_id">
+                <thead>
+                    <tr>
+                        <th class="th-responsive">NOMBRE DEL PERMISO</th>
+                        <th class="th-responsive dnone"></th>
+                        <th class="th-responsive dnone"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Permisos in TPermisos %}
+                    <tr>
+                        <td>
+                            <h6 class="td-responsive">NOMBRE DEL PERMISO:</h6>
+                            {{Permisos.name }}
+                        </td>
+                        <td class="td-salto"></td>
+                        <td class="td-salto"></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="row centrar">
+            <h6 class="h6-form">
+                <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+                No tienes los permisos necesarios para ver el contenido de la tabla
+                <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+            </h6>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

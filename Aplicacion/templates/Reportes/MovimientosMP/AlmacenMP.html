@@ -1,0 +1,19 @@
+<!-- QUERY NO LISTA POR FALTA DE TABLA DE INVENTARIO MATERIA PRIMA -->
+
+"""SELECT  DESCRIP, II, ENTRADAS, SALIDAS,  II+ENTRADAS-SALIDAS AS TOTAL
+FROM( SELECT  MP.MP_DES AS DESCRIP , MP.Cantidad +
+SUM(CASE WHEN Aplicacion_tblentradamp.fecha BETWEEN  MP.FECHA_INV  AND DATE('$Fecha1 INTERVAL -1 day')  
+AND  Aplicacion_tblentradamp.IDAlmacen = MP.ALMACEN	THEN Aplicacion_tblentradamp.Cantidad ELSE 0 END) - 
+SUM(CASE WHEN Aplicacion_tblsalidamp.fecha BETWEEN  MP.FECHA_INV  AND DATE('$Fecha1 INTERVAL -1 day') 
+AND  Aplicacion_tblsalidamp.IDAlmacen =  MP.ALMACEN THEN Aplicacion_tblsalidamp.Cantidad ELSE 0 END) AS II,
+SUM(CASE WHEN Aplicacion_tblentradamp.fecha BETWEEN  '$Fecha1'  AND  '$Fecha2' 
+AND  tblMovimientosMP.IDAlmacen =  MP.ALMACEN	THEN tblMovimientosMP.Cantidad ELSE 0 END) AS ENTRADAS,
+SUM(CASE WHEN Aplicacion_tblsalidamp.fecha BETWEEN  '$Fecha1'  AND '$Fecha2'   
+AND  tblMovimientosMP.IDAlmacen =  MP.ALMACEN  THEN tblMovimientosMP.Cantidad ELSE 0 END) AS SALIDAS
+FROM (  SELECT IDMP AS IDMP, tblMateriaPrima.Descripcion  AS MP_DES, MAX(tblInventarioInicialesMP.Fecha) AS FECHA_INV, Cantidad, '$Almacen' AS ALMACEN
+FROM tblInventarioInicialesMP
+INNER JOIN tblMateriaPrima ON tblMateriaPrima.ID = tblInventarioInicialesMP.IDMP
+WHERE tblInventarioInicialesMP.IDContenedor = '$Almacen'
+GROUP BY IDMP ) AS MP
+LEFT JOIN tblMovimientosMP  ON   tblMovimientosMP.IDMP = MP.IDMP
+GROUP BY MP.IDMP) AS PPAL"""

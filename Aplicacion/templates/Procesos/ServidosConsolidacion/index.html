@@ -1,0 +1,127 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} CONSOLIDACIÓN DE SERVIDOS {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>
+            <a href="{% url 'T-Consolidacion' %}" class="btn h6-form"><i class="fa fa-arrow-left"><</i></a>
+            PROCESOS - CONSOLIDACIÓN DE SERVIDOS
+        </h1>
+        {% if perms.Aplicacion.view_tblservido %}
+        <div class="card card-hdr-procesos mt-3 mb-3">
+            <div class="card card-hdr-procesos mt-3 mb-3 p-4">
+                <form action="/Dato-Consolidacion-Servido-Filtro/" method="POST">{% csrf_token %}
+                    <div class="row">
+                        <div style="width: 60%; padding: 0 5px 0 5px;">
+                            <h6 class="h6-form">Seleccione el producto</h6>
+                            <select name="producto" class="select2 form-control">
+                                {% for consolidacion in TConsolidacion %}
+                                <option value="{{ consolidacion.IDProducto }}">
+                                    {{ consolidacion.Producto }} - - - Cantidad pendiente por servir:
+                                    {{ consolidacion.cantidad }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <input type="hidden" value="1" name="tolva">
+                        <div style="width: 40%; padding: 0 5px 0 5px;">
+                            <input type="hidden" value="1" name="mov">
+                            <h6 class="h6-form">Presione para buscar</h6>
+                            <button type="submit" class="btn sub-button-add"><i class="bi bi-search"></i> Buscar
+                                productos para servir en tolva</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <div class=" table-responsive py-1">
+            <h5 class="h6-form">Tabla de servidos pendientes</h5>
+
+            <table class="tabla_id">
+                <thead>
+                    <tr>
+                        <th class="th-responsive">FOLIO</th>
+                        <th class="th-responsive">CLIENTE</th>
+                        <th class="th-responsive">CORRAL</th>
+                        <th class="th-responsive">PRODUCTO</th>
+                        <th class="th-responsive">CANT. SOL.</th>
+                        <th class="th-responsive">FECHA SOLICITADA</th>
+                        <th class="th-responsive dnone"></th>
+                        <th class="th-responsive dnone"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Servidos in FiltroServidos %}
+                    <tr>
+                        <td>
+                            <h6 class="td-responsive">FOLIO:</h6>
+                            {{ Servidos.Folio }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">CLIENTE:</h6>
+                            {{ Servidos.IDCliente_id__Nombre }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">CORRAL:</h6>
+                            {{ Servidos.IDCorral_id__Descripcion }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">PRODUCTO:</h6>
+                            {{ Servidos.IDProducto_id__Descripcion }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">CANTIDAD:</h6>
+                            {{ Servidos.CantidadSolicitada }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">FECHA:</h6>
+                            {{ Servidos.Fecha }}
+                        </td>
+                        <td class="td-salto"></td>
+                        <td class="td-salto"></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="row centrar">
+            <h6 class="h6-form">
+                <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+                No tienes los permisos necesarios para ver el contenido de la tabla
+                <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+            </h6>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#producto").change(function () {
+            var selectedOption = $(this).val();
+            if (selectedOption) {
+                window.location.href = "Filtro/" + selectedOption + "/" + 4;
+            }
+        });
+    });
+</script>
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,208 @@
+{% extends "include/header.html" %}
+{% load static %}
+{% block title %} PERFIL {% endblock %}
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>PERFIL</h1>
+        <section class="section profile">
+            {% if messages %}
+            {% for message in messages %}
+            <div
+                class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            <div class="row">
+                <div class="col-xl-4">
+                    <div class="card card-orden-h">
+                        <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+                            <img src="{% static 'assets/img/profile-img.png' %}" alt="Profile" class="rounded-circle">
+                            <h2 class="profile-text">{{user.first_name}}</h2>
+                            <h3 class="profile-text">{{grupos}}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-8">
+                    <div class="card">
+                        <div class="card-body card-orden-b">
+                            <!-- Bordered Tabs -->
+                            <ul class="nav nav-tabs nav-tabs-bordered card-orden-b">
+                                <li class="nav-item">
+                                    <button class="nav-link active" data-bs-toggle="tab"
+                                        data-bs-target="#profile-overview" id="texto-perfil">Perfil</button>
+                                </li>
+                                <li class="nav-item">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit"
+                                        id="texto-perfil">Editar Perfil</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content " style="padding: 5px 25px;">
+                                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 label" id="texto-perfil">Nombre completo:</div>
+                                        <div class="col-lg-8 col-md-8" id="texto-perfil">{{user.first_name}}
+                                            {{user.last_name}}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 label" id="texto-perfil">Email:</div>
+                                        <div class="col-lg-8 col-md-8" id="texto-perfil">{{user.username}}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 label" id="texto-perfil">Rol:</div>
+                                        <div class="col-lg-8 col-md-8" id="texto-perfil">{{grupos}}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 label" id="texto-perfil">Fecha de creación:</div>
+                                        <div class="col-lg-8 col-md-8" id="texto-perfil">{{user.date_joined}}</div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+                                    <!-- Profile Edit Form -->
+                                    <br>
+                                    <form action="/ActualizarUsuario/" method="POST" autocomplete="off">{% csrf_token %}
+                                        <input type="hidden" name="email" value="{{user.username}}">
+                                        <input type="hidden" name="roles" value="{{grupos}}">
+                                        <input type="hidden" name="id" value="{{user.id}}">
+                                        <input type="hidden" name="vista" value="1">
+                                        <div class="row mb-3">
+                                            <label id="texto-perfil"
+                                                class="col-md-4 col-lg-3 col-form-label">Nombre</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="nombre" type="text" class="form-control"
+                                                    value="{{user.first_name}}">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label id="texto-perfil" class="col-md-4 col-lg-3 col-form-label">
+                                                Apellido</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="apellido" type="text" class="form-control"
+                                                    value="{{user.last_name}}">
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                        </div>
+                                    </form><!-- End Profile Edit Form -->
+                                </div>
+                            </div>
+                        </div><!-- End Bordered Tabs -->
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="card card-hdr">
+                <div class="card-header">
+                    <div class="row">
+                        <h5 class="h6-form">Datos agregados por: {{user.first_name}} {{user.last_name}} </h5>
+
+                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                            <form action="/Perfil/" class="pr-5 pl-5" method="POST">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <h5 class="h6-form">Catálogos</h5>
+                                    <select name="tabla1" class="select2" style="width: 81%; ">
+                                        <option value="{{TablaCatalogos}}">-----{{TablaCatalogos}}-----</option>
+                                        {% for TecnicosTabla in FTecnicosTablaCatalogos%}
+                                        <option value="{{ TecnicosTabla.NombreTabla}}">
+                                            {{TecnicosTabla.NombreTabla}}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn button-add mt-1"
+                                        style="padding: 0px 14px 1px 14px; border-radius: 1px 7px 7px 1px;">
+                                        <i class="fa fa-search"></i>Ir</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                            <form action="/Perfil/" class="pr-5 pl-5" method="POST">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <h5 class="h6-form">Procesos</h5>
+                                    <select name="tabla2" class="select2" style="width: 81%; ">
+                                        <option value="{{TablaProcesos}}">-----{{TablaProcesos}}-----</option>
+                                        {% for TecnicosTabla in FTecnicosTablaProcesos%}
+                                        <option value="{{ TecnicosTabla.NombreTabla}}">
+                                            {{TecnicosTabla.NombreTabla}}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn button-add mt-1"
+                                        style="padding: 0px 14px 1px 14px; border-radius: 1px 7px 7px 1px;">
+                                        <i class="fa fa-search"></i>Ir</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                            <form action="/Perfil/" class="pr-5 pl-5" method="POST">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <h5 class="h6-form">Subtablas</h5>
+                                    <select name="tabla3" class="select2" style="width: 81%; ">
+                                        <option value="{{TablaSubtabla}}">-----{{TablaSubtabla}}-----</option>
+                                        {% for TecnicosTabla in FTecnicosTablaSubTablas%}
+                                        <option value="{{ TecnicosTabla.NombreTabla}}">
+                                            {{TecnicosTabla.NombreTabla}}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn button-add mt-1"
+                                        style="padding: 0px 14px 1px 14px; border-radius: 1px 7px 7px 1px;">
+                                        <i class="fa fa-search"></i>Ir</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h6 class="h6-form centrar">Tabla seleccionada: {{tablaseleccionada}}</h6>
+                    <div class="table-responsive py-1">
+                        <table class="tabla_id">
+                            <thead>
+                                <tr>
+                                    <th>ID Tabla</th>
+                                    <th>FOLIO</th>
+                                    <th>Fecha Agregado</th>
+                                    <th>Tecnico Editor</th>
+                                    <th>Fecha Editado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for Tecnicos in TTecnicos %}
+                                <tr>
+                                    <td>{{ Tecnicos.IDFila}}</td>
+                                    <td>{{ Tecnicos.IDFilaTabla}}</td>
+                                    <td>{{ Tecnicos.Fecha}}</td>
+                                    {% if Tecnicos.TecnicoEditor is None %}
+                                    <td>No editado</td>
+                                    {% else %}
+                                    <td>Editado por: {{ Tecnicos.TecnicoEditor }}</td>
+                                    {% endif %}
+                                    {% if Tecnicos.TecnicoEditor is None %}
+                                    <td>No editado</td>
+                                    {% else %}
+                                    <td>{{ Tecnicos.FechaActualizado}}</td>
+                                    {% endif %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

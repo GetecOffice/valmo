@@ -1,0 +1,50 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %}EDITAR PERMISO {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.auth.change_permission %}
+
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>EDITAR PERMISO #{{TEPermisos.id}}</h1>
+        <form action="/ActualizarPermiso/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{ TEPermisos.id }}">
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <!-- <h6 class="h6-form">CÓDIGO</h6> -->
+                        <input type="hidden" value="{{TEPermisos.codename}}" class="form-control input" readonly>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 columna">
+                        <h6 class="h6-form">NOMBRE</h6>
+                        <input type="text" name="descripcion" value="{{TEPermisos.name}}" class="form-control input"
+                            placeholder="Ingrese el permiso en español" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Actualizar</button>
+                    <a href="{% url 'T-Permisos' %}" class="btn btn-danger">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% else %}
+<script>
+    window.location.href = "{% url 'T-Permisos' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

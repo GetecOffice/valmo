@@ -1,0 +1,75 @@
+h5 {
+    color: black;
+}
+
+.input {
+    font-size: 18px;
+    color: black;
+}
+
+input::placeholder {
+    font-size: 15px;
+    color: rgb(12, 12, 12);
+}
+
+select {
+    width: 100%;
+}
+
+.select2-container .select2-selection--single {
+    padding: 0px;
+    color: black;
+}
+
+.modal-dialog {
+    width: 80%;
+    height: 60%;
+}
+
+
+
+thead {
+    font-weight: bold;
+    background-color: #e7e1e1;
+    color: black;
+    font-family: 'Arial-Black';
+}
+
+.buscar {
+    border: 2px solid rgb(0, 174, 255);
+}
+
+
+.h1 {
+    /* Estilos para PC */
+    font-size: 28px;
+}
+
+.celular {
+    width: 30%;
+}
+
+.tabla-contenedor {
+    overflow: auto;
+    /* Ajusta la altura máxima según tus necesidades */
+}
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 767px) {
+    .h1 {
+        /* Estilos para móviles */
+        font-size: 18px;
+    }
+
+    .h1-Clientes {
+        font-size: 14px;
+    }
+
+    .celular {
+        width: 47%;
+    }
+
+    .input-datalist {
+        margin: 0% 0% 2% 0%
+    }
+}

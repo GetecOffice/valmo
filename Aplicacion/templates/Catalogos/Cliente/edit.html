@@ -1,0 +1,101 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} EDITAR CLIENTE #{{TECliente.Clave}} {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.change_tblclientes %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>EDITAR CLIENTE #{{TECliente.Clave}}</h1>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <form action="/ActualizarCliente/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{TECliente.ID}}">
+                <input type="hidden" name="clave" value="{{TECliente.Clave}}">
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">NOMBRE <label>*</label></h6>
+                        <input type="text" name="nombre" value="{{TECliente.Nombre}}" class="form-control input"
+                            placeholder="Ingrese el nombre (Obligatorio)" required>
+
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">CONTACTO</h6>
+                        <input type="text" name="contacto" value="{{TECliente.Contacto}}" class="form-control input"
+                            placeholder="Ingrese el contacto">
+
+                    </div>
+                </div>
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">DIRECCIÓN</h6>
+                        <input type="text" name="direccion" value="{{TECliente.Direccion}}" class="form-control input"
+                            placeholder="Ingrese la direccion">
+
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">CIUDAD</h6>
+                        <input type="text" name="ciudad" value="{{TECliente.Ciudad}}" class="form-control input"
+                            placeholder="Ingrese la ciudad">
+
+                    </div>
+                </div>
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">RFC</h6>
+                        <input type="text" name="rfc" value="{{TECliente.RFC}}" class="form-control input"
+                            placeholder="Ingrese el RFC">
+
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">EMAIL</h6>
+                        <input type="text" name="email" value="{{TECliente.Email}}" class="form-control input"
+                            placeholder="Ingrese el email">
+
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">TELÉFONO</h6>
+                        <input type="text" name="telefono" value="{{TECliente.TelefonoContacto}}"
+                            class="form-control input" placeholder="Ingrese el número teléfonico" step="1"
+                            oninput="checkInputValidity(this, 'telefonoErrorMessage', 'agregarBoton', 'salirBoton')">
+                        <div class="invalid-feedback" id="telefonoErrorMessage" style="display: none;">
+                            No se permiten puntos decimales.
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success" id="agregarBoton">Actualizar</button>
+                    <a href="{% url 'T-Cliente' %}" class="btn btn-danger">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'T-Cliente' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

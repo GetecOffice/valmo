@@ -1,0 +1,72 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} CORRALES {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.add_tbldetalleanimales %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>AGREGAR TIPO ANIMALES</h1>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form action="/Guardar-Servidos-Manual/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg col-xl">
+                        <h5>CLIENTE</h5>
+                        <select class="select2 form-control" style="width: 100%;" name="cliente" id="cliente-select"
+                            required>
+                            <option value="">SELECCIONE CLIENTE</option>
+                            {% for Clientes in FCliente %}
+                            <option value="{{ Clientes.ID }}">{{ Clientes.Nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg col-xl">
+                        <h5>CORRAL</h5>
+                        <select class="select2 form-control" style="width: 100%;" name="corral" id="corral-select"
+                            required>
+                            {% for Corrales in FCorral %}
+                            <option value="{{ Corrales.ID }}">{{ Corrales.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success buttonEnviar celular">Guardar</button>
+                    <a href="{% url 'T-Servidos' %}" class="btn btn-danger buttonCancelar celular"
+                        role="button">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<div class="row centrar">
+    <h6 class="h6-form">No tienes los permisos necesarios para ver los datos de los clientes</h6>
+</div>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

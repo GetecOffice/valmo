@@ -1,0 +1,118 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %}AGREGAR CORRALES {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.add_tblcorrales %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>
+            <a href="{% url 'T-Corral' %}" class="btn h6-form"><i class="fa fa-arrow-left"><</i></a>
+            AGREGAR CORRAL
+        </h1>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form action="/Guardar-Corral/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                {% if clave is not None %}
+                <input type="hidden" class=" form-control" name="clave" value="{{ clave }}">
+                {% else %}
+                <input type="hidden" class=" form-control" name="clave" value="{{ ultimo_folio }}">
+                {% endif %}
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">CORRAL <label>*</label></h6>
+                        {% if errorCol is not None %}
+                        <input type="text" autofocus name="descripcion" class=" form-control is-invalid"
+                            placeholder="Ingrese el corral (obligatorio)" required>
+                        <div class="invalid-feedback ">
+                            El corral ya se registro anteriormente
+                        </div>
+                        {% else %}
+                        <input type="text" autofocus name="descripcion" class="form-control"
+                            placeholder="Ingrese el corral (obligatorio)" required>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">CAPACIDAD <label>*</label></h6>
+                        <input type="number" name="capacidad" class="form-control"
+                            placeholder="Ingrese la capacidad (obligatorio)" required step="0.01">
+
+                    </div>
+                </div>
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">CLIENTE <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="cliente" required>
+                            {% for Clientes in FClientes %}
+                            <option value="{{ Clientes.ID }}">{{ Clientes.Nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">ESTATUS <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="estatus" required>
+                            {% for Estatus in FEstatus %}
+                            <option value="{{ Estatus.ID }}">{{ Estatus.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 columna">
+                        {% if perms.Aplicacion.add_user %}
+                        <h6 class="h6-form">FECHA MANUAL <label>*</label></h6>
+                        <input type="datetime-local" name="fecha" value="{{FechaDeHoy}}" class="form-control" required>
+                        {% else %}
+                        <h6 class="h6-form">FECHA AUTOMATICA <label>*</label></h6>
+                        <input type="datetime-local" name="fecha" value="{{FechaDeHoy}}" class="form-control" readonly required>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary agregarBoton" name="agregar">Guardar y
+                        agregar otro</button>
+                    <button type="submit" class="btn btn-success salirBoton" name="salir">Guardar y
+                        salir</button>
+                    <a href="{% url 'T-Corral'%}">
+                        <button type="button" class="btn btn-danger cancelarBoton">Cancelar</button>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<div class="row centrar">
+    <h6 class="h6-form">
+        <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+        No tienes los permisos necesarios para agregar el contenido de la tabla
+        <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+    </h6>
+</div>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,189 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} TECNICOS {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>DATOS DE TÉCNICOS</h1>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <div class="row p-5">
+            {% for item in usuarios_con_grupo %}
+            {% for grupo in item.grupos %}
+            <div class="col-sm-12 col-md-4 col-lg-3 col-xl-3 pb-5"
+                style="justify-content: center; align-items: center; display: flex;">
+                <div class="contenedorTecnico">
+                    <div class="cardTecnico">
+                        <div class="frontTecnico">
+                            <div class="cardTecnico-top">
+                                <p class="cardTecnico-top-para h6-form">{{ grupo.name }}</p>
+                            </div>
+                            <img src="{% static 'assets/img/profile-img.png' %}" alt="" width="100" class="pt-3">
+                            <p class="headingTecnico h6-form">{{ item.usuario.first_name }} {{ item.usuario.last_name }}
+                            </p>
+                            <p class="followTecnico h6-form">{{ item.usuario.username }}</p>
+                        </div>
+                        <div class="backTecnico">
+                            <label class="h6-form" style="font-size: 18px;">Fecha de creación </label>
+                            <label class="h6-form" style="font-size: 16px; font-weight: normal;">
+                                {{item.usuario.date_joined }}</label>
+                            <label class="h6-form" style="font-size: 18px;">Ultima conexión </label>
+                            <label class="h6-form"
+                                style="font-size: 16px; font-weight: normal;">{{item.usuario.last_login }} </label>
+                            <br>
+                            <a href="EdicionUsuario/{{item.usuario.id}}">
+                                <button class="edit-button-user">
+                                    <svg class="edit-svgIcon" viewBox="0 0 512 512">
+                                        <path
+                                            d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
+                                        </path>
+                                    </svg>
+                                </button>
+                            </a>
+                            <br>
+                            <p class="h6-form p-0 m-0">Registro de datos...</p>
+                            <div class="iconsTecnico">
+
+                                <div class="row">
+                                    <div class="col-4" style="justify-content: center;">
+                                        <form action="/Agregar-Tecnicos/" method="POST" style="display: inline-block;">
+                                            {% csrf_token %}
+                                            <input type="hidden" value="{{item.usuario.id}}" name="usuario">
+                                            <input type="hidden"
+                                                value="{{item.usuario.first_name}} {{item.usuario.last_name}}"
+                                                name="full_name">
+                                            <button class="add-button-tecnico">
+                                                <h1 style="font-size: 30px; color: rgb(255, 255, 255);">+</h1>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div class="col-2"></div>
+                                    <div class="col-5">
+                                        <form action="/Editar-Tecnicos/" method="POST" style="display: inline-block;">
+                                            {% csrf_token %}
+                                            <input type="hidden" value="{{item.usuario.id}}" name="usuario">
+                                            <input type="hidden"
+                                                value="{{item.usuario.first_name}} {{item.usuario.last_name}}"
+                                                name="full_name">
+                                            <button class="edit-button-tecnico">
+                                                <svg class="edit-svgIcon" viewBox="0 0 512 512">
+                                                    <path
+                                                        d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-hdr-procesos" style="display: none;">
+                    <div class="card-header">
+                        <div class="row centrar">
+                            <div class="col-sm-7 col-md-7 col-lg-7 col-xl-7">
+                                <h5 class="h6-form"></h5>
+                            </div>
+                            <div class="col-sm-1 col-md-1 col-lg-5 col-xl-5">
+                                {% if perms.Aplicacion.change_tbltecnicos %}
+                                <a class="btn btn-success btn-sm" style="display: inline-block;"
+                                    href="EdicionUsuario/{{item.usuario.id}}" role="button"><i
+                                        class="fas fa-pen"></i>Editar usuarios</a>
+                                {% endif %}
+                            </div>
+                            <!-- <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                                <form action="/ActualizarUsuario/" method="POST" style="display: inline-block;">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{item.usuario.id}}" name="id">
+                                    <input type="hidden" value="{{item.usuario.first_name}}" name="nombre">
+                                    <input type="hidden" value="{{item.usuario.last_name}}" name="apellido">
+                                    <input type="hidden" value="Bloqueado" name="roles">
+                                    <input type="hidden" value="{{item.usuario.username}}" name="email">
+                                    <input type="hidden" value="3" name="vista">
+                                    <button type="submit" name="Bloqueado" class="btn btn-danger btn-sm">
+                                        <i class="fa fa-lock"></i> Bloquear</button>
+                                </form>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row pb-2">
+                            <div class="col-lg-4 col-md-4 h6-form">Nombre:
+                            </div>
+                            <div class="col-lg-8 col-md-8 label-tecnico"> </div>
+                        </div>
+                        <div class="row pb-2">
+                            <div class="col-lg-4 col-md-4 h6-form">Apellido:
+                            </div>
+                            <div class="col-lg-8 col-md-8 label-tecnico"> </div>
+                        </div>
+                        <div class="row pb-2">
+                            <div class="col-lg-4 col-md-4 h6-form">Email:
+                            </div>
+                            <div class="col-lg-8 col-md-8 label-tecnico"> </div>
+                        </div>
+                        <div class="row pb-2">
+                            <div class="col-lg-4 col-md-4 h6-form">Fecha creación:
+                            </div>
+                            <div class="col-lg-8 col-md-8 label-tecnico"> </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 h6-form">ultima conexión:
+                            </div>
+                            <div class="col-lg-8 col-md-8 label-tecnico"> </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row centrar">
+                            <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                <form action="/Agregar-Tecnicos/" method="POST" style="display: inline-block;">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{item.usuario.id}}" name="usuario">
+                                    <input type="hidden" value="{{item.usuario.first_name}} {{item.usuario.last_name}}"
+                                        name="full_name">
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        <i class="fa fa-plus"></i>Datos agregados</button>
+                                </form>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                <form action="/Editar-Tecnicos/" method="POST" style="display: inline-block;">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{item.usuario.id}}" name="usuario">
+                                    <input type="hidden" value="{{item.usuario.first_name}} {{item.usuario.last_name}}"
+                                        name="full_name">
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="fa fa-pen"></i>Datos editados</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

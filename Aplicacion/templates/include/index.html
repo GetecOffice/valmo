@@ -1,0 +1,21 @@
+{% extends "include/header.html" %}
+{% load static %}
+
+{% block title %} Servicio Valmo {% endblock %}
+
+{% block body %}
+<div class="pagetitle">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    <div class="imagen-inicio">
+        <img src="{% static 'assets/img-pages/valmo.png' %}"
+            style="width: 65%; justify-content: center; margin: auto; text-align: center; align-items: center; display: flex; margin-top: 5%;">
+    </div>
+</div>
+
+{% endblock %}

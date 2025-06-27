@@ -1,0 +1,162 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} CARGAMENTO TOLVA {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<style>
+    .loader {
+        display: none;
+    }
+</style>
+<div class="card card-hdr">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-10">
+                <h1>PROCESOS - CARGAMENTO DE TOLVA</h1>
+            </div>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% if perms.Aplicacion.view_tbltolva %}
+        <div class="table-responsive py-1">
+            <table class="tabla_id">
+                <thead>
+                    <tr>
+                        <th class="th-responsive col-2">DESCRIPCIÓN</th>
+                        <th class="th-responsive col-2">PRODUCTO</th>
+                        <th class="th-responsive col-2">ESTATUS</th>
+                        <th class="th-responsive col-4">ACCIONES</th>
+
+                        <th class="th-responsive dnone card-hdr"></th>
+                        <th class="th-responsive dnone card-hdr"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Tolva in TTolva %}
+                    <tr>
+                        <td>
+                            <h6 class="td-responsive">DESCRIPCIÓN:</h6>
+                            {{Tolva.Alias}}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">ESTATUS:</h6>
+                            {{Tolva.IDProducto_id__Descripcion}}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">ESTATUS:</h6>
+                            {{Tolva.IDEstatus_id__Descripcion}}
+                        </td>
+                        {% if Tolva.IDProducto_id != 1 %}
+                        <td>
+
+                            <div class="row">
+                                <div class="col-sm-12 col-md-2 col-lg-2">
+                                    <form action="/Cargamento_tolva/" method="POST">{% csrf_token %}
+                                        <input type="hidden" value="{{Tolva.ID}}" name="tolva">
+                                        <button class="Btn" type="submit">
+                                            <svg class="svgIcon" viewBox="0 0 384 512" height="1em">
+                                                <path
+                                                    d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z">
+                                                </path>
+                                            </svg>
+                                            <!-- <span class="icon2"></span>
+                                            <span class="tooltip">PDF</span> -->
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="col-sm-12 col-md-10 col-lg-10">
+                                    <div class="accordion">
+                                        <div class="accordion-item">
+                                            <input type="checkbox" id="{{Tolva.ID}}" class="accordion-checkbox">
+                                            <label for="{{Tolva.ID}}" class="accordion-title">MOSTRAR PEDIDO</label>
+                                            <div class="accordion-content   card-hdr">
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="th-responsive col-3">CORRAL</th>
+                                                            <th class="th-responsive col-3">CANTIDAD</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for Servido in TServido %}
+                                                        {% if Servido.IDTolva_id == Tolva.ID %}
+                                                        <tr>
+
+                                                            <td>
+                                                                <h6 class="td-responsive">CORRAL:</h6>
+                                                                {{ Servido.IDCorral_id__Descripcion }}
+                                                            </td>
+                                                            <td>
+                                                                <h6 class="td-responsive">CANTIDAD:</h6>
+                                                                {{ Servido.CantidadSolicitada }}
+                                                                {% if Servido.IDProducto_id == 14 %}
+                                                                Paca
+                                                                {% else %}
+                                                                Kg
+                                                                {% endif %}
+                                                            </td>
+                                                            <td class="td-salto"></td>
+                                                            <td class="td-salto"></td>
+                                                            {% endif %}
+                                                            {% endfor %}
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <div class="col-12 my-2">
+                                                    <form action="/ActualizarCancelarServidosVehiculos/" method="POST"
+                                                        style="display: flex; flex-direction: row; justify-content: center; gap: 5px;">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" value="{{Tolva.ID}}" name="id">
+                                                        <div class="col-6">
+                                                            <button type="submit" name="cargamento-tolva" value="Cancelado" class="btn btn-danger btn-sm">CANCELAR PEDIDO</button>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <button type="submit" name="cargamento-tolva" value="Terminado" style="background-color: rgb(19, 93, 163); border: 0;" class="btn btn-danger btn-sm">TERMINAR PEDIDO</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        {% else %}
+                        <td>No se encontraron servidos para {{Tolva.Alias}}</td>
+                        {% endif %}
+                        <td class="td-salto card-hdr"></td>
+                        <td class="td-salto card-hdr"></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="row centrar">
+            <h6 class="h6-form">
+                <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+                No tienes los permisos necesarios para ver el contenido de la tabla
+                <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+            </h6>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

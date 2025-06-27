@@ -1,0 +1,221 @@
+{% extends "include/header.html" %}
+{% load static %}
+
+{% block title %} ESTATUS DE PAGO {% endblock %}
+
+{% block body %}
+<style>
+    .circle {
+        border-radius: 50%;
+        height: 28px;
+        width: 28px;
+        background-color: rgb(0, 0, 0);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: auto;
+    }
+
+    .icono {
+        font-size: 32px;
+    }
+
+    @keyframes pulsate {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.2);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .pulsating-icon-empty {
+        animation: pulsate 3s infinite;
+    }
+
+    .pulsating-icon-half {
+        animation: pulsate 2s infinite;
+    }
+
+    .pulsating-icon-full {
+        animation: pulsate .8s infinite;
+    }
+</style>
+
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>SERVICIO DE SISTEMA WEB</h1>
+        <!-- -------------------------------------------------------------TABLA 1------------------------------------------------------------- -->
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12" style="text-align: center; justify-content: center;">
+            <div
+                class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+                {{ message }}
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% if perms.Aplicacion.view_tblserviciosweb %}
+        <table class="tabla_id">
+            <thead>
+                <tr>
+                    {% if perms.Aplicacion.add_tblserviciosweb %}
+                        {% for Servicio in TServicio %}
+                            {% if Servicio.EstadoPago == False %}
+                            <th class="th-responsive">APLAZAR</th>
+                            {% else %}
+                            <th class="th-responsive">CANCELAR SERVICIO</th>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                    {% for Servicio in TServicio %}
+                        {% if Servicio.EstadoPago == False %}
+                        <th class="th-responsive">NOTIFICACIONES</th>
+                        {% endif %}
+                    {% endfor %}
+
+                    <th class="th-responsive">SERVICIO</th>
+                    <th class="th-responsive">ESTADO DE PAGO</th>
+                    <th class="th-responsive">FECHA DE VENCIMIENTO</th>
+                    <th class="th-responsive">DIAS RESTANTES</th>
+                    <th class="th-responsive">ESTATUS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for Servicio in TServicio %}
+                <tr>
+                    {% if perms.Aplicacion.add_tblserviciosweb %}
+                    {% if Servicio.EstadoPago == False %}
+                    <td>
+                        <h6 class="td-responsive">APLAZAR:</h6>
+                        <form action="/SeAgregoElPago/" method="POST" autocomplete="off">{% csrf_token %}
+                            <button type="submit" name="aplazar" class="btn btn-sm btn-success" style="padding: 2% 6%;">
+                                <i style="font-size: 18px;" class="fa fa-check"></i>Aplazar</button>
+                        </form>
+                    </td>
+                    {% else %}
+                    <td>
+                        <h6 class="td-responsive">CANCELAR SERVICIO:</h6>
+                        <form action="/SeAgregoElPago/" method="POST" autocomplete="off">{% csrf_token %}
+                            <button type="submit" name="cancelar" class="btn btn-sm btn-danger" style="padding: 2% 6%;">
+                                <i style="font-size: 18px;" class="fa fa-close text-light"></i>Cancelar servicio</button>
+                        </form>
+                    </td>
+                    {% endif %}
+                    {% endif %}
+                    {% if Servicio.EstadoPago == False %}
+                    {% if Servicio.Notificacion == True %}
+                    <td>
+                        <h6 class="td-responsive">NOTIFICACIONES:</h6>
+                        <form action="/Notificaciones/" method="POST" autocomplete="off">{% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-primary" name="Activar">
+                                <i class="fa fa-bell"> Activar</i></button>
+                        </form>
+                    </td>
+                    {% elif Servicio.Notificacion == False %}
+                    <td>
+                        <h6 class="td-responsive">NOTIFICACIONES:</h6>
+                        <form action="/Notificaciones/" method="POST" autocomplete="off">{% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger" name="Desactivar">
+                                <i class="fa fa-bell-slash"> Desactivar</i></button>
+                        </form>
+                    </td>
+                    {% endif %}
+                    {% endif %}
+                    {% if Servicio.Servicio == False %}
+                    <td>
+                        <h6 class="td-responsive">SERVICIO:</h6>
+                        Desactivado
+                    </td>
+                    {% else %}
+                    <td>
+                        <h6 class="td-responsive">SERVICIO:</h6>
+                        Activo
+                    </td>
+                    {% endif %}
+
+                    {% if Servicio.EstadoPago == False %}
+                    <td>
+                        <h6 class="td-responsive">ESTADO DE PAGO:</h6>
+                        No acreditado
+                    </td>
+                    {% else %}
+                    <td>
+                        <h6 class="td-responsive">ESTADO DE PAGO:</h6>
+                        Acreditado
+                    </td>
+                    {% endif %}
+
+                    <td>
+                        <h6 class="td-responsive">FECHA DE VENCIMIENTO:</h6>
+                        {{Servicio.FechaVencimiento}}
+                    </td>
+
+                    {% if Servicio.EstadoPago == False %}
+                        {% if dias_restantes <= 0 or Servicio.EstadoPago == False or Servicio.Servicio == False %} 
+                            <td style="color:red; font-weight: bold;">
+                            <h6 class="td-responsive">DÍAS RESTANTES:</h6>
+                                El servicio ha sido suspendido
+                            </td>
+                        {% elif dias_restantes == 1 %}
+                        <td>
+                            <h6 class="td-responsive">DÍAS RESTANTES:</h6>
+                            El servicio ha sido suspendido {{dias_restantes}} día
+                        </td>
+                        {% else %}
+                        <td>
+                            <h6 class="td-responsive">DÍAS RESTANTES:</h6>
+                            El servicio se suspendera en {{dias_restantes}} días
+                        </td>
+                        {% endif %}
+                    {% else %}
+                        <td>
+                            <h6 class="td-responsive">DÍAS RESTANTES:</h6>
+                            El servicio vencera en {{dias_restantes}} días
+                        </td>
+                    {% endif %}
+
+                    {% if Servicio.EstadoPago == False and Servicio.Servicio == False %}
+                        <td>
+                            <h6 class="td-responsive">ESTATUS:</h6>
+                            <h6 class="pulsating-icon-empty" style="color: #ff0000;">Servicio cancelado</h6>
+                        </td>
+                    {% elif Servicio.EstadoPago == False and Servicio.Servicio == True %}
+                        <td>
+                            <h6 class="td-responsive">ESTATUS:</h6>
+                            <h6 class="pulsating-icon-half" style="color: #ff7b00;">El servicio esta por expirar </h6>
+                        </td>
+                    {% else %}
+                        <td>
+                            <h6 class="td-responsive">ESTATUS:</h6>
+                            <h6 class="pulsating-icon-full" style="color: #00ff2a;">Servicio activo</h6>
+                        </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="row centrar">
+            <h6 class="h6-form">
+                <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+                No tienes los permisos necesarios para ver el contenido de la tabla
+                <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+            </h6>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+
+
+
+{% endblock %}

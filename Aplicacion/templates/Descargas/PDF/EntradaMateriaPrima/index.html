@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ datos.titulo }}</title>
+</head>
+
+<style>
+    /* Estilos CSS aquí */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .th {
+        padding: 5px;
+        font-size: 15px;
+    }
+
+    .th,
+    .td {
+        padding: 5px 5px 0 5px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        text-align: center;
+        border: 1px solid black;
+    }
+
+    .th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        font-size: 14px;
+        border: 1px solid black;
+    }
+
+    /* Estilos para el encabezado y el pie de página */
+    .encabezado {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+
+    .pie-pagina {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+
+    .contenedor {
+        display: flex;
+
+        flex-direction: column;
+    }
+
+    .imagen {
+        position: absolute;
+    }
+
+    .col-2 {
+        width: 17%;
+    }
+
+    .col-4 {
+        width: 28%;
+    }
+
+    .col-1 {
+        width: 25%;
+    }
+    @page { size: letter; margin-left: 0.5in; margin-right: 0.5in; margin-top: 0.3in; margin-bottom: 0.3in; }
+</style>
+
+<body>
+    <div class="encabezado">
+        <table>
+            <thead>
+                <tr>
+                    <th align="left" colspan="2">
+                        <img src="{{ logo_url }}" class="imagen" alt="Logo de la empresa" width="120"
+                            style="padding-right: 30px;">
+                    </th>
+                    <th colspan="6" style="padding-top: 20px;">
+                        <h2 style="font-size: 35px; text-align: right;">ENTRADA M.P. </h2>
+                    </th>
+                    <th colspan="2"></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="encabezado">
+        <table>
+            <thead>
+                {% for row in chofer%}
+                <tr>
+                    <th colspan="4" style="padding: 0; ">
+                        <h1 class="title" style="font-size: 14px; text-align: left; margin: -25px 0 0 0;">
+                            Folio:
+                            <label style="font-weight: normal; font-size: 14px;">{{folio}}</label>
+                        </h1>
+                        <!-- <h1 class="title" style="font-size: 14px; text-align: left; margin:0; padding:0;">
+                            Producto:
+                            <label style="font-weight: normal; font-size: 14px; ">INTERMEDIA</label>
+                        </h1> -->
+                        <h1 class="title" style="font-size: 14px; text-align: left; margin:0; padding:0;">
+                            Procedencia:
+                            <label style="font-weight: normal; font-size: 14px; ">{{procedencia}}</label>
+                        </h1>
+                        <h1 class="title" style="font-size: 14px; text-align: left; margin:0; padding:0;">
+                            Camión:
+                            <label style="font-weight: normal; font-size: 14px; ">{{row.Camion}}</label>
+                        </h1>
+                        <h1 class="title" style="font-size: 14px; text-align: left; margin:0; padding:0;">
+                            Placas:
+                            <label style="font-weight: normal; font-size: 14px; ">{{row.Placas}}</label>
+                        </h1>
+                        <h1 class="title" style="font-size: 14px; text-align: left; margin:0; padding:0;">
+                            Chofer:
+                            <label style="font-weight: normal; font-size: 14px; ">{{row.Chofer}}</label>
+                        </h1>
+                        <h1 class="title" style="font-size: 14px; text-align: left; margin:0; padding:0;">
+                            Neto:
+                            <label style="font-weight: normal; font-size: 14px; ">______________KG.</label>
+                        </h1>
+                    </th>
+                    <th colspan="4" style="padding-top: 25px; padding: 0;">
+                        <h1 class="title" style="font-size: 14px; text-align: right; margin: 0; padding:0">
+                            Industrial Agropecuaria Hermosillense
+                        </h1>
+                        <h1 style="font-size: 14px; font-weight: normal; text-align: right;margin:0; padding:0">
+                            {{fecha_actual}}</h1>
+                        <h1 class="title"
+                            style="font-size: 14px; font-weight: normal; text-align: right;margin:0; padding:0">
+                            Blvd. de los Ganaderos <br> Vaso de la presa <br> Hermosillo, Sonora
+                        </h1>
+                        <h1 class="title"
+                            style="font-size: 14px; font-weight: normal; text-align: right;margin:0; padding:0"></h1>
+                    </th>
+                    <th class="th" colspan="2" style="background: white; border: 0;"></th>
+                </tr>
+                {% endfor %}
+            </thead>
+        </table>
+    </div>
+    <br>
+    <div class="contenedor cuerpo">
+        <div class="table">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="th columna-contenido" colspan="2">Materia Prima</th>
+                        <th class="th columna-contenido" colspan="2">Cantidad</th>
+                        <th class="th columna-contenido" colspan="2">Precio Unit.</th>
+                        <th class="th columna-contenido" colspan="2">Importe</th>
+                        <th class="th" colspan="2" style="background: white; border: 0;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in entradaMatPrima %}
+                    <tr>
+
+                        <td class="td columna-base" colspan="2">
+                            {{ row.IDMateriaPrima_id__Descripcion }}
+                        </td>
+                        <td class="td columna-base" colspan="2">
+                            {{ row.cantidad}}
+                        </td>
+                        <td class="td columna-base" colspan="2">
+                        </td>
+                        <td class="td columna-base" colspan="2">
+                        </td>
+                        <td colspan="2 " style="background: white; border: 0;"></td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="encabezado">
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="8" style="padding: 0;">
+                        <h1 class="title" style="font-size: 14px; text-align: left; margin: 0; padding:0;">
+                            Observaciones:
+                            <br><br>__________________________________________________________________________
+                            <br><br>__________________________________________________________________________
+                        </h1>
+                    </th>
+                    <th class="th" colspan="2" style="background: white; border: 0;"></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="pie-pagina">
+        <br>
+        <table>
+            <thead>
+                <tr>
+                    <th class="columna-base" style="padding-top: 5px;" colspan="2">
+                        <h1>Firma del que sirvio<br>
+                            <br>_________________________
+                        </h1>
+                    </th>
+                    <th colspan="2"></th>
+                    <th style="padding-top: 5px;" colspan="2">
+                        <h1>Firma del pesador: <br> <br>_________________________</h1>
+                    </th>
+                    <th colspan="2"></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</body>

@@ -1,0 +1,133 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} PERMISOS {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>
+            <a href="{% url 'T-Grupos' %}" class="btn h6-form"><i class="fa fa-arrow-left"><</i></a>
+            CONFIGURACIÓN - PERMISOS
+        
+        </h1>
+        {% if perms.auth.add_group %}
+        <h5 class="h6-form">Agregrar permisos a {{ grupoPost.0.name }}</h5>
+        <div class="card card-hdr">
+            <div class="card-body">
+                {% if messages %}
+                {% for message in messages %}
+                <div
+                    class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                {% if grupoPost.0.name %}
+                <div class=" table-responsive py-1">
+                    <div style="float: left; width: 50%;">
+                        <form action="/Movimiento-Permisos/" method="POST">
+                            <button type="submit" class="btn btn-success btn-sm w-100 mb-3"> Agregar permisos
+                                <i class="fas fa-arrow-alt-circle-right"></i>
+                            </button>
+                            <table class="tabla_id">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 80%;">PERMISOS</th>
+                                        <th scope="col" style="width: 10%;">AGREGAR</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for permisosLibres in TPermisosLibres %}
+                                    {% if permisosLibres.name != 'Restringido' %}
+                                    <tr>
+
+                                        <td>{{ permisosLibres.name}}</td>
+                                        <td>
+
+                                            {% csrf_token %}
+                                            <input type="hidden" value="1" name="asignar">
+                                            <h6 style="display: none;">grupo</h6>
+                                            <input type="hidden" value="{{ grupoPost.0.id }}" name="grupo">
+                                            <h6 style="display: none;">Permisos</h6>
+                                            <input type="hidden" value="{{ permisosLibres.name}}" name="permiso">
+                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                                value="{{ permisosLibres.id }}" name="permisos_seleccionados"
+                                                style="border: 1px black solid;">
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                    <div style="float: right; width: 49%;">
+                        <form action="/Movimiento-Permisos/" method="POST">
+                            <button type="submit" class="btn btn-danger btn-sm w-100 mb-3"><i
+                                    class="fas fa-arrow-alt-circle-left"
+                                    title="Seleccione un cliente, para poder asignar"></i>
+                                Eliminar permisos</button>
+                            <table class="tabla_id">
+                                <thead>
+                                    <tr>
+
+                                        <th scope="col" style="width: 10%;">QUITAR</th>
+                                        <th scope="col" style="width: 80%;">PERMISOS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for PermisosAsignados in TPermisosAsignados %}
+                                    {% if PermisosAsignados.name != 'Restringido' %}
+                                    <tr>
+                                        <td>
+                                            {% csrf_token %}
+                                            <input type="hidden" value="1" name="liberar">
+                                            <h6 style="display: none;">grupo</h6>
+                                            <input type="hidden" value="{{ grupoPost.0.id }}" name="grupo">
+                                            <h6 style="display: none;">Permisos</h6>
+                                            <input type="hidden" value="{{ PermisosAsignados.name}}" name="permiso">
+                                            <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                                value="{{ PermisosAsignados.id }}" name="permisos_seleccionados"
+                                                style="border: 1px black solid;">
+                                        </td>
+                                        <td>{{ PermisosAsignados.name}}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
+                <div class="row centrar">
+                    <h6 style="color: red; text-transform: uppercase; text-align: center;" class="h6-form">
+                        Para poder asignar o liberar permisos, debe seleccionar primeramente un grupo</h6>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+        {% else %}
+        <div class="row centrar">
+            <h6 class="h6-form">
+                <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+                No tienes los permisos necesarios para ver contenido a la tabla
+                <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+            </h6>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+{% endblock %}

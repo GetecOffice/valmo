@@ -1,0 +1,168 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} AGREGAR PROVEEDOR {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.add_tblproveedores %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>
+            <a href="{% url 'T-Proveedor' %}" class="btn h6-form"><i class="fa fa-arrow-left"><</i></a>
+            AGREGAR PROVEEDOR
+        </h1>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form action="/Guardar-Proveedor/" method="POST" autocomplete="off">{% csrf_token %}
+            {% if clave is not None %}
+            <input type="hidden" class=" form-control" name="clave" value="{{ clave }}">
+            {% else %}
+            <input type="hidden" class=" form-control" name="clave" value="{{ ultimo_folio }}">
+            {% endif %}
+            <input type="hidden" class=" form-control" name="tecnico" value="{{ user.first_name }} {{user.last_name}}">
+
+            <div class="form-group">
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">NOMBRE <label>*</label></h6>
+                        {% if errorProveedor is not None %}
+                        <input type="text" autofocus name="nombre" class=" form-control is-invalid"
+                            placeholder="Ingrese el nombre (obligatorio)" required>
+                        <div class="invalid-feedback ">
+                            El nombre ya se registro anteriormente
+                        </div>
+                        {% else %}
+                        {% if nombre is not None %}
+                        <input type="text" autofocus name="nombre" class=" form-control"
+                            placeholder="Ingrese el nombre (obligatorio)" value="{{nombre}}" required>
+                        {% else %}
+                        <input type="text" autofocus name="nombre" class=" form-control"
+                            placeholder="Ingrese el nombre (obligatorio)" required>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">CONTACTO</h6>
+                        {% if contacto is not None %}
+                        <input type="text" name="contacto" class=" form-control" placeholder="Ingrese el contacto"
+                            value="{{ contacto }}">
+                        {% else %}
+                        <input type="text" name="contacto" class=" form-control" placeholder="Ingrese el contacto">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">DIRECCIÓN</h6>
+                        {% if direccion is not None %}
+                        <input type="text" name="direccion" class=" form-control" placeholder="Ingrese la dirección"
+                            value="{{ direccion }}">
+                        {% else %}
+                        <input type="text" name="direccion" class=" form-control" placeholder="Ingrese la dirección">
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">CIUDAD</h6>
+                        {% if ciudad is not None %}
+                        <input type="text" name="ciudad" class=" form-control" placeholder="Ingrese la ciudad"
+                            value="{{ciudad}}">
+                        {% else %}
+                        <input type="text" name="ciudad" class=" form-control" placeholder="Ingrese la ciudad">
+                        {% endif %}
+
+                    </div>
+                </div>
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">EMAIL</h6>
+                        {% if email is not None %}
+                        <input type="email" name="email" class=" form-control" placeholder="Ingrese el email"
+                            value="{{email}}">
+                        {% else %}
+                        <input type="email" name="email" class=" form-control" placeholder="Ingrese el email">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">RFC</h6>
+                        {% if rfc is not None %}
+                        <input type="text" name="rfc" class=" form-control" placeholder="Ingrese el RFC"
+                            value="{{rfc}}">
+                        {% else %}
+                        <input type="text" name="rfc" class=" form-control" placeholder="Ingrese el RFC">
+                        {% endif %}
+                    </div>
+
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">TELÉFONO</h6>
+                        {% if numero is not None %}
+                        <input type="number" name="numero" class=" form-control"
+                            placeholder="Ingrese el número telefonico" value="{{numero}}" step="1"
+                            oninput="checkInputValidity(this, 'telefonoErrorMessage', 'agregarBoton', 'salirBoton')">
+                        <div class="invalid-feedback" id="telefonoErrorMessage" style="display: none;">
+                            No se permiten puntos decimales.
+                        </div>
+                        {% else %}
+                        <input type="number" name="numero" class=" form-control"
+                            placeholder="Ingrese el número telefonico" step="1"
+                            oninput="checkInputValidity(this, 'telefonoErrorMessage', 'agregarBoton', 'salirBoton')">
+                        <div class="invalid-feedback" id="telefonoErrorMessage" style="display: none;">
+                            No se permiten puntos decimales.
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group form-check mb-3">
+                    {% if guardar %}
+                    <input type="checkbox" class="form-check-input" id="guardar" name="guardar-datos" checked>
+                    {% else %}
+                    <input type="checkbox" class="form-check-input" id="guardar" name="guardar-datos">
+                    {% endif %}
+                    <label class="form-check-label" for="guardar" data-toggle="tooltip" data-placement="top"
+                        title="Vuelve a llenar los campos del formulario">Almacenar datos</label>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary agregarBoton" name="agregar" id="agregarBoton">Guardar
+                        y
+                        agregar otro</button>
+                    <button type="submit" class="btn btn-success salirBoton" name="salir" id="salirBoton">Guardar y
+                        salir</button>
+                    <a href="{% url 'T-Proveedor'%}">
+                        <button type="button" class="btn btn-danger cancelarBoton">Cancelar</button>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<div class="row centrar">
+    <h6 class="h6-form">
+        <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+        No tienes los permisos necesarios para agregar el contenido de la tabla
+        <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+    </h6>
+</div>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

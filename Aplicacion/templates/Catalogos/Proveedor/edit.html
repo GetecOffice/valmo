@@ -1,0 +1,97 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} EDITAR PROVEEDOR #{{TEProveedor.Clave}} {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.change_tblproveedores %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>EDITAR PROVEEDOR #{{TEProveedor.Clave}} </h1>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <form action="/ActualizarProveedor/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{TEProveedor.ID}}">
+                <input type="hidden" name="clave" value="{{TEProveedor.Clave}}">
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">NOMBRE <label>*</label></h6>
+                        <input type="text" name="nombre" value="{{TEProveedor.Nombre}}" class="form-control input"
+                            placeholder="Ingrese el nombre (obligatorio)" required>
+                        
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">CONTACTO</h6>
+                        <input type="text" name="contacto" value="{{TEProveedor.Contacto}}" class="form-control input"
+                            placeholder="Ingrese el contacto">
+                        
+                    </div>
+                </div>
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">DIRECCIÓN</h6>
+                        <input type="text" name="direccion" value="{{TEProveedor.Direccion}}" class="form-control input"
+                            placeholder="Ingrese la dirección">
+                        
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">CIUDAD</h6>
+                        <input type="text" name="ciudad" value="{{TEProveedor.Ciudad}}" class="form-control input"
+                            placeholder="Ingrese la ciudad">
+                        
+                    </div>
+                </div>
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">RFC</h6>
+                        <input type="text" name="rfc" value="{{TEProveedor.RFC}}" class="form-control input"
+                            placeholder="Ingrese el RFC">
+                        
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">EMAIL</h6>
+                        <input type="text" name="email" value="{{TEProveedor.Email}}" class="form-control input"
+                            placeholder="Ingrese el email">
+                        
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg col-xl columna">
+                        <h6 class="h6-form">TELÉFONO</h6>
+                        <input type="number" name="telefono" value="{{TEProveedor.TelefonoContacto}}"
+                            class="form-control input" placeholder="Ingrese el número teléfonico">
+                        
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Actualizar</button>
+                    <a href="{% url 'T-Proveedor' %}" class="btn btn-danger">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'T-Proveedor' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

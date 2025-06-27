@@ -1,0 +1,92 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %}EDITAR MATERIA PRIMA #{{TEMateriaPrima.Clave}} {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.change_tblmateriaprima %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>EDITAR MATERIA PRIMA #{{TEMateriaPrima.Clave}} </h1>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <form action="/ActualizarMateriaPrima/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{TEMateriaPrima.ID}}">
+                <input type="hidden" name="clave" value="{{TEMateriaPrima.Clave}}">
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">MATERIA PRIMA <label>*</label></h6>
+                        <input type="text" name="materia" value="{{TEMateriaPrima.Descripcion}}"
+                            class="form-control input" placeholder="Ingrese la materia prima" required>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 columna">
+                        <h6 class="h6-form">PRECIO UNITARIO <label>*</label></h6>
+                        <input type="number" name="precio" value="{{TEMateriaPrima.PrecioUnitario}}"
+                            class="form-control input" placeholder="Ingrese el precio unitario" required step="0.01">
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-2 col-xl-2 columna">
+                        <h6 class="h6-form">MERMA <label>*</label></h6>
+                        <input type="number" name="merma" value="{{TEMateriaPrima.Merma}}" class="form-control input"
+                            placeholder="Ingrese la merma" required step="0.01">
+                    </div>
+                </div>
+                
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">ESTATUS <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="estatus" required>
+                            <option value="{{FiltradoEstatus.ID}}">
+                                --------{{FiltradoEstatus.Descripcion}}--------
+                            </option>
+                            {% for Estatus in FEEstatus %}
+                            <option value="{{ Estatus.ID }}">{{ Estatus.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">UNIDAD MEDIDA <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="unidad" required>
+                            <option value="{{FiltradoUnidad.ID}}">
+                                --------{{FiltradoUnidad.Descripcion}}--------
+                            </option>
+                            {% for Unidad in FEUnidad %}
+                            <option value="{{ Unidad.ID }}">{{ Unidad.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Actualizar</button>
+                    <a href="{% url 'T-MateriaPrima' %}" class="btn btn-danger">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'T-MateriaPrima' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

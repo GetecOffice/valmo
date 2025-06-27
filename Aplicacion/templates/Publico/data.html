@@ -1,0 +1,125 @@
+{% extends "Publico/header.html" %}
+{% load static %}
+
+{% block title %} Servicio Valmo {% endblock %}
+{% block body %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+{% if corrales %}
+<div class="card card-hdr-procesos">
+    <div class="card-header">
+        <form method="POST" action="{% url 'Cliente'%}" class="mt-2">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-12">
+                    <button type="submit" class="btn" style="font-size: 20px; font-weight: bold; font-family: Arial, Helvetica, sans-serif">
+                        <i class="fa-solid fa-arrow-left"><</i> Hola, {{Nombre}}
+                    </button>
+
+                </div>
+
+                <input type="hidden" name="email" value="{{email}}">
+            </div>
+        </form>
+
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive py-1">
+            <table class="tabla_id">
+                <thead>
+                    <tr>
+                        <th class="th-responsive">FOLIO</th>
+                        <th class="th-responsive">CLIENTE</th>
+                        <th class="th-responsive">CORRAL</th>
+                        <th class="th-responsive">PRODUCTO</th>
+                        <th class="th-responsive">ESTATUS</th>
+                        <th class="th-responsive">CANTIDAD SOLICITADA</th>
+                        <th class="th-responsive">CANTIDAD SERVIDA</th>
+                        <th class="th-responsive">FECHA PETICION</th>
+                        <th class="th-responsive">FECHA A SERVIR</th>
+                        <th class="th-responsive">FECHA SERVIDO</th>
+                        <th class="th-responsive dnone"></th>
+                        <th class="th-responsive dnone"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Servidos in corrales %}
+
+                    <tr>
+                        <td>
+                            <h6 class="td-responsive">FOLIO:</h6>
+                            {{ Servidos.Folio }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">CLIENTE:</h6>
+                            {{ Servidos.IDCliente_id__Nombre }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">CORRAL:</h6>
+                            {{ Servidos.IDCorral_id__Descripcion }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">PRODUCTO:</h6>
+                            {{ Servidos.IDProducto_id__Descripcion }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">ESTATUS:</h6>
+                            {{ Servidos.IDEstatus_id__Descripcion }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">CANTIDAD SOLICITADA:</h6>
+                            {{ Servidos.CantidadSolicitada }}
+                            {% if Servidos.IDProducto_id == 14 %}
+                            Paca
+                            {% else %}
+                            Kg
+                            {% endif %}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">CANTIDAD SERVIDA:</h6>
+                            {{ Servidos.CantidadServida}}
+                            {% if Servidos.IDProducto_id == 14 %}
+                            Paca
+                            {% else %}
+                            Kg
+                            {% endif %}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">FECHA PETICION:</h6>
+                            {{ Servidos.Fecha }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">FECHA A SERVIR:</h6>
+                            {{ Servidos.FechaAServir }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">FECHA SERVIDO:</h6>
+                            {{ Servidos.FechaServida }}
+                        </td>
+                        <td class="td-salto"></td>
+                        <td class="td-salto"></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+<h5 class="h6-form">Hola, estimado usuario.sadadsd</h5>
+<label for="">Para poder ver sus datos correspondientes, debera ingresar el email con el que esta
+    registrado en <b>Ganadera Valmo.</b></label>
+<div class="imagen-inicio">
+    <img src="{% static 'assets/img-pages/valmo.png' %}"
+        style="width: 65%; justify-content: center; margin: auto; text-align: center; align-items: center; display: flex; margin-top: 5%;">
+</div>
+{% endif %}
+{% endblock %}

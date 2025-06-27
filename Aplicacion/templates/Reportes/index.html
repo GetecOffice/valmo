@@ -1,0 +1,84 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} REPORTES SERVIDOS {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1 class="mt-2 mb-5">REPORTES</h1>
+        <div class="reportes-card">
+            <div class="card-reportes">
+                <div class="face front">
+                    <div class="card-header titulo-servidos-card">
+                        <h5 class="h6-form">SERVIDOS</h5>
+                    </div>
+                    <div class="card-body px-5 pt-4">
+                        <a href="{% url 'Reportes-Movimientos-Servidos' %}">
+                            <button type="submit" class="btn button-add mb-3 col-12">
+                                <strong>Movimientos</strong>
+                            </button>
+                        </a>
+                        <a href="{% url 'Reportes-Servidos-Liquidacion' %}">
+                            <button type="submit" class="btn button-add mb-3 col-12">
+                                <strong>Liquidación Cliente</strong>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-reportes">
+                <div class="face front">
+                    <div class="card-header titulo-servidos-card">
+                        <h5 class="h6-form">MATERIA PRIMA</h5>
+                    </div>
+                    <div class="card-body px-5 pt-4">
+                        <a href="{% url 'Reportes-Entrada-Materia-Prima' %}">
+                            <button type="submit" class="btn button-add mb-3 col-12">
+                                <strong>Entrada</strong>
+                            </button>
+                        </a>
+                        <a href="{% url 'Reportes-Salida-Materia-Prima' %}">
+                            <button type="submit" class="btn button-add mb-3 col-12">
+                                <strong>Salida</strong>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-reportes">
+                <div class="face front">
+                    <div class="card-header titulo-servidos-card">
+                        <h5 class="h6-form">ANIMALES</h5>
+                    </div>
+                    <div class="card-body px-5 pt-4">
+                        <a href="{% url 'Reportes-Movimientos-Animales' %}"><button type="submit"
+                                class="btn button-add mb-3 col-12"><strong>Movimientos</strong></button>
+                        </a>
+                        <a href="{% url 'Reportes-Animales-Clientes' %}">
+                            <button type="submit" class="btn button-add mb-3 col-12">
+                                <strong>Por cliente</strong>
+                            </button>
+                        </a>
+                        <a href="{% url 'Reportes-Animales-Clientes-Corrales' %}">
+                            <button type="submit" class="btn button-add mb-3 col-12">
+                                <strong>Por corral</strong>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

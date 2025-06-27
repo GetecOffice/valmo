@@ -1,0 +1,90 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} EDITAR INVENTARIO INICIAL PRODUCTO #{{TEInventario.Clave}} {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.change_tblinventarioinicialesproductos %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>EDITAR INVENTARIO INICIAL PRODUCTO #{{TEInventario.Clave}}</h1>
+        <form action="/ActualizarInventatioInicialMateriaPrima/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{TEInventario.ID}}">
+                <input type="hidden" name="clave" value="{{TEInventario.Folio}}">
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-l-6 col-xl-6 columna">
+                        <h6 class="h6-form">CONTENEDOR PRODUCTOS <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="almacen" required>
+                            <option value="{{FiltradoContenedorProductos.ID}}">
+                                --------{{FiltradoContenedorProductos.Proveedor}}--------
+                            </option>
+                            {% for almacen in FEContenedorProducto %}
+                            <option value="{{ almacen.ID }}"> {{ almacen.Proveedor }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">PRODUCTOS <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="materia" required>
+                            <option value="{{FiltradoProductos.ID}}">
+                                --------{{FiltradoProductos.Descripcion}}--------
+                            </option>
+                            {% for Productos in FEProductos %}
+                            <option value="{{ Productos.ID }}">{{ Productos.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                        {% if perms.Aplicacion.add_user %}
+                        <h6 class="h6-form">FECHA MANUAL <label>*</label></h6>
+                        <input type="datetime-local" name="fecha" value="{{fecha|date:'Y-m-d H:i'}}" class="form-control input"
+                            required>
+                        {% else %}
+                        <h6 class="h6-form">FECHA AUTOMATICA <label>*</label></h6>
+                        <input class="form-control" type="datetime-local" value="{{fecha|date:'Y-m-d H:i'}}" name="fecha" required>
+
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                        <h6 class="h6-form">CANTIDAD <label>*</label></h6>
+                        <input type="number" step="0.01" value="{{TEInventario.Cantidad}}" name="cantidad"
+                            placeholder="Ingrese la cantidad (obligatorio)" class="form-control input" required>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">NOTAS</h6>
+                        <input type="text" name="notas" value="{{TEInventario.Notas}}" placeholder="Ingrese las notas"
+                            class="form-control input">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Actualizar</button>
+                    <a href="{% url 'T-InventarioProductos' %}" class="btn btn-danger">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'T-InventarioProductos' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

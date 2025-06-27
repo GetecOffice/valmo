@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ datos.titulo }}</title>
+</head>
+
+<style>
+    @media print {
+        .page-break {
+            page-break-before: always;
+
+        }
+
+        .encabezado {
+            top: -150mm;
+        }
+
+    }
+
+    /* Estilos CSS aquí */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .th {
+        padding: 5px;
+        font-size: 15px;
+    }
+
+    .th,
+    .td {
+        padding: 3px 0 -2px 0;
+        border: 1px solid #ccc;
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid black;
+    }
+
+    .th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        border: 1px solid black;
+    }
+
+    /* Estilos para el encabezado y el pie de página */
+    .encabezado {
+        position: fixed;
+        top: -10px;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+
+    @page {
+        size: A4 portrait;
+        /* Tamaño estándar de hoja */
+        margin: 10mm;
+        /* Márgenes pequeños para aprovechar el espacio */
+    }
+
+
+    .pie-pagina {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+
+    .contenedor {
+        display: flex;
+
+        flex-direction: column;
+    }
+
+    .imagen {
+        position: absolute;
+    }
+
+    .col-2 {
+        width: 17%;
+    }
+
+    .col-4 {
+        width: 28%;
+    }
+
+    .col-1 {
+        width: 25%;
+    }
+
+    @page {
+        size: letter;
+        margin-left: 0.5in;
+        margin-right: 0.5in;
+        margin-top: 0.7in;
+        margin-bottom: 0.3in;
+    }
+</style>
+
+<body>
+    {% for i in imprimir %}
+    {% if i == 1 %}
+    <label style="font-size: 10px;">Recortar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Recortar</label>
+    {% endif %}
+    {% if i == 2 %}
+    <div class="contenido no-brake page-break">
+        {% else %}
+        <div class="contenido">
+            {% endif %}
+            <div class="encabezado">
+                <table>
+                    <thead>
+                        <tr>
+                            <th align="left" colspan="2">
+                                <img src="{{ logo_url }}" class="imagen" alt="Logo de la empresa" width="120"
+                                    style="padding-right: 30px;">
+                            </th>
+                            <th colspan="6" style="padding-top: 20px;">
+                                <h4 style="font-size: 25px; text-align: center;">
+                                    {% if movimientoAnimales.IDMovimiento_id == 1 %}
+                                    ENTRADA
+                                    {% else %}
+                                    SÁLIDA
+                                    {% endif %}
+                                    DE GANADO
+                                </h4>
+                            </th>
+                            <th colspan="2" style="padding-top: 20px;">
+                                <h4 style="font-size: 15px; text-align: center;">Folio:
+                                    <label
+                                        style="font-weight: normal; font-size: 14px;">{{movimientoAnimales.Folio}}</label>
+                                </h4>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="encabezado">
+                <table>
+                    <thead>
+
+                        <tr>
+                            <th colspan="4" style="padding-top: 25px; padding: 0;">
+                                <h1 class="title" style="font-size: 11px; text-align: left; margin: 0; padding:0">
+                                    Industrial Agropecuaria Hermosillense S.A. DE C.V.
+                                </h1>
+
+                                <h1 class="title"
+                                    style="font-size: 9px; font-weight: normal; text-align: center;margin:0; padding-right:98px;">
+                                    Blvd. KINO Y PERIFERICO OTE. S/N ESQ. Hillo, Son.
+                                </h1>
+                                <h1
+                                    style="font-size: 9px; font-weight: normal; text-align: center;margin:0;padding-right:98px;">
+                                    COL. SAN LUIS C.P. 83160 <br> TELS. 254-00-60. 254-00-33 Y 214-43-43
+                                </h1>
+                            </th>
+                            <th colspan="4" style="padding: 0; ">
+                                <h1 class="title" style="font-size: 12px; text-align: right; margin: -25px 0 0 0;">
+                                    Cliente:
+                                    <label style="font-weight: normal; font-size: 12px;">{{procedencia.Nombre}}</label>
+                                </h1>
+                                <h1 class="title" style="font-size: 12px; text-align: right; margin: -25px 0 0 0;">
+                                    Fecha:
+                                    <label style="font-weight: normal; font-size: 12px;"> {{fecha_actual}}</label>
+                                </h1>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="contenedor cuerpo">
+                <div class="table">
+                    <table>
+                        <thead>
+                            <tr style="font-size: 2rem;">
+                                <th class="th columna-contenido" colspan="2">Corral</th>
+                                <th class="th columna-contenido" colspan="2">Animal</th>
+                                <th class="th columna-contenido" colspan="2">Cantidad</th>
+                                <th class="th columna-contenido" colspan="2">Peso promedio</th>
+                                <th class="th columna-contenido" colspan="2">Peso total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reporte in Detalle %}
+                            <tr>
+                                <td class="td columna-base" colspan="2">
+                                    {{ reporte.IDCorral_id__Descripcion }}
+                                </td>
+                                <td class="td columna-base" colspan="2">
+                                    {{ reporte.IDAnimales_id__Descripcion }}
+                                </td>
+                                <td class="td columna-base" colspan="2">
+                                    {{ reporte.Cantidad }}
+                                </td>
+                                <td class="td columna-base" colspan="2">
+                                    {{ reporte.PesoPromedio }} Kg
+                                </td>
+                                <td class="td columna-base" colspan="2">
+                                    {{ reporte.PesoTotal }} Kg
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <td class="td columna-base" colspan="2"></td>
+                                <td class="td columna-base" colspan="2">
+                                    <h3><b>Total</b></h3>
+                                </td>
+                                <td class="td columna-base" colspan="2">{{suma_cantidad|floatformat:2 }}</td>
+                                <td class="td columna-base" colspan="2">{{suma_peso_promedio|floatformat:2 }} Kg</td>
+                                <td class="td columna-base" colspan="2">{{suma_peso_total|floatformat:2 }} Kg</td>
+                            </tr>
+                            <tr>
+                                <td class="td columna-base" colspan="10"
+                                    style="text-align: left; padding: 5px 0 3px 5px;">
+                                    No.
+                                    Guia:
+                                    _________________________________________________________________________________________________<br>
+                                    _________________________________________________________________________________________________________
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td columna-base" colspan="10"
+                                    style="text-align: left; padding: 5px 0 3px 5px;">
+                                    Observaciones:____________________________________________________________________________________________<br>
+                                    _________________________________________________________________________________________________________
+                                </td>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="pie-pagina">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="columna-base" style="padding-top: 5px;" colspan="2">
+                                <h1 style="font-size: 12px;">Firma de Entregado
+                                    <br>___________________________________
+                                </h1>
+                            </th>
+                            <th colspan="2"></th>
+                            <th style="padding-top: 5px;" colspan="2">
+                                <h1 style="font-size: 12px;">Firma del recibido:
+                                    <br>___________________________________
+                                </h1>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+
+</body>

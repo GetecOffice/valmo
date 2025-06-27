@@ -1,0 +1,94 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} EDITAR CORRAL #{{TECorrales.ID}} {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.change_tblcorrales %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>EDITAR CORRAL #{{TECorrales.ID}} </h1>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <form action="/ActualizarCorral/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{TECorrales.ID}}">
+                <input type="hidden" name="clave" value="{{TECorrales.Clave}}">
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">CORRAL <label>*</label></h6>
+                        <input type="text" name="corral" value="{{TECorrales.Descripcion}}" class="form-control input"
+                            placeholder="Ingrese el nombre del corral" required>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">CAPACIDAD <label>*</label></h6>
+                        <input type="number" name="capacidad" value="{{TECorrales.Capacidad}}"
+                            class="form-control input" placeholder="Ingrese la capacidad para los corrales" required>
+                    </div>
+                </div>
+
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">CLIENTE <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="cliente" required>
+                            <option value="{{FiltradoCliente.ID}}">
+                                --------{{FiltradoCliente.Nombre}}--------
+                            </option>
+                            {% for Cliente in FECliente %}
+                            <option value="{{ Cliente.ID }}">{{ Cliente.Nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">ESTATUS <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="estatus" required>
+                            <option value="{{FiltradoEstatus.ID}}">
+                                --------{{FiltradoEstatus.Descripcion}}--------
+                            </option>
+                            {% for Estatus in FEEstatus %}
+                            <option value="{{ Estatus.ID }}">{{ Estatus.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-4 col-lg col-xl-12 columna">
+                        <h6 class="h6-form">FECHA <label>*</label></h6>
+                        <input class="form-control" type="datetime-local" value="{{ fecha|date:'Y-m-d H:i' }}" name="fecha" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Actualizar</button>
+                    <a href="{% url 'T-Corral' %}" class="btn btn-danger">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'T-Corral' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

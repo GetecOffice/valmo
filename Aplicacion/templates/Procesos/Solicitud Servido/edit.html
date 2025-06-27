@@ -1,0 +1,146 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} EDITAR SERVIDOS MANUALES #{{TEServidos.ID}} {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.change_tblservido %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>EDITAR SERVIDOS MANUALES #{{TEServidos.ID}}</h1>
+        <form action="/ActualizarServidorManual/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{TEServidos.ID}}">
+                <input type="hidden" name="folio" value="{{TEServidos.Folio}}">
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <input type="hidden" name="servido" value="1">
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">CLIENTE</h6>
+                        <select class="select2 form-control" style="width: 100%;" name="cliente" id="cliente-select">
+                            <option value="{{FiltradoCliente.ID}}">
+                                --------{{FiltradoCliente.Nombre}}--------
+                            </option>
+                            {% for Cliente in FECliente %}
+                            <option value="{{ Cliente.ID }}">{{ Cliente.Nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">CORRAL <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="corral" id="corral-select" required>
+                            <option value="{{FiltradoCorral.ID}}">
+                                --------{{FiltradoCorral.Descripcion}}--------
+                            </option>
+                            {% for Corral in FECorral %}
+                            <option value="{{ Corral.ID }}">{{ Corral.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">PRODUCTO <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="producto" required>
+                            <option value="{{FiltradoProducto.ID}}">
+                                --------{{FiltradoProducto.Descripcion}}--------
+                            </option>
+                            {% for Producto in FEProducto %}
+                            <option value="{{ Producto.ID }}">{{ Producto.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input type="hidden" value="{{FiltradoEstatus.ID}}" name="estatus">
+                    <!-- <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 columna">
+                        <h6 class="h6-form">ESTATUS <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="estatus" required>
+                            <option value="{{FiltradoEstatus.ID}}">
+                                --------{{FiltradoEstatus.Descripcion}}--------
+                            </option>
+                            {% for Estatus in FEEstatus %}
+                            <option value="{{ Estatus.ID }}">{{ Estatus.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div> -->
+                    <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">PRIORIDAD <label>*</label></h6>
+                        <select class="select2 form-control input col-12" name="prioridad" required>
+                            <option value="{{TEServidos.Prioridad}}">---------{{TEServidos.Prioridad}}---------
+                            </option>
+                            <option value="Alta">Alta</option>
+                            <option value="Media">Media</option>
+                            <option value="Baja">Baja</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">CANTIDAD SOLICITADA <label>*</label></h6>
+                        <input type="number" name="cantidadSol" value="{{TEServidos.CantidadSolicitada}}"
+                            class="form-control input" placeholder="Ingrese la cantidad solicitada (obligatorio)"
+                            required>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-l-6g col-xl-6 columna">
+                        <h6 class="h6-form">FECHA SOLICITADA <label>*</label></h6>
+                        <input type="datetime-local" value="{{fecha|date:'Y-m-d H:i'}}" name="fechaSol"
+                            class="form-control input">
+                    </div>
+                </div>
+
+
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 columna">
+                        <input type="hidden" name="cantidadSer" value="{{TEServidos.CantidadServida}}">
+                    </div>
+                    <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 columna">
+                        <input type="hidden" value="{{fechaServida|date:'Y-m-d H:i'}}" name="fechaSer">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success buttonEnviar celular">Actualizar</button>
+                    <a href="{% url 'T-Solicitud-Servidos' %}" class="btn btn-danger buttonCancelar celular"
+                        role="button">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#corral-select').change(function () {
+            var corralId = $(this).val();
+            var url = '/obtener_clientes/' + corralId + '/';
+            console.log(corralId)
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (data) {
+                    $('#cliente-select').empty();
+
+                    $.each(data.clientes, function (index, cliente) {
+                        $('#cliente-select').append('<option value="' + cliente.ID + '">' + cliente.Nombre + '</option>');
+                    });
+                }
+            });
+        });
+    });
+</script>
+{% else %}
+<script>
+    window.location.href = "{% url 'T-Servidos' %}";
+</script>
+{% endif %}
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+{% endblock %}

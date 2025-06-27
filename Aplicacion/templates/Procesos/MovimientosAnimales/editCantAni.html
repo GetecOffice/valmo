@@ -1,0 +1,80 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %}EDITAR CANTIDAD MOVIMIENTOS ANIMALES # {{ TCantidadMovimientoAnimales.Folio }} {% endblock %}
+
+{% block body %}
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.change_tbldetallemovanimales %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>
+            <a href="{% url 'T-MovAnimales' %}" class="btn h6-form"><i class="fa fa-arrow-left">
+                    <</i></a>
+            EDITAR CANTIDAD MOVIMIENTOS ANIMALES # {{ TCantidadMovimientoAnimales.Folio }}
+        </h1>
+        <form action="/ActualizarCantidadMovimientosAnimales/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{TCantidadMovimientoAnimales.ID}}">
+                <input type="hidden" name="folio" value="{{TCantidadMovimientoAnimales.IDFolio}}">
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <div class="row mr-1 ml-1 fila">
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                        <h6 class="h6-form">CORRAL <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="corral" required>
+                            <option value="{{FiltradoCorral.ID}}">
+                                --------{{FiltradoCorral.Descripcion}}--------
+                            </option>
+                            {% for corral in FECorral %}
+                            <option value="{{ corral.ID }}">{{ corral.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                        <h6 class="h6-form">TIPO ANIMAL <label>*</label></h6>
+                        <select class="select2 form-control col-12" name="animal" required>
+                            <option value="{{FiltradoAnimales.ID}}">
+                                --------{{FiltradoAnimales.Descripcion}}--------
+                            </option>
+                            {% for Animal in FEAnimal %}
+                            <option value="{{ Animal.ID }}">{{ Animal.Descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                        <h6 class="h6-form">CANTIDAD <label>*</label></h6>
+                        <input type="tel" name="cantidad" value="{{TCantidadMovimientoAnimales.Cantidad}}"
+                            class="form-control" placeholder="Ingrese la cantidad" required>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                        <h6 class="h6-form">PESO TOTAL <label>*</label></h6>
+                        <input type="tel" name="pesoTotal" value="{{TCantidadMovimientoAnimales.PesoTotal}}"
+                            class="form-control" placeholder="Ingrese la cantidad" required>
+                    </div>
+                </div>
+                <div class="form-group ml-1 mr-1">
+                    <button type="submit" class="btn btn-success buttonEnviar celular">ACTUALIZAR</button>
+                    <a href="{% url 'D-MovAnimales' ID=TCantidadMovimientoAnimales.IDFolio %}"
+                        class="btn btn-danger buttonCancelar celular" role="button">CANCELAR</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'T-MovAnimales' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

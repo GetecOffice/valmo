@@ -1,0 +1,481 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} CONSOLIDACIÓN SERVIDOS {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>PROCESOS - CONSOLIDACIÓN SERVIDOS </h1>
+
+        {% if perms.Aplicacion.view_tblservido %}
+        <div class="card card-hdr-procesos mt-3 mb-3">
+            <div class="row">
+                <h6 class="h6-form centrar">SELECCIONE TOLVA PARA VER SU CONTENIDO</h6>
+                <div class="col sub-button-col">
+                    <form action="/Dato-Tolva-Servido/" method="POST">{% csrf_token %}
+                        <input type="hidden" value="4" name="tolva">
+                        <button type="submit" class="btn sub-button-add"><i class="fas fa-truck-moving"></i>
+                            TOLVA 1 ( {{ TTolva1.0.cantidad }} Kg) <br>
+                            ( {{ TTolva1.0.Producto }} )
+                        </button>
+                    </form>
+                </div>
+                <div class="col sub-button-col">
+                    <form action="/Dato-Tolva-Servido/" method="POST">{% csrf_token %}
+                        <input type="hidden" value="5" name="tolva">
+                        <button type="submit" class="btn sub-button-add"><i class="fas fa-truck-moving"></i>
+                            TOLVA 2 ( {{ TTolva2.0.cantidad }} Kg) <br>
+                            ( {{ TTolva2.0.Producto }} )
+                        </button>
+                    </form>
+                </div>
+                <div class="col sub-button-col">
+                    <form action="/Dato-Tolva-Servido/" method="POST">{% csrf_token %}
+                        <input type="hidden" value="6" name="tolva">
+                        <button type="submit" class="btn sub-button-add"><i class="fas fa-truck-moving"></i>
+                            TOLVA 3 ( {{ TTolva3.0.cantidad }} Kg) <br>
+                            ( {{ TTolva3.0.Producto }} )
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class=" table-responsive py-1">
+            <table class="tabla_id">
+                <thead>
+                    <tr>
+                        <th class="th-responsive" style="width: 30%;">SELECCIONE EL PRODUCTO</th>
+                        <th class="th-responsive">PRODUCTO</th>
+                        <th class="th-responsive">CANTIDAD</th>
+                        <th class="th-responsive dnone"></th>
+                        <th class="th-responsive dnone"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for Consolidacion in TConsolidacion %}
+                    <tr>
+                        <td>
+                            <h6 class="td-responsive">SELECCIONE EL PRODUCTO:</h6>
+                            <a class="btn btn-success btn-sm" style="display: inline-block;"
+                                href="Filtro/{{Consolidacion.IDProducto}}" role="button"><i class="fas fa-eye"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">PRODUCTO:</h6>
+                            {{ Consolidacion.Producto }}
+                        </td>
+                        <td>
+                            <h6 class="td-responsive">CANTIDAD:</h6>
+                            {{ Consolidacion.cantidad }}
+                        </td>
+                        <td class="td-salto"></td>
+                        <td class="td-salto"></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="row centrar">
+            <h6 class="h6-form">
+                <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+                No tienes los permisos necesarios para ver el contenido de la tabla
+                <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+            </h6>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}
+
+<td>
+    {% with suma=TTolva1.0.cantidad|default:0|add:Servidos.CantidadSolicitada|default:0 %}
+    {% if producto_tolva1.IDProducto_id == Servidos.IDProducto_id or producto_tolva1.IDProducto_id is none %}
+
+    {% if suma > 3000 %}
+    <a class="btn btn-danger btn-sm" style="display: inline-block;" role="button"><i class="fas fa-truck-moving"></i>
+        1</a>
+    {% else %}
+    <a href="Tolva/{{ Servidos.Folio }}/4/{{Servidos.IDProducto_id}}" class="btn tolva btn-sm"
+        style="display: inline-block;" role="button"><i class="fas fa-truck-moving"></i> 1 </a>
+    {% endif %}
+
+    {% else %}
+    <a class="btn btn-warning btn-sm" style="display: inline-block;" role="button"><i class="fas fa-truck-moving"></i>
+        1</a>
+    {% endif %}
+    {% endwith %}
+
+    {% with suma=TTolva2.0.cantidad|default:0|add:Servidos.CantidadSolicitada|default:0 %}
+    {% if producto_tolva2.IDProducto_id == Servidos.IDProducto_id or producto_tolva2.IDProducto_id is none %}
+
+    {% if suma > 3000 %}
+    <a class="btn btn-danger btn-sm" style="display: inline-block;" role="button"><i class="fas fa-truck-moving"></i>
+        2</a>
+    {% else %}
+    <a class="btn tolva btn-sm" style="display: inline-block;"
+        href="Tolva/{{ Servidos.Folio }}/5/{{Servidos.IDProducto_id}}" role="button"><i class="fas fa-truck-moving"></i>
+        2</a>
+    {% endif %}
+
+    {% else %}
+    <a class="btn btn-warning btn-sm" style="display: inline-block;" role="button"><i class="fas fa-truck-moving"></i>
+        2</a>
+    {% endif %}
+    {% endwith %}
+
+    {% with suma=TTolva3.0.cantidad|default:0|add:Servidos.CantidadSolicitada|default:0 %}
+
+    {% if producto_tolva3.IDProducto_id == Servidos.IDProducto_id or producto_tolva3.IDProducto_id is none %}
+
+    {% if suma > 3000 %}
+    <a class="btn btn-danger btn-sm" style="display: inline-block;" role="button"><i class="fas fa-truck-moving"></i>
+        3</a>
+    {% else %}
+    <a class="btn tolva btn-sm" style="display: inline-block;"
+        href="Tolva/{{ Servidos.Folio }}/6/{{Servidos.IDProducto_id}}" role="button"><i class="fas fa-truck-moving"></i>
+        3</a>
+    {% endif %}
+
+    {% else %}
+    <a class="btn btn-warning btn-sm" style="display: inline-block;" role="button"><i class="fas fa-truck-moving"></i>
+        3</a>
+    {% endif %}
+
+    {% endwith %}
+</td>
+<!-- filtro.html -->
+<div class="row mt-3 mb-3" style="justify-content: center;">
+    <div style="width: 30%; border: 1px rgb(116, 116, 116) solid; text-align: center; display: inline;"
+        class="p-2 card-hdr">
+        <h6 class="h6-form">TOLVA 1</h6>
+        <h6 class="h6-form">Cantidad cargada: ( {{ TTolva1.0.cantidad }} Kg)</h6>
+        <h6 class="h6-form">Producto cargado: ( {{ TTolva1.0.Producto }} )</h6>
+        <form action="/Dato-Tolva-Servido/" method="POST">{% csrf_token %}
+            <input type="hidden" value="4" name="tolva">
+            <button type="submit" class="btn sub-button-add"><i class="fas fa-truck-moving"></i>
+                ver datos en tolva
+            </button>
+        </form>
+    </div>
+    <div style="width: 30%; border: 1px rgb(116, 116, 116) solid; text-align: center; display: inline;"
+        class="p-2 card-hdr">
+        <h6 class="h6-form">TOLVA 2</h6>
+        <h6 class="h6-form">Cantidad cargada: ( {{ TTolva2.0.cantidad }} Kg)</h6>
+        <h6 class="h6-form">Producto cargado: ( {{ TTolva2.0.Producto }} )</h6>
+        <form action="/Dato-Tolva-Servido/" method="POST">{% csrf_token %}
+            <input type="hidden" value="5" name="tolva">
+            <button type="submit" class="btn sub-button-add"><i class="fas fa-truck-moving"></i>
+                ver datos en tolva
+            </button>
+        </form>
+    </div>
+    <div style="width: 30%; border: 1px rgb(116, 116, 116) solid; text-align: center; display: inline;"
+        class="p-2 card-hdr">
+        <h6 class="h6-form">TOLVA 3</h6>
+        <h6 class="h6-form">Cantidad cargada: ( {{ TTolva3.0.cantidad }} Kg)</h6>
+        <h6 class="h6-form">Producto cargado: ( {{ TTolva3.0.Producto }} )</h6>
+        <form action="/Dato-Tolva-Servido/" method="POST">{% csrf_token %}
+            <input type="hidden" value="6" name="tolva">
+            <button type="submit" class="btn sub-button-add"><i class="fas fa-truck-moving"></i>
+                ver datos en tolva
+            </button>
+        </form>
+    </div>
+    <td>
+        {% with suma=TTolva1.0.cantidad|default:0|add:Servidos.CantidadSolicitada|default:0 %}
+        {% if producto_tolva1.IDProducto_id == Servidos.IDProducto_id or producto_tolva1.IDProducto_id is none %}
+
+        {% if suma > 3000 %}
+        <a class="btn btn-danger btn-sm" style="display: inline-block;" role="button"><i
+                class="fas fa-truck-moving"></i> 1</a>
+        {% else %}
+        <a href="Tolva/{{ Servidos.Folio }}/4/{{Servidos.IDProducto_id}}" class="btn tolva btn-sm"
+            style="display: inline-block;" role="button"><i class="fas fa-truck-moving"></i> 1 </a>
+        {% endif %}
+
+        {% else %}
+        <a class="btn btn-warning btn-sm" style="display: inline-block;" role="button"><i
+                class="fas fa-truck-moving"></i> 1</a>
+        {% endif %}
+        {% endwith %}
+
+        {% with suma=TTolva2.0.cantidad|default:0|add:Servidos.CantidadSolicitada|default:0 %}
+        {% if producto_tolva2.IDProducto_id == Servidos.IDProducto_id or producto_tolva2.IDProducto_id is none %}
+
+        {% if suma > 3000 %}
+        <a class="btn btn-danger btn-sm" style="display: inline-block;" role="button"><i
+                class="fas fa-truck-moving"></i> 2</a>
+        {% else %}
+        <a class="btn tolva btn-sm" style="display: inline-block;"
+            href="Tolva/{{ Servidos.Folio }}/5/{{Servidos.IDProducto_id}}" role="button"><i
+                class="fas fa-truck-moving"></i> 2</a>
+        {% endif %}
+
+        {% else %}
+        <a class="btn btn-warning btn-sm" style="display: inline-block;" role="button"><i
+                class="fas fa-truck-moving"></i> 2</a>
+        {% endif %}
+        {% endwith %}
+
+        {% with suma=TTolva3.0.cantidad|default:0|add:Servidos.CantidadSolicitada|default:0 %}
+
+        {% if producto_tolva3.IDProducto_id == Servidos.IDProducto_id or producto_tolva3.IDProducto_id is none %}
+
+        {% if suma > 3000 %}
+        <a class="btn btn-danger btn-sm" style="display: inline-block;" role="button"><i
+                class="fas fa-truck-moving"></i> 3</a>
+        {% else %}
+        <a class="btn tolva btn-sm" style="display: inline-block;"
+            href="Tolva/{{ Servidos.Folio }}/6/{{Servidos.IDProducto_id}}" role="button"><i
+                class="fas fa-truck-moving"></i> 3</a>
+        {% endif %}
+
+        {% else %}
+        <a class="btn btn-warning btn-sm" style="display: inline-block;" role="button"><i
+                class="fas fa-truck-moving"></i> 3</a>
+        {% endif %}
+
+        {% endwith %}
+    </td>
+
+
+    <!-- funcion antigua -->
+    <h6>
+        def TablaTolva(request):
+        tolva = request.POST.get('tolva', '')
+
+        if tolva is not None and tolva != '':
+        TServidos = tblServido.objects.exclude(IDCliente_id=1).filter(IDTolva_id = tolva).values('ID', 'Folio',
+        'IDCliente_id__Nombre', 'IDCorral_id__Descripcion', 'IDProducto_id__Descripcion', 'IDEstatus_id__Descripcion',
+        'CantidadSolicitada', 'CantidadServida', 'Prioridad', 'Fecha', 'FechaServida', 'IDProducto_id', 'IDEstatus_id')
+        if tolva == '2':
+        tolvas = 'EN TOLVA 1'
+        elif tolva == '3':
+        tolvas = 'EN TOLVA 2'
+        elif tolva == '4':
+        tolvas = 'EN TOLVA 3'
+        else:
+        tolvas = 'NO SE SELECCIONO TOLVA'
+        TServidos = tblServido.objects.exclude(IDCliente_id=1).values('ID', 'Folio',
+        'IDCliente_id__Nombre', 'IDCorral_id__Descripcion', 'IDProducto_id__Descripcion', 'IDEstatus_id__Descripcion',
+        'CantidadSolicitada', 'CantidadServida', 'Prioridad', 'Fecha', 'FechaServida', 'IDProducto_id', 'IDEstatus_id')
+
+        ServiciosWeb = servicioActivo()
+        grupos = grupo_user(request)
+        return render(request, 'Procesos/ServidosConsolidacion/tolva.html',{'grupos': grupos,
+        'ServiciosWeb': ServiciosWeb, 'TServidos':TServidos, 'tolva':tolvas})
+
+        def TablaFiltroServido(request, ID, Tolva):
+        grupos = grupo_user(request)
+        FiltroServidos = tblServido.objects.filter(IDProducto_id=ID, IDEstatus_id =3).values('ID', 'Folio',
+        'IDCliente_id__Nombre', 'IDCorral_id__Descripcion', 'IDProducto_id__Descripcion',
+        'IDEstatus_id__Descripcion', 'CantidadSolicitada', 'CantidadServida', 'Prioridad',
+        'Fecha', 'FechaServida','IDProducto_id'
+        )
+        FiltradoProducto= tblProductos.objects.get(ID=ID)
+        resultados = tblServido.objects.exclude(IDCliente_id=1).filter(IDEstatus_id
+        =3).values('IDProducto_id__Descripcion','IDProducto_id').annotate(total_cantidad=Sum('CantidadSolicitada'))
+
+        TConsolidacion = [] # Crear una lista vacía para almacenar los resultados
+
+        for resultado in resultados:
+        descripcion = resultado['IDProducto_id__Descripcion']
+        IDProducto = resultado['IDProducto_id']
+        total_cantidad = resultado['total_cantidad']
+        TConsolidacion.append({'Producto': descripcion, 'cantidad': total_cantidad, 'IDProducto':IDProducto}) # Agregar
+        cada
+        entrada a la lista
+
+        # TRAER LA CANTIDAD DE KILOGRAMOS DE CADA TOLVA Y PRESENTARLO EN EL TEMPLATE
+        tolva1 = tblServido.objects.exclude(IDCliente_id=1).filter(IDTolva_id =
+        2).values('IDProducto_id__Descripcion').annotate(total_cantidad=Sum('CantidadSolicitada'))
+        tolva2 = tblServido.objects.exclude(IDCliente_id=1).filter(IDTolva_id =
+        3).values('IDProducto_id__Descripcion').annotate(total_cantidad=Sum('CantidadSolicitada'))
+        tolva3 = tblServido.objects.exclude(IDCliente_id=1).filter(IDTolva_id =
+        4).values('IDProducto_id__Descripcion').annotate(total_cantidad=Sum('CantidadSolicitada'))
+        TTolva1 = []
+        for resultado in tolva1:
+        descripcion = resultado['IDProducto_id__Descripcion']
+        total_cantidad = resultado['total_cantidad']
+        TTolva1.append({'Producto': descripcion, 'cantidad': total_cantidad})
+
+        TTolva2 = []
+        for resultado in tolva2:
+        descripcion = resultado['IDProducto_id__Descripcion']
+        total_cantidad = resultado['total_cantidad']
+        TTolva2.append({'Producto': descripcion, 'cantidad': total_cantidad})
+
+        TTolva3 = []
+        for resultado in tolva3:
+        descripcion = resultado['IDProducto_id__Descripcion']
+        total_cantidad = resultado['total_cantidad']
+        TTolva3.append({'Producto': descripcion, 'cantidad': total_cantidad})
+
+        # TRAER LA TOLVA, PARA VERIFICAR SI TIENE PRODUCTO
+        # Obtén una lista de registros que tienen IDEstatus igual a 4
+        productos_tolva1 = tblServido.objects.filter(IDTolva = 2)
+        productos_tolva2 = tblServido.objects.filter(IDTolva = 3)
+        productos_tolva3 = tblServido.objects.filter(IDTolva = 4)
+        if productos_tolva1.exists():
+        producto_tolva1 = productos_tolva1.first()
+        else:
+        producto_tolva1 = 0
+
+        if productos_tolva2.exists():
+        producto_tolva2 = productos_tolva2.first()
+        else:
+        producto_tolva2 = 0
+
+        if productos_tolva3.exists():
+        producto_tolva3 = productos_tolva3.first()
+        else:
+        producto_tolva3 = 0
+
+        ServiciosWeb = servicioActivo()
+        return render(request, 'Procesos/ServidosConsolidacion/Filtro.html',{'grupos': grupos,
+        'ServiciosWeb': ServiciosWeb, 'FiltroServidos':FiltroServidos, 'TTolva1':TTolva1,
+        'TTolva2':TTolva2, 'TTolva3':TTolva3, 'producto_tolva1':producto_tolva1, 'FiltradoProducto':FiltradoProducto,
+        'producto_tolva2':producto_tolva2,'producto_tolva3':producto_tolva3, 'TConsolidacion': TConsolidacion})
+
+        def TablaConsolidacionServido(request):
+        grupos = grupo_user(request)
+
+        resultados = tblServido.objects.exclude(IDCliente_id=1).filter(IDEstatus_id
+        =3).values('IDProducto_id__Descripcion','IDProducto_id').annotate(total_cantidad=Sum('CantidadSolicitada'))
+
+        TConsolidacion = [] # Crear una lista vacía para almacenar los resultados
+
+        for resultado in resultados:
+        descripcion = resultado['IDProducto_id__Descripcion']
+        IDProducto = resultado['IDProducto_id']
+        total_cantidad = resultado['total_cantidad']
+        TConsolidacion.append({'Producto': descripcion, 'cantidad': total_cantidad, 'IDProducto':IDProducto}) # Agregar
+        cada
+        entrada a la lista
+
+        # TRAER LA CANTIDAD DE KILOGRAMOS DE CADA TOLVA Y PRESENTARLO EN EL TEMPLATE
+        tolva1 = tblServido.objects.exclude(IDCliente_id=1).filter(IDTolva_id
+        =2).values('IDProducto_id__Descripcion').annotate(total_cantidad=Sum('CantidadSolicitada'))
+        tolva2 = tblServido.objects.exclude(IDCliente_id=1).filter(IDTolva_id
+        =3).values('IDProducto_id__Descripcion').annotate(total_cantidad=Sum('CantidadSolicitada'))
+        tolva3 = tblServido.objects.exclude(IDCliente_id=1).filter(IDTolva_id
+        =4).values('IDProducto_id__Descripcion').annotate(total_cantidad=Sum('CantidadSolicitada'))
+        TTolva1 = []
+        for resultado in tolva1:
+        descripcion = resultado['IDProducto_id__Descripcion']
+        total_cantidad = resultado['total_cantidad']
+        TTolva1.append({'Producto': descripcion, 'cantidad': total_cantidad})
+
+        TTolva2 = []
+        for resultado in tolva2:
+        descripcion = resultado['IDProducto_id__Descripcion']
+        total_cantidad = resultado['total_cantidad']
+        TTolva2.append({'Producto': descripcion, 'cantidad': total_cantidad})
+
+        TTolva3 = []
+        for resultado in tolva3:
+        descripcion = resultado['IDProducto_id__Descripcion']
+        total_cantidad = resultado['total_cantidad']
+        TTolva3.append({'Producto': descripcion, 'cantidad': total_cantidad})
+
+        ServiciosWeb = servicioActivo()
+        return render(request, 'Procesos/ServidosConsolidacion/index.html', {'grupos': grupos,
+        'TConsolidacion': TConsolidacion, 'ServiciosWeb': ServiciosWeb, 'TTolva1':TTolva1, 'TTolva2':TTolva2,
+        'TTolva3':TTolva3})</h6>
+
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Obtén todos los checkboxes con la clase "checkbox"
+        var checkboxes = document.querySelectorAll(".checkbox");
+        var suma = 0;
+        var sumaTotal = parseFloat("{{ TTolva1.0.cantidad }}"); // Inicializa la suma con TTolva1.0.cantidad
+        var sumaSelect = document.getElementById("sumaSelect"); // Obtén el elemento donde mostrarás la suma seleccionada
+        var sumaElement = document.getElementById("suma"); // Obtén el elemento donde mostrarás la suma total
+        var autocompletar = true; // Variable para habilitar o deshabilitar la función de autocompletar
+
+        // Función para validar y seleccionar checkboxes
+        function validarYSeleccionar() {
+            suma = parseFloat("{{ TTolva1.0.cantidad }}"); // Reinicializa la suma
+            checkboxes.forEach(function (cb) {
+                var valor = parseFloat(cb.value);
+
+                // Verifica si el checkbox está dentro del rango
+                if ((autocompletar || cb.checked) && valor + suma <= 3000) {
+                    cb.checked = true; // Marca el checkbox automáticamente si corresponde
+                    suma += valor; // Actualiza la suma
+                } else {
+                    cb.checked = false; // Desmarca el checkbox si no corresponde
+                }
+            });
+
+            // Actualiza el contenido del elemento "suma"
+            sumaSelect.textContent = suma; // Muestra la suma seleccionada
+            sumaElement.textContent = suma - sumaTotal; // Muestra la suma total
+        }
+
+        // Llama a la función para validar y seleccionar al cargar la página
+        validarYSeleccionar();
+
+
+        // Agrega un evento "change" a cada checkbox para volver a validar al cambiar
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", function () {
+                var valor = parseFloat(checkbox.value);
+
+                // Si se desmarca un checkbox, resta su valor de la suma
+                if (!checkbox.checked) {
+                    suma -= valor;
+                }
+
+                // Vuelve a validar y seleccionar
+                validarYSeleccionar();
+            });
+        });
+
+        // Agrega un botón para deshabilitar la función de autocompletar
+        var botonDeshabilitar = document.getElementById("boton-deshabilitar");
+        botonDeshabilitar.addEventListener("click", function () {
+            autocompletar = false; // Deshabilita la función de autocompletar
+            // Deshabilita los checkboxes que superan el límite
+            checkboxes.forEach(function (cb) {
+                var valor = parseFloat(cb.value);
+                if (checkbox.checked) {
+                    if (valor + suma > 3000) {
+                        cb.disabled = false;
+                    } else {
+                        cb.disabled = true;
+                    }
+                }
+            });
+        });
+    });
+    $(document).ready(function () {
+        $("#producto").change(function () {
+            var selectedOption = $(this).val();
+            if (selectedOption) {
+                // Obtiene la URL actual
+                var currentUrl = window.location.pathname;
+
+                // Reemplaza el último segmento (ID) con el nuevo valor
+                var newUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1) + selectedOption;
+
+                // Redirige a la nueva URL
+                window.location.href = newUrl;
+            }
+        });
+    });
+</script>

@@ -1,0 +1,138 @@
+{% extends "Publico/header.html" %}
+{% load static %}
+
+{% block title %} Servicio Valmo {% endblock %}
+{% block body %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+{% if corrales %}
+<div class="card card-hdr-procesos">
+    <div class="card-header">
+        <form method="POST" action="{% url 'Cliente'%}" class="mt-2">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-sm-3 col-md-3 col-lg-1">
+                    <button type="submit" class="btn btn-danger col-12">
+                        Volver atras
+                    </button>
+                </div>
+                <div class="col-sm-8 col-md-9 col-lg-11">
+                    <h5 class="h6-form mt-2">Bienvenido, {{Nombre}} </h5>
+                </div>
+                <input type="hidden" name="email" value="{{email}}">
+            </div>
+        </form>
+        <label for="">En la siguiente sección podra ingresar la cantidad de producto que requiere por corral, siguiendo
+            los siguientes pasos</label>
+    </div>
+
+    <div class="card-body">
+        <form action="{% url 'GS-Cliente' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="email" value="{{email}}">
+            <input type="hidden" name="folio" value="{{ ultimo_folio }}">
+
+            <ul>
+                <li><b> Paso 1: </b> Seleccione el producto que requiere servir</li>
+                <div style="display: flex; justify-content: center; width: 100%; text-align: center; width: 90%;">
+                    <select class="select2 form-control col-8" name="producto" required>
+                        <option value="">SELECCIONE UN PRODUCTO</option>
+                        {% for Producto in FEProductos %}
+                        <option value="{{ Producto.ID }}">{{ Producto.Descripcion }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <li><b> Paso 2: </b> Ingrese la cantidad que quiere servir en los corrales</li>
+                <li><b> Paso 3: </b> Una ves asignada la cantidad a todos los corrales, navegue hacia la parte inferior
+                    de la página y pulse "Guardar servidos", caso contrario presione "Cancelar"</li>
+            </ul>
+
+            <table class="tabla_id">
+                <thead>
+                    <tr>
+                        <th class="th-responsive" style="width: 33%;">CORRAL</th>
+                        <th class="th-responsive" style="width: 33%;">CANTIDAD</th>
+                        <th class="th-responsive" style="width: 33%;">FECHA</th>
+                        <th class="th-responsive dnone"></th>
+                        <th class="th-responsive dnone"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for corral in corrales %}
+                    <tr>
+                        <td style="width: 33%;">
+                            <h6 class="td-responsive">CORRAL:</h6>
+                            {{ corral.Descripcion }}
+                        </td>
+                        <td style="width: 33%;">
+                            <h6 class="td-responsive">CANTIDAD:</h6>
+                            <input type="number" name="cantidadSol[]" class="form-control input"
+                                placeholder="Ingrese la cantidad solicitada" step="0.01">
+                        </td>
+                        <td style="width: 33%;">
+                            <h6 class="td-responsive">FECHA A SERVIR:</h6>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1_{{ corral.ID }}"
+                                    name="checkFecha[]" value="hoy" data-corral="{{ corral.ID }}"
+                                    style="border: 1px black solid; font-size: 13px;" onclick="onlyOne(this)" checked>
+                                <label class="form-check-label" for="inlineCheckbox1_{{ corral.ID }}">HOY</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox2_{{ corral.ID }}"
+                                    name="checkFecha[]" value="mañana" data-corral="{{ corral.ID }}"
+                                    style="border: 1px black solid; font-size: 13px;" onclick="onlyOne(this)">
+                                <label class="form-check-label" for="inlineCheckbox2_{{ corral.ID }}">MAÑANA</label>
+                            </div>
+                        </td>
+
+                        <td class="td-salto">
+                            <input type="hidden" name="corral[]" value="{{ corral.ID }}">
+                            <input type="hidden" name="tecnico[]" value="{{ Nombre }}">
+                            <input type="hidden" name="peticion[]" value="2">
+                            <input type="hidden" name="email[]" value="{{ email }}">
+                            <input type="hidden" name="cliente[]" value="{{ idCliente }}">
+                            <input type="hidden" name="cantidadSer[]" value="0">
+                            <input type="hidden" name="prioridad[]" value="Media">
+                            <input type="hidden" name="estatus[]" value="3">
+                            <input type="hidden" name="fechaSol[]" value="{{ FechaDeHoy }}">
+                            <input type="hidden" name="fechaSer[]" value="{{ FechaDeHoy }}">
+                        </td>
+                        <td class="td-salto"></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <button type="submit" class="btn btn-success btn-sm w-100 mb-3 mt-3"> Guardar servidos </button>
+        </form>
+
+
+    </div>
+</div>
+<script>
+    function onlyOne(checkbox) {
+        var corralID = checkbox.getAttribute('data-corral');
+        var checkboxes = document.querySelectorAll('input[name="checkFecha[]"][data-corral="' + corralID + '"]');
+        checkboxes.forEach((item) => {
+            if (item !== checkbox) item.checked = false;
+        });
+    }
+</script>
+{% else %}
+<h5 class="h6-form">Hola, estimado usuario.</h5>
+<label for="">Para poder ver sus datos correspondientes, debera ingresar el email con el que esta
+    registrado en <b>Ganadera Valmo.</b></label>
+<div class="imagen-inicio">
+    <img src="{% static 'assets/img-pages/valmo.png' %}"
+        style="width: 65%; justify-content: center; margin: auto; text-align: center; align-items: center; display: flex; margin-top: 5%;">
+</div>
+{% endif %}
+{% endblock %}

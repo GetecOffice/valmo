@@ -1,0 +1,70 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} OPERADOR SÁLIDA MATERIA PRIMA {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.add_tblotrosdatossalxbas %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>
+            <a href="{% url 'T-Sal-Materia-Prima' %}" class="btn h6-form"><i class="fa fa-arrow-left"><</i></a>
+            SAL. MAT. PRIMA - OPERADORES SALIDAS DE MATERIAS PRIMAS #{{tblOperador.IDSalida}} asd
+        </h1>
+        <form action="/ActualizarOperadoresSalidaMateriaPrima/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{tblOperador.ID}}">
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">OPERADOR</h6>
+                        <input type="hidden" value="{{ user.id }}" name="operador">
+                        <input type="text" value="{{ user.first_name }} {{user.last_name }}" class="form-control input"
+                            readonly>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">CHOFER</h6>
+                        <input type="text" name="chofer" value="{{tblOperador.Chofer}}" class="form-control input"
+                            placeholder="Ingrese el chofer" required>
+                    </div>
+                </div>
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">CAMIÓN</h6>
+                        <input type="text" name="camion" value="{{tblOperador.Camion}}" class="form-control input"
+                            placeholder="Ingrese el camión" required>
+
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 columna">
+                        <h6 class="h6-form">PLACAS</h6>
+                        <input type="text" name="placas" value="{{tblOperador.Placas}}" class="form-control input"
+                            placeholder="Ingrese la placa" required>
+
+                    </div>
+                </div>
+                <div class="form-group mt-3">
+                    <button type="submit" name="mp" class="btn btn-success buttonEnviar celular">Actualizar</button>
+                    <a href="{% url 'T-Sal-Materia-Prima' %}" class="btn btn-danger buttonCancelar celular"
+                        role="button">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'T-Sal-Materia-Prima' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

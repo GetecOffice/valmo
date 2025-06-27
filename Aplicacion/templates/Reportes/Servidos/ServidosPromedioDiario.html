@@ -1,0 +1,108 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} REPORTES SERVIDOS {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1> <a href="{% url 'Reportes' %}" class="btn h6-form"><i class="fa fa-arrow-left"><</i></a>
+            REPORTES - PROMEDIO DIARIO </h1>
+        <div class="card card-hdr-procesos">
+            <div class="card-header">
+                <div class="row">
+                    <h5 class="h6-form">Filtrar datos de promedio diario</h5>
+                    <div class="col-12">
+                        <form action="/Reporte-Servidos-Promedio-Diario/" class="pr-5 pl-5" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-12 col-sm-5 col-xl-5">
+                                        <select name="cliente" class="select2" style="width: 100%;" required>
+                                            {% if Nombre is none %}
+                                            {% else %}
+                                            <option value="{{ Cliente }}">-------{{Nombre}}-------</option>
+                                            {% endif %}
+                                            <option value="todos">Traer todos los clientes</option>
+                                            {% for clientes in FClientes%}
+                                            <option value="{{ clientes.ID }}">{{ clientes.Nombre }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12 col-md-12 col-sm-3 col-xl-3 p-0 m-0">
+                                        {% if Fecha is none %}
+                                        <input type="datetime-local" name="fecha1" class="form-control"
+                                            style=" border-radius: 0;" value="{{FechaDeHoy}}">
+                                        {% else %}
+                                        <input type="datetime-local" name="fecha1" class="form-control"
+                                            style=" border-radius: 0;" value="{{Fecha}}">
+                                        {% endif %}
+
+                                    </div>
+                                    <div class="col-sm-12 col-md-12 col-sm-3 col-xl-3 p-0 m-0">
+                                        {% if Fecha2 is none %}
+                                        <input type="datetime-local" name="fecha2" class="form-control"
+                                            style=" border-radius: 0;" value="{{FechaDeHoy}}">
+                                        {% else %}
+                                        <input type="datetime-local" name="fecha2" class="form-control"
+                                            style=" border-radius: 0;" value="{{Fecha2}}">
+                                        {% endif %}
+
+                                    </div>
+                                    <div class="col-sm-12 col-md-12 col-sm-1 col-xl-1 p-0 m-0">
+                                        <button type="submit" class="btn button-add" name="reportes"
+                                            style="padding: 5px 14px 7px 14px; border-radius: 1px 7px 7px 1px;">Buscar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive py-1">
+            <table class="tabla_id">
+                <thead>
+                    <tr>
+                        <th>CORRALES</th>
+                        <th>Prod1</th>
+                        <th>Prod2</th>
+                        <th>Prod3</th>
+                        <th>Prod4</th>
+                        <th>TotalAnim</th>
+                        <th>TotProd</th>
+                        <th>TotDiasAnima</th>
+                        <th>Na</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reporte in ListaForRep %}
+                    <tr>
+                        <td>{{ reporte.0 }}</td>
+                        <td>{{ reporte.1 }}</td>
+                        <td>{{ reporte.2 }}</td>
+                        <td>{{ reporte.3 }}</td>
+                        <td>{{ reporte.4 }}</td>
+                        <td>{{ reporte.5 }}</td>
+                        <td>{{ reporte.6 }}</td>
+                        <td>{{ reporte.7 }}</td>
+                        <td>{{ reporte.8 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

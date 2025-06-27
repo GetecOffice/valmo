@@ -1,0 +1,278 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} AGREGAR MOVIMIENTOS ANIMALES {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.add_tblmovimientoanimales %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>
+            <a href="{% url 'T-MovAnimales' %}" class="btn h6-form">
+                <</i>
+            </a>
+            AGREGAR MOVIMIENTOS ANIMALES
+        </h1>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form action="/Guardar-Movimiento-Animales/" method="POST" autocomplete="off">{% csrf_token %}
+
+            <input type="hidden" class="form-control" name="clave" value="{{ ultimo_folio }}">
+            <input type="hidden" class="form-control" name="tecnico" value="{{ user.first_name }} {{user.last_name}}">
+            <div class="row mr-1 ml-1 fila">
+                <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                    <h6 class="h6-form">CLIENTE <label>*</label></h6>
+                    <!-- <input type="hidden" value="{{Agrego_aniamles.cliente}}" name="cliente">
+                    <input type="text" value="" class="form-control" readonly> -->
+
+                    <select class="select2 form-control col-12" name="cliente" required id="select-cliente">
+                        {% if Agrego_aniamles %}
+                        <option value="{{FiltradoCliente.ID}}">{{FiltradoCliente.Nombre }}</option>
+                        {% else %}
+                        <option value="">Selecciona cliente</option>
+                        {% for Clientes in FCliente %}
+                        <option value="{{ Clientes.ID }}">{{ Clientes.Nombre }}</option>
+                        {% endfor %}
+                        {% endif %}
+                    </select>
+
+                </div>
+
+                <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                    <h6 class="h6-form">TIPO DE MOVIMIENTO <label>*</label></h6>
+                    {% if Agrego_aniamles %}
+                    <input type="hidden" value="{{Agrego_aniamles.movimiento}}" name="movimiento">
+                    <input type="text" value="{{FiltradoMovimiento.Descripcion}}" class="form-control" readonly>
+                    {% else %}
+                    <select class="select2 form-control col-12" name="movimiento" required>
+                        {% for Movimiento in FMovimiento %}
+                        <option value="{{ Movimiento.ID }}">{{ Movimiento.Descripcion }}</option>
+                        {% endfor %}
+                    </select>
+                    {% endif %}
+                </div>
+
+                <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                    {% if Agrego_aniamles %}
+                    <h6 class="h6-form">FECHA <label>*</label></h6>
+                    <input type="text" name="fecha" value="{{Agrego_aniamles.fecha}}" class="form-control" readonly>
+                    {% else %}
+                    {% if perms.Aplicacion.add_user %}
+                    <h6 class="h6-form">FECHA <label>*</label></h6>
+                    <input type="date" name="fecha" value="{{ FechaDeHoy }}" class="form-control" required>
+                    {% else %}
+                    <h6 class="h6-form">FECHA <label>*</label></h6>
+                    <input type="date" name="fecha" value="{{ FechaDeHoy }}" class="form-control" required>
+                    {% endif %}
+                    {% endif %}
+                </div>
+
+                <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 columna">
+                    <h6 class="h6-form">PESO LOTE<label>*</label></h6>
+                    {% if Agrego_aniamles %}
+                    <input type="text" name="peso" value="{{Agrego_aniamles.peso}}" class="form-control" readonly>
+                    {% else %}
+                    <input type="number" name="peso" step="0.01" class="form-control" value="0"
+                        placeholder="Ingrese el peso" readonly>
+                    {% endif %}
+                </div>
+
+                <div class=" col-sm-12 col-md-12 col-lg-3 col-xl-3 columna" style="display: none;">
+                    <h6 class="h6-form">No. PARTIDA</h6>
+                    {% if Agrego_aniamles %}
+                    <input type="text" name="partida" value="{{Agrego_aniamles.partida}}" class="form-control" readonly>
+                    {% else %}
+                    <input type="number" name="partida" placeholder="Ingrese No. Partida" class="form-control" step="1"
+                        value="0"
+                        oninput="checkInputValidity(this, 'partidaErrorMessage', 'agregarBoton', 'salirBoton')">
+                    <div class="invalid-feedback" id="partidaErrorMessage" style="display: none;">
+                        No se permiten puntos decimales.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary agregarBoton" name="agregar" id="agregarBoton">Guardar y
+                    agregar otro</button>
+                <button type="submit" class="btn btn-success salirBoton" name="salir" id="salirBoton">Guardar y
+                    salir</button>
+                <a href="{% url 'T-MovAnimales'%}">
+                    <button type="button" class="btn btn-danger cancelarBoton">Cancelar</button>
+                </a>
+            </div>
+
+            <div class="card card-hdr-procesos mt-3 mb-3 p-4">
+                <div class="row mb-3">
+                    <div class="col-8">
+                        <h6 class="h6-form">Agregar cantidad y tipo de animal</h6>
+                    </div>
+                    <div class="col-4">
+                        <button type="submit" class="btn btn-sm btn-primary agregarBoton px-5" name="guardarAnimal"
+                            id="agregarBoton"><i class="fa fa-plus"></i> Agregar</button>
+                    </div>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="th-responsive col-1">FOLIO</th>
+                            <th scope="col" class="th-responsive col-2">CORRAL</th>
+                            <th scope="col" class="th-responsive col-2">TIPO ANIMAL</th>
+                            <th scope="col" class="th-responsive  col-2">CANTIDAD</th>
+                            <th scope="col" class="th-responsive  col-2">PESO TOTAL</th>
+                            <!-- <th scope="col" class="th-responsive">GUIA</th>
+                            <th scope="col" class="th-responsive">OBSERVACIONES</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row" style="border-bottom: 1px white solid;">
+                                {{ formatoClave }}
+                            </th>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">CORRAL:</h6>
+                                <select class="select2 form-control col-12" name="corral" required id="select-corral">
+                                    {% if Agrego_aniamles %}
+                                    <option value="{{FiltradoCorral.ID}}">----{{FiltradoCorral.Descripcion}}----
+                                    </option>
+                                    {% endif %}
+                                    <option value="">Selecciona corral</option>
+                                    {% for Corral in FCorral %}
+                                    <option value="{{ Corral.ID }}">{{ Corral.Descripcion }}</option>
+                                    {% endfor %}
+                                </select>
+
+                            </td>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">ANIMAL:</h6>
+                                <select class="select2 form-control" style="width: 100%;" name="animal" required>
+                                    {% for TipoAnimal in FTipoAnimal %}
+                                    <option value="{{ TipoAnimal.ID }}">{{ TipoAnimal.Descripcion }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">CANTIDAD ANIMAL:</h6>
+                                <input type="text" name="cantidad" autofocus class="form-control" placeholder="Cantidad"
+                                     step="1"
+                                    oninput="checkInputValidity(this, 'cantidadErrorMessage', 'agregarBoton', 'salirBoton')">
+                                <div class="invalid-feedback" id="cantidadErrorMessage" style="display: none;">
+                                    No se permiten puntos decimales.
+                                </div>
+                            </td>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">PESO TOTAL:</h6>
+                                <input type="text" name="pesoTotal" class="form-control" placeholder="Peso"
+                                    step="1">
+                            </td>
+                            <!-- <td class="td-agregar">
+                                <h6 class="td-responsive">GUIA:</h6>
+                                {% if Agrego_aniamles %}
+                                <input type="text" name="guia" class="form-control" placeholder="GUIA">
+                                {% else %}
+                                <input type="text" name="guia" class="form-control" placeholder="GUIA">
+
+                                {% endif %}
+                            </td> -->
+                            <!-- <td class="td-agregar">
+                                <h6 class="td-responsive">OBSERVACIONES:</h6>
+                                {% if Agrego_aniamles %}
+                                <textarea type="text" name="notas" placeholder="Observaciones"
+                                    class="form-control"></textarea>
+                                {% else %}
+                                <textarea type="text" name="notas" class="form-control"
+                                    placeholder="Observaciones"></textarea>
+                                {% endif %}
+                            </td> -->
+                        </tr>
+                        {% for animales in Detalle%}
+                        <tr>
+                            <th scope="row" style="border-bottom: 1px white solid;">
+                                <h6 class="td-responsive">ID:</h6>{{ animales.IDFolio }}
+                            </th>
+                            <td>
+                                <h6 class="td-responsive">CORRAL:</h6>
+                                {{ animales.IDCorral_id__Descripcion}}
+                            </td>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">TIPO ANIMAL:</h6>
+                                {{ animales.IDAnimales_id__Descripcion}}
+                            </td>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">CANTIDAD:</h6>
+                                {{ animales.Cantidad }}
+                            </td>
+                            <td class="td-agregar">
+                                <h6 class="td-responsive">PESO TOTAL:</h6>
+                                {{ animales.PesoTotal }}
+                            </td>
+
+                            <!-- <td>
+                                <h6 class="td-responsive">NO. GUIA:</h6>
+                                {{ animales.No_Guia}}
+                            </td>
+                            <td>
+                                <h6 class="td-responsive">NOTAS:</h6>
+                                {{ animales.Notas}}
+                            </td> -->
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#select-cliente').change(function () {
+            var cliente = $(this).val();
+            var url = '/obtener_corrales_clientes/' + cliente + '/';
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (data) {
+                    $('#select-corral').empty();
+                    console.log(data);
+
+                    $.each(data.corrales, function (index, corral) {
+                        $('#select-corral').append('<option value="' + corral.ID + '">' + corral.Descripcion + '</option>');
+                        console.log(corral)
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+{% else %}
+<div class="row centrar">
+    <h6 class="h6-form">
+        <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+        No tienes los permisos necesarios para agregar el contenido de la tabla
+        <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+    </h6>
+</div>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

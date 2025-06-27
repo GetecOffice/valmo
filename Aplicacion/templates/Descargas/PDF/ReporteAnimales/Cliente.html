@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ datos.titulo }}</title>
+</head>
+
+<style>
+    /* Estilos CSS aquí */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .th {
+        padding: 5px;
+        font-size: 15px;
+    }
+
+    .th,
+    .td {
+        padding: 5px 5px 0 5px;
+        border: 1px solid #ccc;
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid black;
+    }
+
+    .th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        border: 1px solid black;
+    }
+
+    /* Estilos para el encabezado y el pie de página */
+    .encabezado {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+
+    .pie-pagina {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+
+    .contenedor {
+        display: flex;
+
+        flex-direction: column;
+    }
+
+    .imagen {
+        position: absolute;
+    }
+
+    .col-2 {
+        width: 17%;
+    }
+
+    .col-4 {
+        width: 28%;
+    }
+
+    .col-1 {
+        width: 25%;
+    }
+
+    @page { size: letter; margin-left: 0.5in; margin-right: 0.5in; margin-top: 0.7in; margin-bottom: 0.3in; }
+</style>
+
+<body>
+    <div class="encabezado">
+        <table>
+            <thead>
+                <tr>
+                    <th align="left" colspan="2">
+                        <img src="{{ logo_url }}" class="imagen" alt="Logo de la empresa" width="120"
+                            style="padding-right: 30px;">
+                    </th>
+                    <th colspan="6" style="padding-top: 20px;">
+                        <h2 style="font-size: 35px; text-align: right;">Movimientos Animales/Cliente</h2>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="encabezado">
+        <table>
+            <thead>
+
+                <tr>
+                    <th colspan="4" style="padding: 0; ">
+                        <h1 class="title" style="font-size: 14px; text-align: left; margin: -25px 0 0 0;">
+                            Folio:
+                            <label style="font-weight: normal; font-size: 14px;">{{formatoClave}}</label>
+                        </h1>
+                        <h1 class="title" style="font-size: 14px; text-align: left; margin: -25px 0 0 0;">
+                            Cliente:
+                            <label style="font-weight: normal; font-size: 14px;">{{Nombre}}</label>
+                        </h1>
+                        <h1 style="font-size: 14px; font-weight: normal; text-align: left;margin:0; padding:0">
+                            {{fecha_actual}}</h1>
+                    </th>
+                    <th colspan="4" style="padding-top: 25px; padding: 0;">
+                        <h1 class="title" style="font-size: 14px; text-align: right; margin: 0; padding:0">
+                            Industrial Agropecuaria Hermosillense
+                        </h1>
+
+                        <h1 class="title"
+                            style="font-size: 14px; font-weight: normal; text-align: right;margin:0; padding:0">
+                            Blvd. de los Ganaderos Vaso de la presa <br> Hermosillo, Sonora
+                        </h1>
+                        <h1 class="title"
+                            style="font-size: 14px; font-weight: normal; text-align: right;margin:0; padding:0"></h1>
+                    </th>
+                </tr>
+
+            </thead>
+        </table>
+    </div>
+    <br>
+    <div class="contenedor cuerpo">
+        <div class="table">
+            <table>
+                <thead>
+                    <tr style="font-size: 2rem;">
+                        {% if Nombre == "En general" %}
+                            <th class="th columna-contenido" colspan="2">Cliente</th>
+                        {% endif %}
+                        <!-- <th class="th columna-contenido" colspan="2">Corral</th> -->
+                        <th class="th columna-contenido" colspan="2">Inicial</th>
+                        <th class="th columna-contenido" colspan="1">Entrada</th>
+                        <th class="th columna-contenido" colspan="1">Sálida</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reporte in reportes %}
+                    <tr>
+                        {% if Nombre == "En general" %}
+                        <td class="td columna-base" colspan="2">
+                            {{ reporte.0 }}
+                        </td>
+                        {% endif %}
+                        <!-- <td class="td columna-base" colspan="2">
+                            {{ reporte.1 }}
+                        </td> -->
+                        <td class="td columna-base" colspan="2">
+                            {{ reporte.2 }}
+                        </td>
+                        <td class="td columna-base" colspan="1">
+                            {{ reporte.4 }}
+                        </td>
+                        <td class="td columna-base" colspan="1">
+                            {{ reporte.3 }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
+    <div class="pie-pagina">
+        <br>
+        <table>
+            <thead>
+                <tr>
+                    <th class="columna-base" style="padding-top: 5px;" colspan="2">
+                        <h1>Firma de Entregado<br>
+                            <br>_________________________
+                        </h1>
+                    </th>
+                    <th colspan="2"></th>
+                    <th style="padding-top: 5px;" colspan="2">
+                        <h1>Firma del recibido: <br> <br>_________________________</h1>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</body>

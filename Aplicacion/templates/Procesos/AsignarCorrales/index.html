@@ -1,0 +1,162 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} ASIGNAR Y LIBERAR CORRALES {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>PROCESOS - ASIGNAR Y LIBERAR CORRALES</h1>
+        <div class="row">
+            <div class="col sub-button-col">
+                <a href="{% url 'T-Historial'%}" class="btn btn-sm button-add">
+                    <i class="fas fa-clock-rotate-left"></i>
+                    Historial
+                </a>
+            </div>
+        </div>
+        {% if perms.Aplicacion.view_tblasignacorrales %}
+        <div class="card card-hdr">
+            <div class="card-body">
+                <form action="/Asignacion-Corrales/" class="pr-5 pl-5" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group" style="justify-content: center; display: flex;">
+                        <select name="cliente" class="select2" style="width: 50%; ">
+                            {% if clientePost.0.Nombre %}
+                            <option value="{{ clientePost.0.ClienteID }}">
+                                --------------{{ clientePost.0.Nombre }}--------------
+                                {% endif %}
+                            </option>
+                            {% for Clientes in FClientes%}
+                            <option value="{{ Clientes.ID}}">{{Clientes.Nombre}}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn button-add"
+                            style="padding: 1px 14px 1px 14px; border-radius: 1px 7px 7px 1px;">Buscar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% if clientePost.0.Nombre %}
+        <div class=" table-responsive py-1">
+
+            <div style="float: left; width: 50%;">
+                <form action="/Asignacion-Corrales/" method="POST">{% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm col-12 mb-3" style="padding: 7px 14px 7px 14px;">                    
+                        LIBERAR CORRALES SELECCIONADOS
+                    </button>
+                    <table class="tabla_id">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 30%;">CORRAL</th>
+                                <th scope="col" style="width: 60%;">CLIENTE</th>
+                                <th scope="col" style="width: 10%;">LIBERAR</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ClienteCorrales in TClienteCorrales %}
+                            <tr>
+                                <td>{{ ClienteCorrales.Descripcion}}</td>
+                                <td>{{ ClienteCorrales.IDCliente_id__Nombre}}</td>
+                                <td>
+                                    {% csrf_token %}
+
+                                    <h6 style="display: none;">CLIENTE SELECCIONADO</h6>
+                                    <input type="hidden" value="{{ clientePost.0.ClienteID }}" name="cliente">
+                                    <h6 style="display: none;">CAPACIDAD </h6>
+                                    <input type="hidden" value="0" name="capacidad">
+                                    <h6 style="display: none;">LIBERAR</h6>
+                                    <input type="hidden" value="1" name="liberar">
+                                    <h6 style="display: none;">CLIETNE A LIBERAR</h6>
+                                    <input type="hidden" value="{{ ClienteCorrales.IDCliente_id}}" name="IDCliente">
+                                    <h6 style="display: none;">CORRAL</h6>
+                                    <input type="hidden" value="{{ClienteCorrales.Descripcion}}" name="corral">
+                                    <h6 style="display: none;">ID corral</h6>
+                                    <input class="form-check-input" type="checkbox" value="{{ ClienteCorrales.ID}}"
+                                        id="defaultCheck1" name="ID" style="border: 1px black solid; font-size: 20px;">
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div style="float: right; width: 49%;">
+                <form action="/Asignacion-Corrales/" method="POST">{% csrf_token %}
+                    <button type="submit" class="btn btn-success btn-sm col-12 mb-3"
+                        style="padding: 7px 14px 7px 14px;">ASIGNAR CORRALES SELECCIONADOS</button>
+                    <table class="tabla_id">
+                        <thead>
+                            <tr>
+
+                                <th scope="col" style="width: 10%;">ASIGNAR</th>
+                                <th scope="col">CLAVE</th>
+                                <th scope="col" style="width: 30%;">CLIENTE</th>
+                                <th scope="col">CORRAL</th>
+                                <th scope="col">STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for CorralesLibres in TCorralesLibres %}
+                            <tr>
+                                <td>
+                                    {% csrf_token %}
+                                    <h6 style="display: none;">ID CORRAL</h6>
+                                    <input class="form-check-input btn-lg" type="checkbox" value="{{ CorralesLibres.ID}}"
+                                        id="defaultCheck1" name="ID" style="border: 1px black solid; font-size: 20px;">
+                                    <h6 style="display: none;">ASIGNAR</h6>
+                                    <input type="hidden" value="1" name="asignar">
+                                    <h6 style="display: none;">CLIENTE SELECCIONADO</h6>
+                                    <input type="hidden" value="{{ clientePost.0.ClienteID }}" name="cliente">
+                                    <h6 style="display: none;">CORRAL</h6>
+                                    <input type="hidden" value="{{CorralesLibres.Descripcion}}" name="corral">
+
+                                </td>
+                                <td>{{ CorralesLibres.Clave}}</td>
+                                <td>{{ CorralesLibres.IDCliente_id__Nombre}}</td>
+                                <td>{{ CorralesLibres.Descripcion}}</td>
+                                <td>{{ CorralesLibres.IDEstatus_id__Descripcion}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+
+            </div>
+        </div>
+        {% else %}
+        <div class="row centrar pt-4">
+            <h6 style="color: red; text-transform: uppercase; text-align: center;" class="h6-form">
+                Para poder asignar o liberar corrales, debe seleccionar primeramente un cliente</h6>
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="row centrar">
+            <h6 class="h6-form">
+                <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+                No tienes los permisos necesarios para ver el contenido de la tabla
+                <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+            </h6>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+{% endblock %}

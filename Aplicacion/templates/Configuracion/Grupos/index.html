@@ -1,0 +1,119 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %} GRUPOS {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.auth.add_tblserviciosweb %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-10">
+                <h1>CONFIGURACIÓN - GRUPOS</h1>
+
+            </div>
+            <div class="col-2">
+
+                {% if perms.auth.add_group %}
+                <a href="{% url 'F-Grupos'%}">
+                    <button type="button" class="btn button-add col-12">DAR DE ALTA GRUPO</button>
+                </a>
+                {% else %}
+                <div class="row centrar">
+                    <h6 class="h6-form">
+                        <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+                        No tienes los permisos necesarios para agregar contenido a la tabla
+                        <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+                    </h6>
+                </div>
+                {% endif %}
+            </div>
+            {% if messages %}
+            {% for message in messages %}
+            <div
+                class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            {% if perms.auth.view_group %}
+            <div class="table-responsive py-1">
+                <table class="tabla_id">
+                    <thead>
+                        <tr>
+                            <th class="th-responsive">ID</th>
+                            <th class="th-responsive">DESCRIPCIÓN</th>
+                            {% if perms.auth.add_permission %}
+                            <th class="th-responsive">AGREGAR PERMISOS</th>
+                            {% endif %}
+                            {% if perms.auth.change_group or perms.auth.delete_group %}
+                            <th class="th-responsive">ACCIÓN</th>
+                            {% endif %}
+                            <th class="th-responsive dnone"></th>
+                            <th class="th-responsive dnone"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for Grupos in TGrupos %}
+                        <tr>
+                            <td>
+                                <h6 class="td-responsive">ID:</h6>
+                                {{ Grupos.id}}
+                            </td>
+                            <td>
+                                <h6 class="td-responsive">DESCRIPCIÓN:</h6>
+                                {{ Grupos.name}}
+                            </td>
+                            {% if perms.auth.add_permission %}
+                            <td>
+                                <form action="/Movimiento-Permisos/" class="pr-5 pl-5" method="POST">
+                                    {% csrf_token %}
+                                    <div class="form-group" style="justify-content: center; display: flex;">
+                                        <input type="hidden" name="grupo" value="{{Grupos.id}}">
+
+                                        <button type="submit" class="btn btn-primary btn-sm">Agregar permiso</button>
+                                    </div>
+                                </form>
+                            </td>
+                            {% endif %}
+                            {% if perms.auth.change_group or perms.auth.delete_group %}
+                            <td>
+                                {% if perms.auth.change_group %}
+                                <a class="btn btn-success btn-sm" style="display: inline-block;"
+                                    href="Editar/{{Grupos.id}}"><i class="fas fa-pen"></i> Editar</a>
+                                {% endif %}
+                                <!-- {% if perms.auth.delete_group %}
+                            <a class="btn btn-danger btn-sm" style="display: inline-block;"
+                                href="EliminarCliente/{{Cliente.ID}}"><i class="fas fa-trash-alt"></i></a>
+                            {% endif %} -->
+                            </td>
+                            {% endif %}
+                            <td class="td-salto"></td>
+                            <td class="td-salto"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="row centrar">
+                <h6 class="h6-form">
+                    <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+                    No tienes los permisos necesarios para ver el contenido de la tabla
+                    <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+                </h6>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% else %}
+    <script>
+        window.location.href = "{% url 'NoPago' %}";
+    </script>
+    {% endif %}
+
+    {% endblock %}

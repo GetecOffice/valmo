@@ -1,0 +1,49 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %}EDITAR GRUPO #{{TEGrupos.ID}} {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.auth.change_group %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>EDITAR GRUPO #{{TEGrupos.ID}}</h1>
+        <form action="/ActualizarGrupo/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{TEGrupos.id}}">
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 columna">
+                        <h6 class="h6-form">DESCRIPCIÓN</h6>
+                        <input type="text" name="descripcion" value="{{TEGrupos.name}}" class="form-control input"
+                            placeholder="Ingrese el grupo" required>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Actualizar</button>
+                    <a href="{% url 'T-Grupos' %}" class="btn btn-danger">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'T-Grupos' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}

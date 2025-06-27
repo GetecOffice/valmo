@@ -1,0 +1,325 @@
+{% extends "Publico/header.html" %}
+{% load static %}
+
+{% block title %} Servicio Valmo {% endblock %}
+{% block body %}
+
+<style>
+    .corrales-asignados {
+        width: 48%;
+        justify-content: center;
+        text-align: center;
+        background-color: rgb(241, 244, 247);
+        border: 1px solid rgb(104, 104, 104);
+    }
+
+    .modal {
+        display: none;
+        /* Oculta el modal por defecto */
+        position: fixed;
+        /* Mantén el modal en la pantalla */
+        z-index: 1;
+        /* Asegúrate de que el modal esté sobre otros elementos */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Ancho completo */
+        height: 100%;
+        /* Alto completo */
+        overflow: auto;
+        /* Permite el desplazamiento si es necesario */
+        background-color: rgb(0, 0, 0);
+        /* Color de fondo negro */
+        background-color: rgba(0, 0, 0, 0.4);
+        /* Fondo negro con opacidad */
+    }
+
+    /* Contenido del modal */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        /* Centra el modal */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        /* Ancho del modal */
+    }
+
+    /* El botón para cerrar el modal */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .capitalizar {
+        text-transform: lowercase;
+        font-size: 18px;
+    }
+
+    .capitalizar::first-letter {
+        text-transform: uppercase;
+    }
+
+    .contenedor-datos-modal {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .datos-modal {
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+    }
+
+
+    @media (max-width: 1250px) {
+        .datos-modal {
+            justify-content: center;
+            text-align: left;
+            align-items: center;
+        }
+
+        .contenedor-datos-modal {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+</style>
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+{% if corrales %}
+<div class="card card-hdr-procesos">
+    <div class="card-header">
+        <h5 class="h6-form">Hola, {{Nombre}} </h5>
+        <label style="text-align: justify;">En la siguiente sección podra visualizar los corrales
+            asiginados y agregar la cantidad por servir al corral seleccionado</label>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-4 col-md-6 col-lg-6">
+                <form class="search-form d-flex align-items-center" method="POST" action="{% url 'FP-Cliente'%}">
+                    {% csrf_token %}
+                    <input type="hidden" name="email" value="{{email}}">
+                    <button type="submit" class="btn button-add col-12">
+                        <i class="fa fa-plus"></i> AGREGAR SERVIDOS
+                    </button>
+                </form>
+            </div>
+            <div class="col-sm-4 col-md-6 col-lg-6">
+                <form class="search-form d-flex align-items-center" method="POST"
+                    action="{% url 'FP-Servidos-Cliente'%}">
+                    {% csrf_token %}
+                    <input type="hidden" name="email" value="{{email}}">
+                    <button type="submit" class="btn button-add col-12">
+                        <i class="fa fa-plus"></i> VER SERVIDOS
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <hr>
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item col-12 h6-form" style="text-align: center;"><b>CORRALES
+                    ASIGNADOS</b></li>
+        </ul>
+        <div style="justify-content: center;">
+            <!-- <div class="col-sm-5 col-md-4 col-lg-2">
+                    <li class="h6-form">{{corral.Descripcion}}</li>
+                </div> -->
+            <ul class="list-group" style="padding-left: 30px; padding-right: 30px; background: #fff; border-radius: 0;">
+
+                {% for corral in corrales %}
+                <li class="list-group-item"
+                    style="display: flex; justify-content: space-between; border: 0; border-bottom: 1px solid #adadad; background: #fff;">
+                    <div style="display: flex; flex-direction: column; gap: 0;">
+                        <p style="margin: 0; padding: 0; font-size: 1.5rem;">Corral {{corral.1}}</p>
+                        {% if corral.2 == None %}
+                        <p style="margin: 0; padding: 0;" class="capitalizar">SIN REGISTRO</p>
+                        {% else %}
+                        <p style="margin: 0; padding: 0;" class="capitalizar">{{corral.2}}</p>
+                        {% endif %}
+                    </div>
+                    <button type="button" class="btn btn-primary openModalBtn button-add "
+                        style="margin-top: 10px; margin-bottom: 10px;" data-modal="{{corral.0}}">Ver detalles</button>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% for corral in corrales %}
+        <div id="{{corral.0}}" class="modal">
+            <div class="modal-content">
+                <span id="closeModalBtn" class="close">&times;</span>
+                <h1 style="margin-bottom: 30px; text-align: center; text-transform: capitalize;">Ultimo registro del
+                    corral: {{corral.1}}</h1>
+                <div class="contenedor-datos-modal">
+                    <div class="datos-modal">
+                        <h4>Folio</h4>
+                        <p>{{corral.8}}</p>
+                    </div>
+                    <div class="datos-modal">
+                        <h4>Estatus</h4>
+                        {% if corral.2 == None %}
+                        <p class="capitalizar">SIN REGISTRO</p>
+                        {% else %}
+                        <p class="capitalizar">{{corral.2}}</p>
+                        {% endif %}
+                    </div>
+                    <div class="datos-modal">
+                        <h4>Producto</h4>
+                        <p>{{corral.3}}</p>
+                    </div>
+                    <div class="datos-modal">
+                        <h4>Cantidad Solicitada</h4>
+                        <p>{{corral.4}} kg</p>
+                    </div>
+                    <div class="datos-modal">
+                        <h4>Cantidad Servida</h4>
+                        <p>{{corral.5}} kg</p>
+                    </div>
+                    <div class="datos-modal">
+                        <h4>Fecha Solicitada</h4>
+                        <p>{{corral.6}}</p>
+                    </div>
+                </div>
+                <hr>
+                <h1 style="margin-bottom: 30px; text-align: center; text-transform: capitalize;">Historial de registro
+                </h1>
+                <!-- {{servidos.IDCliente_id__Nombre}} -->
+                <div class="table-responsive py-1">
+                    <table class="tabla_id">
+                        <thead>
+                            <tr>
+                                <!-- <th scope="col">ID</th> -->
+                                <th scope="col" class="th-responsive">Folio</th>
+                                <!-- <th scope="col">Corral</th> -->
+                                <th scope="col" class="th-responsive">Producto</th>
+                                <th scope="col" class="th-responsive">Estatus</th>
+                                <th scope="col" class="th-responsive">Cantidad Solicitada</th>
+                                <th scope="col" class="th-responsive">Cantidad Servida</th>
+                                <th scope="col" class="th-responsive">Fecha Solicitada</th>
+                                <th class="th-responsive dnone"></th>
+                                <th class="th-responsive dnone"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for servidos in corrales_filtro%}
+                            {% if corral.1 == servidos.IDCorral_id__Descripcion and corral.7 != servidos.ID %}
+                            <tr>
+                                <!-- <th >{{servidos.ID}}</th> -->
+                                <td>
+                                    <h6 class="td-responsive">Folio:</h6>{{servidos.Folio}}
+                                </td>
+                                <!-- <td>{{servidos.IDCorral_id__Descripcion}}</td> -->
+                                <td>
+                                    <h6 class="td-responsive">Producto:</h6>{{servidos.IDProducto_id__Descripcion}}
+                                </td>
+                                <td>
+                                    <h6 class="td-responsive">Estatus:</h6>{{servidos.IDEstatus_id__Descripcion}}
+                                </td>
+                                <td>
+                                    <h6 class="td-responsive">Cantidad Solicitada:</h6>{{servidos.CantidadSolicitada}}
+                                </td>
+                                <td>
+                                    <h6 class="td-responsive">Cantidad Servida:</h6>{{servidos.CantidadServida}}
+                                </td>
+                                <td>
+                                    <h6 class="td-responsive">Fecha Solicitada:</h6>{{servidos.Fecha}}
+                                </td>
+                                <td class="td-salto"></td>
+                                <td class="td-salto"></td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- {{servidos.IDCliente_id__Nombre}} -->
+            </div>
+        </div>
+        {% endfor %}
+        <hr>
+
+    </div>
+</div>
+<script>
+    // Función para abrir un modal
+    function openModal(modalId) {
+        var modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = "block";
+        }
+    }
+
+    // Función para cerrar todos los modales
+    function closeModals() {
+        var modals = document.querySelectorAll('.modal');
+        modals.forEach(function (modal) {
+            modal.style.display = "none";
+        });
+    }
+
+    // Obtener todos los botones que abren modales
+    var openModalButtons = document.querySelectorAll('.openModalBtn');
+
+    // Añadir el evento click a cada botón
+    openModalButtons.forEach(function (button) {
+        button.onclick = function () {
+            var modalId = button.getAttribute('data-modal');
+            closeModals(); // Cierra cualquier modal abierto
+            openModal(modalId); // Abre el modal correspondiente
+        };
+    });
+
+    // Obtener todos los botones de cierre
+    var closeButtons = document.querySelectorAll('.close');
+
+    // Añadir el evento click a cada botón de cierre
+    closeButtons.forEach(function (button) {
+        button.onclick = function () {
+            var modal = button.closest('.modal');
+            if (modal) {
+                modal.style.display = "none";
+            }
+        };
+    });
+
+    // Cerrar el modal si se hace clic fuera del contenido
+    window.onclick = function (event) {
+        var modals = document.querySelectorAll('.modal');
+        modals.forEach(function (modal) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        });
+    };
+</script>
+
+{% else %}
+<h5 class="h6-form">Hola, estimado usuario.</h5>
+<label for="">Para poder ver sus datos correspondientes, debera ingresar el email con el que esta
+    registrado en <b>Ganadera Valmo.</b></label>
+<div class="imagen-inicio">
+    <img src="{% static 'assets/img-pages/valmo.png' %}"
+        style="width: 65%; justify-content: center; margin: auto; text-align: center; align-items: center; display: flex; margin-top: 5%;">
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "include/header.html" %}
+
+{% load static %}
+
+{% block title %}EDITAR TIPOS DE MOVIMIENTO #{{TETipoMov.ID}} {% endblock %}
+
+{% block body %}
+
+{% if ServiciosWeb.Servicio == True or perms.Aplicacion.add_tblserviciosweb %}
+
+{% if perms.Aplicacion.change_tbltipomov %}
+<div class="card card-hdr">
+    <div class="card-body">
+        <h1>EDITAR TIPOS MOVIMIENTO #{{TETipoMov.ID}}</h1>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if 'error' in message.tags %}alert-danger{% else %}alert-primary{% endif %} notifications">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <form action="/ActualizarTipoMovimiento/" method="POST" autocomplete="off">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="id" value="{{TETipoMov.ID}}">
+                <input type="hidden" name="clave" value="{{TETipoMov.Clave}}">
+                <input type="hidden" class="form-control" name="tecnico"
+                    value="{{ user.first_name }} {{user.last_name}}">
+                <div class="row fila">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 columna">
+                        <h6 class="h6-form">TIPO MOVIMIENTO <label>*</label></h6>
+                        <input type="text" name="descripcion" value="{{TETipoMov.Descripcion}}"
+                            class="form-control input" placeholder="Ingrese el tipo de movimiento" required>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Actualizar</button>
+                    <a href="{% url 'T-Tipo-Movimiento' %}" class="btn btn-danger">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<script>
+    window.location.href = "{% url 'T-Tipo-Movimiento' %}";
+</script>
+{% endif %}
+
+{% else %}
+<script>
+    window.location.href = "{% url 'NoPago' %}";
+</script>
+{% endif %}
+
+{% endblock %}
