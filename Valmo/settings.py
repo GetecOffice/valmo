@@ -38,7 +38,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Valmo.urls'
 
-CSRF_TRUSTED_ORIGINS = ['https://valmo.185b.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://valmo.up.railway.app']
 
 TEMPLATES = [
     {
