@@ -1,1 +1,1 @@
-web: python manage.py migrate && gunicorn Valmo.wsgi:application
+web: sh entrypoint.sh
