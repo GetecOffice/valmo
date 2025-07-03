@@ -1,1 +1,1 @@
-web: gunicorn Valmo.wsgi:application
+web: python manage.py migrate && gunicorn Valmo.wsgi:application
