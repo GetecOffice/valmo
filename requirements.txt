@@ -20,6 +20,7 @@ django-allauth==0.57.0
 django-crispy-forms==2.1
 django-extensions==3.2.3
 django-wkhtmltopdf==3.4.0
+dj-database-url==3.0.1
 et-xmlfile==1.1.0
 fonttools==4.39.4
 freetype-py==2.3.0
