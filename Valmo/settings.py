@@ -71,13 +71,26 @@ WSGI_APPLICATION = 'Valmo.wsgi.application'
 #         },        
 #     }
 # }
-
-DATABASES ={
+DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'Respaldo_MYSQL.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'railway',
+        'USER': 'root',
+        'PASSWORD': 'evTOhUTDPaZXNMlBVLCzELCHOQYcgvoU',
+        'HOST': 'mysql.railway.internal',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },        
     }
 }
+
+# DATABASES ={
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'Respaldo_MYSQL.sqlite3',
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
