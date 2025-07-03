@@ -74,16 +74,14 @@ WSGI_APPLICATION = 'Valmo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'railway',
-        'USER': 'root',
-        'PASSWORD': 'evTOhUTDPaZXNMlBVLCzELCHOQYcgvoU',
-        'HOST': 'mysql.railway.internal',
+        'NAME': os.getenv("DB_NAME", "valmo_db"),
+        'USER': os.getenv("DB_USER", "valmo_user"),
+        'PASSWORD': os.getenv("DB_PASSWORD", "valmo_pass"),
+        'HOST': os.getenv("DB_HOST", "db"),
         'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },        
     }
 }
+
 
 # DATABASES ={
 #     'default': {
