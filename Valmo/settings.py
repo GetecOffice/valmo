@@ -1,6 +1,7 @@
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+import dj_database_url
 # import pymysql
 # pymysql.install_as_MySQLdb()
 
@@ -71,15 +72,9 @@ WSGI_APPLICATION = 'Valmo.wsgi.application'
 #         },        
 #     }
 # }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv("DB_NAME", "valmo_db"),
-        'USER': os.getenv("DB_USER", "valmo_user"),
-        'PASSWORD': os.getenv("DB_PASSWORD", "valmo_pass"),
-        'HOST': os.getenv("DB_HOST", "db"),
-        'PORT': '3306',
-    }
+
+DATABASES ={
+    'default': dj_database_url.config(default=os.getenv("url_database"))
 }
 
 
