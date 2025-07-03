@@ -20,4 +20,5 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Ejecuta migraciones y arranca el servidor con Gunicorn
-CMD ["sh", "-c", "python manage.py migrate && gunicorn Valmo.wsgi:application --bind 0.0.0.0:8080"]
+CMD python manage.py migrate && gunicorn Valmo.wsgi:application
+# CMD ["sh", "-c", "python manage.py migrate && gunicorn Valmo.wsgi:application --bind 0.0.0.0:8080"]
